@@ -5,7 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
 
-public class PayrollAdminLoginGUI extends LoginGUI{
+public class PayrollAdminLoginGUI extends LoginGUI {
     public PayrollAdminLoginGUI() {
         super();
 
@@ -19,12 +19,18 @@ public class PayrollAdminLoginGUI extends LoginGUI{
                 String empID = emp_ID_field.getText();
                 String username = usernameField.getText();
                 String password = new String(passwordField.getPassword());
+                System.out.println("Employee ID: " + empID + " Username: " + username + " Password: " + password);
 
                 if (verifyAdminLogin(empID, username, password)) {
                     JOptionPane.showMessageDialog(null, "Admin login successful!");
                     // Proceed to the admin dashboard or functionality
+                    dispose();
+                    AdminSystemViewGUI adminSystemView = new AdminSystemViewGUI();
+                    adminSystemView.setVisible(true);
+                    System.out.println("Logged in as Admin Successful.");
                 } else {
-                    JOptionPane.showMessageDialog(null, "Invalid admin credentials. Please try again.");
+                    JOptionPane.showMessageDialog(null, "Failed to login as Admin. Please Input Valid Credentials.");
+                    System.out.println("Logged in as Admin Failed.");
                 }
             }
         });
@@ -56,7 +62,7 @@ public class PayrollAdminLoginGUI extends LoginGUI{
     }
 
     public static void main(String[] args) {
-        PayrollAdminLoginGUI adminLoginGUI = new PayrollAdminLoginGUI();
-        adminLoginGUI.setVisible(true);
+        MainLogin main = new MainLogin();
+        main.setVisible(true);
     }
 }
