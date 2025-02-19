@@ -1,7 +1,6 @@
 package GUI;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
@@ -40,7 +39,6 @@ public abstract class LoginGUI extends JFrame {
         connectToDatabase();
 
         // JLabel, TextField, PasswordField, Login Button and Menu Button
-        JLabel appLabel = new JLabel("User Login", SwingConstants.CENTER);
         JLabel usernameLabel = new JLabel("Username:");
         JLabel passwordLabel = new JLabel("Password:");
         JLabel emp_idLabel = new JLabel("Employee ID:");
@@ -52,7 +50,6 @@ public abstract class LoginGUI extends JFrame {
         JButton menuButton = new JButton("Back to Main Menu");
 
         // Set the Location of the Components
-        appLabel.setBounds(800, 200, 500, 50);
         emp_idLabel.setBounds(800, 260, 300, 50);
         emp_ID_field.setBounds(800, 310, 300, 40);
         usernameLabel.setBounds(800, 350, 300, 50);
@@ -64,7 +61,6 @@ public abstract class LoginGUI extends JFrame {
         menuButton.setBounds(800, 660, 300, 50);
 
         // Add the Components to the JFrame
-        add(appLabel);
         add(emp_idLabel);
         add(emp_ID_field);
         add(loginButton);
@@ -99,6 +95,7 @@ public abstract class LoginGUI extends JFrame {
             String username = usernameField.getText();
             String password = new String(passwordField.getPassword());
 
+            LOGGER.info("Login Attempt with EmpID:" + empID + ", Username: " + username);
             if (verifyLogin(empID, username, password)) {
                 JOptionPane.showMessageDialog(null, "Login successful!");
                 // Proceed to the next screen or functionality
