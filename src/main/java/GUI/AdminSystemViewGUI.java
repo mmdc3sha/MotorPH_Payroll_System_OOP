@@ -47,10 +47,11 @@ public class AdminSystemViewGUI {
         gbc.ipady = 20; // This will increase the height of the buttons
 
         JButton profileBtn = new JButton("Profile");
+        JButton employeeRecordsBtn = new JButton("Employee Records");
         JButton payrollBtn = new JButton("Payroll");
         JButton attendanceBtn = new JButton("Attendance");
         JButton inquiryBtn = new JButton("Inquiry");
-        JButton leavesBtn = new JButton("Report");
+        JButton leavesBtn = new JButton("Leave Requests");
         JButton exitBtn = new JButton("Exit");
 
         gbc.gridy = 0;
@@ -64,6 +65,8 @@ public class AdminSystemViewGUI {
         gbc.gridy = 4;
         menuPanel.add(leavesBtn, gbc);
         gbc.gridy = 5;
+        menuPanel.add(employeeRecordsBtn, gbc);
+        gbc.gridy = 6;
         menuPanel.add(exitBtn, gbc);
 
         // Create the main panel with CardLayout
@@ -75,29 +78,33 @@ public class AdminSystemViewGUI {
         // Create individual panels for each button
         JPanel profilePanel = new JPanel();
         profilePanel.add(new JLabel("Profile View"));
+        JPanel employeeRecordsPanel = new JPanel();
+        employeeRecordsPanel.add(new JLabel("Employee Records"));
         JPanel payrollPanel = new JPanel();
         payrollPanel.add(new JLabel("Payroll View"));
         JPanel attendancePanel = new JPanel();
         attendancePanel.add(new JLabel("Attendance View"));
         JPanel inquiryPanel = new JPanel();
-        inquiryPanel.add(new JLabel("Inquiry View"));
+        inquiryPanel.add(new JLabel("Leave Requests View"));
         JPanel leavesPanel = new JPanel();
         leavesPanel.add(new JLabel("Report View"));
 
 
         // Add individual panels to the main panel
         mainPanel.add(profilePanel, "Profile");
+        mainPanel.add(employeeRecordsPanel, "EmployeeRecords");
         mainPanel.add(payrollPanel, "Payroll");
         mainPanel.add(attendancePanel, "Attendance");
         mainPanel.add(inquiryPanel, "Inquiry");
-        mainPanel.add(leavesPanel, "Report");
+        mainPanel.add(leavesPanel, "Leave Requests");
 
         // Add action listeners to the buttons
         profileBtn.addActionListener(e -> cardLayout.show(mainPanel, "Profile"));
+        employeeRecordsBtn.addActionListener(e -> cardLayout.show(mainPanel, "EmployeeRecords"));
         payrollBtn.addActionListener(e -> cardLayout.show(mainPanel, "Payroll"));
         attendanceBtn.addActionListener(e -> cardLayout.show(mainPanel, "Attendance"));
         inquiryBtn.addActionListener(e -> cardLayout.show(mainPanel, "Inquiry"));
-        leavesBtn.addActionListener(e -> cardLayout.show(mainPanel, "Report"));
+        leavesBtn.addActionListener(e -> cardLayout.show(mainPanel, "Leave Requests"));
 
         // Logs out of the System
         exitBtn.addActionListener(e ->  {
