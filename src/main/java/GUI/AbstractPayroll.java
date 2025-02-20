@@ -56,7 +56,7 @@ public abstract class AbstractPayroll {
     protected double totalDeductions;
     protected double totalNetIncome;
 
-    public AbstractPayroll(int employee_id, String payslipNo, String payPeriodStart, String payPeriodEnd, String employeeName, String firstName, String lastName, String empPosition, double monthlyRate, double dailyRate, int daysWorked, int overtime, double totalGrossIncome, double riceSubsidy, double phoneAllowance, double clothingAllowance, double totalBenefits) {
+    public AbstractPayroll(int employeeId, String payPeriodStart, String payPeriodEnd, String employeeName, String firstName, String lastName, String empPosition, double monthlyRate, double dailyRate, int daysWorked, int overtime, double totalGrossIncome, double riceSubsidy, double phoneAllowance, double clothingAllowance, double totalBenefits) {
     }
 
 
