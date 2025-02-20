@@ -37,7 +37,7 @@ public class PayrollAdminEmployeeLoginGUI extends EmployeeLoginGUI {
     }
 
     @Override
-    protected void connectToDatabase() {
+    protected Connection connectToDatabase() {
         try {
             Class.forName("org.sqlite.JDBC");
             connection = DriverManager.getConnection("jdbc:sqlite:src/main/java/MotorPHDatabase.db");
@@ -45,6 +45,7 @@ public class PayrollAdminEmployeeLoginGUI extends EmployeeLoginGUI {
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     private boolean verifyAdminLogin(String empID, String username, String password) {

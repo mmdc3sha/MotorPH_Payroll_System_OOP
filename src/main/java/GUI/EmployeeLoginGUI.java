@@ -105,7 +105,7 @@ public abstract class EmployeeLoginGUI extends JFrame {
         });
     }
 
-    protected abstract void connectToDatabase();
+    protected abstract Connection connectToDatabase();
 
     protected boolean verifyLogin(String empID, String username, String password) {
         String query = "SELECT * FROM LoginCredentials WHERE emp_id = ? AND username = ? AND password = ?";

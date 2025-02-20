@@ -1,5 +1,10 @@
 package GUI;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.PreparedStatement;
+
 public class ConcretePayroll extends AbstractPayroll implements PayrollOperationsInterface{
     public ConcretePayroll(String payslip_no, String payPeriodStart, String payPeriodEnd, String employeeName, String firstName,
                            String lastName, String emp_position, double monthly_rate, double daily_rate, int days_worked,
@@ -15,6 +20,15 @@ public class ConcretePayroll extends AbstractPayroll implements PayrollOperation
 
     @Override
     public void insertPayroll_to_Database() {
+        DatabaseConnection db = new DatabaseConnection();
+        Connection connection = db.connectToDatabase();
 
+        String insert = "INSERT INTO Payroll(payslip_no, ) VALUES(?,?,?,?,)";
+
+        try (PreparedStatement ps = connection.prepareStatement(insert)) {
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

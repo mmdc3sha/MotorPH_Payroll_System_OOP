@@ -2,6 +2,7 @@ package GUI;
 
 public abstract class AbstractPayroll {
     protected String payslip_no;
+    protected int employee_id;
     protected String payPeriodStart;
     protected String payPeriodEnd;
     protected String employeeName;
@@ -18,11 +19,12 @@ public abstract class AbstractPayroll {
     protected double clothing_allowance;
     protected double totalBenefits;
 
-    public AbstractPayroll(String payslip_no, String payPeriodStart, String payPeriodEnd,
+    public AbstractPayroll(int employee_id, String payslip_no, String payPeriodStart, String payPeriodEnd,
                            String employeeName, String firstName, String lastName, String emp_position,
                            double monthly_rate, double daily_rate, int days_worked, int overtime, double totalGrossIncome,
                            double rice_subsidy, double phone_allowance, double clothing_allowance, double totalBenefits, double totalSSSDeduction,
                            double totalPhilHealthDeduction, double totalPagIbigDeduction, double totalWithholdingTax, double totalDeductions, double totalNetIncome) {
+        this.employee_id = employee_id;
         this.payslip_no = payslip_no;
         this.payPeriodStart = payPeriodStart;
         this.payPeriodEnd = payPeriodEnd;
@@ -54,7 +56,7 @@ public abstract class AbstractPayroll {
     protected double totalDeductions;
     protected double totalNetIncome;
 
-    public AbstractPayroll(String payslipNo, String payPeriodStart, String payPeriodEnd, String employeeName, String firstName, String lastName, String empPosition, double monthlyRate, double dailyRate, int daysWorked, int overtime, double totalGrossIncome, double riceSubsidy, double phoneAllowance, double clothingAllowance, double totalBenefits) {
+    public AbstractPayroll(int employee_id, String payslipNo, String payPeriodStart, String payPeriodEnd, String employeeName, String firstName, String lastName, String empPosition, double monthlyRate, double dailyRate, int daysWorked, int overtime, double totalGrossIncome, double riceSubsidy, double phoneAllowance, double clothingAllowance, double totalBenefits) {
     }
 
 
