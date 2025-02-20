@@ -1,7 +1,6 @@
 package GUI;
 
 import javax.swing.*;
-import java.awt.event.ActionListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,7 +34,7 @@ public class MainLogin extends javax.swing.JFrame {
 
         //Directs to LoginGUI
         employeeButton.addActionListener(e -> {
-            LoginGUI employeeGUI = new LoginGUIConnection();
+            LoginGUI employeeGUI = new DatabaseConnection();
             employeeGUI.setVisible(true);
             dispose(); // Closes this Frame
         });
