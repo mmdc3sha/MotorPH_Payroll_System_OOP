@@ -54,8 +54,11 @@ public abstract class AbstractPayroll {
     protected double totalDeductions;
     protected double totalNetIncome;
 
+    public AbstractPayroll(String payslipNo, String payPeriodStart, String payPeriodEnd, String employeeName, String firstName, String lastName, String empPosition, double monthlyRate, double dailyRate, int daysWorked, int overtime, double totalGrossIncome, double riceSubsidy, double phoneAllowance, double clothingAllowance, double totalBenefits) {
+    }
+
 
     // Abstract method to be implemented by subclasses
-    public abstract void insertIntoDatabase();
+//    public abstract void insertIntoDatabase();
 }
 
