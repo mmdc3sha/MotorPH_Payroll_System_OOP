@@ -1,23 +1,19 @@
 package GUI;
 
+import javax.swing.*;
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public class ConcretePayroll extends AbstractPayroll implements PayrollOperationsInterface{
     public ConcretePayroll(int employee_id, String payslip_no, String payPeriodStart, String payPeriodEnd, String employeeName, String firstName,
                            String lastName, String emp_position, double monthly_rate, double daily_rate, int days_worked,
                            int overtime, double totalGrossIncome, double rice_subsidy, double phone_allowance,
-                           double clothing_allowance, double totalBenefits, double total_sss_deduction, double total_philhealth_deduction, double total_pagibig_deduction, double total_withholding_tax,
-                           double total_deductions, double total_net_income) {
-
+                           double clothing_allowance, double totalBenefits, double totalSSSDeduction, double totalPhilHealthDeduction, double totalPagIbigDeduction, double totalWithholdingTax,
+                           double totalDeductions, double totalNetIncome) {
         super(employee_id, payslip_no, payPeriodStart, payPeriodEnd, employeeName, firstName, lastName, emp_position,  monthly_rate, daily_rate, days_worked, overtime, totalGrossIncome, rice_subsidy, phone_allowance,
-                clothing_allowance, totalBenefits, total_sss_deduction, total_philhealth_deduction, total_pagibig_deduction, total_withholding_tax, total_deductions, total_net_income);
-
-
+                clothing_allowance, totalBenefits, totalSSSDeduction, totalPhilHealthDeduction, totalPagIbigDeduction, totalWithholdingTax, totalDeductions, totalNetIncome);
     }
-
 
     @Override
     public void insertPayroll_to_Database() {
@@ -32,28 +28,36 @@ public class ConcretePayroll extends AbstractPayroll implements PayrollOperation
             psm.setInt(1, employee_id);
             psm.setString(2, payPeriodStart);
             psm.setString(3, payPeriodEnd);
-            psm.setString(4, employeeName);
-            psm.setString(5, firstName);
-            psm.setString(6, lastName);
-            psm.setString(7, emp_position);
-            psm.setDouble(8, monthly_rate);
-            psm.setDouble(9, daily_rate);
-            psm.setInt(10, days_worked);
-            psm.setInt(11, overtime);
-            psm.setDouble(12, totalGrossIncome);
-            psm.setDouble(13, rice_subsidy);
-            psm.setDouble(14, phone_allowance);
-            psm.setDouble(15, clothing_allowance);
-            psm.setDouble(16, totalBenefits);
-            psm.setDouble(17, totalSSSDeduction);
-            psm.setDouble(18, totalPhilHealthDeduction);
-            psm.setDouble(19, totalPagIbigDeduction);
-            psm.setDouble(20, totalWithholdingTax);
-            psm.setDouble(21, totalDeductions);
-            psm.setDouble(22, totalNetIncome);
-
+            psm.setString(4, emp_position);
+            psm.setDouble(5, monthly_rate);
+            psm.setDouble(6, daily_rate);
+            psm.setInt(7, days_worked);
+            psm.setInt(8, 0); // Assuming hours worked is 0
+            psm.setInt(9, overtime);
+            psm.setDouble(10, totalGrossIncome);
+            psm.setDouble(11, rice_subsidy);
+            psm.setDouble(12, phone_allowance);
+            psm.setDouble(13, clothing_allowance);
+            psm.setDouble(14, totalBenefits);
+            psm.setDouble(15, totalSSSDeduction);
+            psm.setDouble(16, totalPhilHealthDeduction);
+            psm.setDouble(17, totalPagIbigDeduction);
+            psm.setDouble(18, totalWithholdingTax);
+            psm.setDouble(19, totalDeductions);
+            psm.setDouble(20, totalNetIncome);
+            psm.setDouble(21, 0.0); // Assuming thirteenth month pay is 0
+            psm.executeUpdate();
         } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Failed to Insert Payroll. Please try again later.");
             e.printStackTrace();
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
         }
     }
 }
