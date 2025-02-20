@@ -7,16 +7,16 @@ import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public abstract class LoginGUI extends JFrame {
+public abstract class EmployeeLoginGUI extends JFrame {
     protected JTextField emp_ID_field;
     protected JTextField usernameField;
     protected JPasswordField passwordField;
     protected Connection connection;
     protected JButton loginButton;
-    private static final Logger LOGGER = Logger.getLogger(LoginGUI.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(EmployeeLoginGUI.class.getName());
 
-    public LoginGUI() {
-        setTitle("Login to MotorPH Payroll System");
+    public EmployeeLoginGUI() {
+        setTitle("Login to MotorPH AbstractPayroll System");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setResizable(true);
@@ -83,9 +83,9 @@ public abstract class LoginGUI extends JFrame {
         // Action listener for the menu button
         menuButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                MainLogin mainLogin = new MainLogin();
-                mainLogin.setVisible(true);
-                dispose(); // Close the LoginGUI frame
+                RoleLogin roleLogin = new RoleLogin();
+                roleLogin.setVisible(true);
+                dispose(); // Close the EmployeeLoginGUI frame
             }
         });
 

@@ -2,8 +2,8 @@ package GUI;
 
 import javax.swing.*;
 
-public class MainSystemGUI {
-    public MainSystemGUI() {
+public class EmployeeSystemViewGUI {
+    public EmployeeSystemViewGUI() {
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("Main System");
@@ -14,6 +14,6 @@ public class MainSystemGUI {
 
     public static void main(String[] args) {
         // Create an instance of MainSystem to display the frame
-        new MainSystemGUI();
+        new EmployeeSystemViewGUI();
     }
 }

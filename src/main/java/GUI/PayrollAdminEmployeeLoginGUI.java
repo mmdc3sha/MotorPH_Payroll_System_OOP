@@ -5,14 +5,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
 
-public class PayrollAdminLoginGUI extends LoginGUI {
-    public PayrollAdminLoginGUI() {
+public class PayrollAdminEmployeeLoginGUI extends EmployeeLoginGUI {
+    public PayrollAdminEmployeeLoginGUI() {
         super();
 
-        // Modify the title and UI components specific to Payroll Administrators
-        setTitle("MotorPH Payroll : Login as Admin");
+        // Modify the title and UI components specific to AbstractPayroll Administrators
+        setTitle("MotorPH AbstractPayroll : Login as Admin");
 
-        // Action listener for the login button specific to Payroll Administrators
+        // Action listener for the login button specific to AbstractPayroll Administrators
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -62,7 +62,7 @@ public class PayrollAdminLoginGUI extends LoginGUI {
     }
 
     public static void main(String[] args) {
-        MainLogin main = new MainLogin();
+        RoleLogin main = new RoleLogin();
         main.setVisible(true);
     }
 }

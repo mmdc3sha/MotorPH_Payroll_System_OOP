@@ -1,7 +1,7 @@
 package GUI;
 import java.sql.DriverManager;
 
-public class DatabaseConnection extends LoginGUI {
+public class DatabaseConnection extends EmployeeLoginGUI {
     @Override
     protected void connectToDatabase() {
         try {

@@ -48,7 +48,7 @@ public class AdminSystemViewGUI {
 
         JButton profileBtn = new JButton("Profile");
         JButton employeeRecordsBtn = new JButton("Employee Records");
-        JButton payrollBtn = new JButton("Payroll");
+        JButton payrollBtn = new JButton("AbstractPayroll");
         JButton attendanceBtn = new JButton("Attendance");
         JButton inquiryBtn = new JButton("Inquiry");
         JButton leavesBtn = new JButton("Leave Requests");
@@ -86,7 +86,7 @@ public class AdminSystemViewGUI {
         employeeRecordsPanel.setLayout(null);
 
         JPanel payrollPanel = new JPanel();
-        payrollPanel.add(new JLabel("Payroll View"));
+        payrollPanel.add(new JLabel("AbstractPayroll View"));
         payrollPanel.setLayout(null);
 
         JPanel attendancePanel = new JPanel();
@@ -135,7 +135,7 @@ public class AdminSystemViewGUI {
         emp_position_comboBox.setModel(new DefaultComboBoxModel());
         //Employee Department
 
-        // Add components to the Payroll Panel
+        // Add components to the AbstractPayroll Panel
             payrollPanel.add(emp_ID_field);
             payrollPanel.add(emp_ID_label);
             payrollPanel.add(emp_NameLabel);
@@ -148,7 +148,7 @@ public class AdminSystemViewGUI {
         // Add individual panels to the main panel
         mainPanel.add(profilePanel, "Profile");
         mainPanel.add(employeeRecordsPanel, "EmployeeRecords");
-        mainPanel.add(payrollPanel, "Payroll");
+        mainPanel.add(payrollPanel, "AbstractPayroll");
         mainPanel.add(attendancePanel, "Attendance");
         mainPanel.add(inquiryPanel, "Inquiry");
         mainPanel.add(leavesPanel, "Leave Requests");
@@ -156,7 +156,7 @@ public class AdminSystemViewGUI {
         // Add action listeners to the buttons
         profileBtn.addActionListener(e -> cardLayout.show(mainPanel, "Profile"));
         employeeRecordsBtn.addActionListener(e -> cardLayout.show(mainPanel, "EmployeeRecords"));
-        payrollBtn.addActionListener(e -> cardLayout.show(mainPanel, "Payroll"));
+        payrollBtn.addActionListener(e -> cardLayout.show(mainPanel, "AbstractPayroll"));
         attendanceBtn.addActionListener(e -> cardLayout.show(mainPanel, "Attendance"));
         inquiryBtn.addActionListener(e -> cardLayout.show(mainPanel, "Inquiry"));
         leavesBtn.addActionListener(e -> cardLayout.show(mainPanel, "Leave Requests"));
@@ -164,8 +164,8 @@ public class AdminSystemViewGUI {
         // Logs out of the System
         exitBtn.addActionListener(e ->  {
                 AdminSystemViewGUI.this.frame.dispose();
-                MainLogin mainLogin = new MainLogin();
-                mainLogin.setVisible(true);
+                RoleLogin roleLogin = new RoleLogin();
+                roleLogin.setVisible(true);
         });
 
         // Frame Components

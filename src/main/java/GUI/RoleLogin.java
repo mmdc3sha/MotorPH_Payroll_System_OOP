@@ -4,11 +4,11 @@ import javax.swing.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class MainLogin extends javax.swing.JFrame {
-    private static final Logger LOGGER = Logger.getLogger(LoginGUI.class.getName());
+public class RoleLogin extends javax.swing.JFrame {
+    private static final Logger LOGGER = Logger.getLogger(EmployeeLoginGUI.class.getName());
 
-    public MainLogin() {
-        setTitle("MotorPH Payroll System");
+    public RoleLogin() {
+        setTitle("MotorPH AbstractPayroll System");
         setSize(960, 780);
         setLocationRelativeTo(null);
         setLayout(null);
@@ -32,16 +32,16 @@ public class MainLogin extends javax.swing.JFrame {
         employeeButton.setBounds(370, 300, 200, 50);
         administratorButton.setBounds(370, 350, 200, 50);
 
-        //Directs to LoginGUI
+        //Directs to EmployeeLoginGUI
         employeeButton.addActionListener(e -> {
-            LoginGUI employeeGUI = new DatabaseConnection();
+            EmployeeLoginGUI employeeGUI = new DatabaseConnection();
             employeeGUI.setVisible(true);
             dispose(); // Closes this Frame
         });
 
-        //Directs to Payroll Admin Login GUI
+        //Directs to AbstractPayroll Admin Login GUI
         administratorButton.addActionListener(e -> {
-            PayrollAdminLoginGUI payrollAdminGUI = new PayrollAdminLoginGUI();
+            PayrollAdminEmployeeLoginGUI payrollAdminGUI = new PayrollAdminEmployeeLoginGUI();
             payrollAdminGUI.setVisible(true);
             dispose();
         });
@@ -52,6 +52,6 @@ public class MainLogin extends javax.swing.JFrame {
     }
 
     public static void main(String[] args) {
-        new MainLogin().setVisible(true);
+        new RoleLogin().setVisible(true);
     }
 }
