@@ -115,6 +115,7 @@ public abstract class LoginGUI extends JFrame {
             preparedStatement.setString(3, password);
             ResultSet rs = preparedStatement.executeQuery();
             return rs.next(); // Returns true if a matching record is found
+
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Error verifying login", e);
             return false;
