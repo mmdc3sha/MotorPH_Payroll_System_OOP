@@ -120,6 +120,7 @@ public class AdminSystemViewGUI {
 
             //Employee Position
             JComboBox<String> department = new JComboBox<>();
+
             //Employee Department
             JLabel employee_department_label = new JLabel();
             JComboBox<String> emp_department_box = new JComboBox<>();
@@ -130,6 +131,8 @@ public class AdminSystemViewGUI {
             emp_department_box.addItem("Customer Service & Relations");
             emp_department_box.addItem("Supply Chains and Logistic");
             emp_department_box.addItem("Finance Department");
+
+
         JPanel attendancePanel = new JPanel();
         attendancePanel.add(new JLabel("Attendance View"));
         attendancePanel.setLayout(null);
@@ -151,6 +154,13 @@ public class AdminSystemViewGUI {
             payrollPanel.add(emp_firstNameTxt);
             payrollPanel.add(emp_surnameLabel);
             payrollPanel.add(emp_surnameTxt);
+            payrollPanel.add(period_start_date);
+            payrollPanel.add(period_start_dateTxt);
+            payrollPanel.add(period_end_date);
+            payrollPanel.add(period_end_dateTxt);
+            payrollPanel.add(department);
+            payrollPanel.add(emp_department_box);
+
 
 
 
