@@ -9,7 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-public class AdminSystemViewGUI extends ConcretePayroll {
+public class AdminSystemViewGUI {
     private final JFrame frame;
     private final JPanel mainPanel;
     private final CardLayout cardLayout;
@@ -52,7 +52,7 @@ public class AdminSystemViewGUI extends ConcretePayroll {
 
         JButton profileBtn = new JButton("Profile");
         JButton employeeRecordsBtn = new JButton("Employee Records");
-        JButton payrollBtn = new JButton("AbstractPayroll");
+        JButton payrollBtn = new JButton("Payroll");
         JButton attendanceBtn = new JButton("Attendance");
         JButton inquiryBtn = new JButton("Inquiry");
         JButton leavesBtn = new JButton("Leave Requests");
@@ -90,7 +90,7 @@ public class AdminSystemViewGUI extends ConcretePayroll {
         employeeRecordsPanel.setLayout(null);
 
         JPanel payrollPanel = new JPanel();
-        payrollPanel.add(new JLabel("AbstractPayroll View"));
+        payrollPanel.add(new JLabel("Payroll View"));
         payrollPanel.setLayout(null);
             //2.PAYROLL PANEL
             //Payslip No.
@@ -101,8 +101,8 @@ public class AdminSystemViewGUI extends ConcretePayroll {
             //Employee ID:
             JLabel emp_ID_label = new JLabel("Employee ID:");
             JTextField emp_ID_field = new JTextField("Enter employee ID");
-            emp_ID_label.setBounds(1,30,30,20);
-            emp_ID_field.setBounds(2, 30, 100, 20);
+            emp_ID_label.setBounds(10,30,200,30);
+            emp_ID_field.setBounds(100, 30, 100, 30);
 
             //Employee Name
             JLabel emp_NameLabel = new JLabel("Employee Name:");
@@ -112,18 +112,24 @@ public class AdminSystemViewGUI extends ConcretePayroll {
 
             //Period Start Date
             JLabel period_start_date = new JLabel("Period Start Date:");
-            JSpinner period_start_dateSpinner = new JSpinner();
+            JTextField period_start_dateTxt = new JTextField("Period Start Date:");
 
             //Period End Date
             JLabel period_end_date = new JLabel("Period End Date:");
-            JSpinner period_end_dateSpinner = new JSpinner();
+            JTextField period_end_dateTxt = new JTextField("Period End Date:");
 
             //Employee Position
-            JLabel emp_position_label = new JLabel("Employee Position:");
-            JComboBox emp_position_comboBox = new JComboBox();
-            emp_position_comboBox.setModel(new DefaultComboBoxModel());
+            JComboBox<String> department = new JComboBox<>();
             //Employee Department
-
+            JLabel employee_department_label = new JLabel();
+            JComboBox<String> emp_department_box = new JComboBox<>();
+            emp_department_box.addItem("HR Department");
+            emp_department_box.addItem("IT Department");
+            emp_department_box.addItem("Account Rank and File");
+            emp_department_box.addItem("Sales & Marketing");
+            emp_department_box.addItem("Customer Service & Relations");
+            emp_department_box.addItem("Supply Chains and Logistic");
+            emp_department_box.addItem("Finance Department");
         JPanel attendancePanel = new JPanel();
         attendancePanel.add(new JLabel("Attendance View"));
         attendancePanel.setLayout(null);
