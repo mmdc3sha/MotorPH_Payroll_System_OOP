@@ -9,12 +9,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-public class AdminSystemViewGUI implements InterfaceEmployeeRecords, InterfaceAdminProfile {
+public class AdminSystemViewGUI extends ConcretePayroll {
     private final JFrame frame;
     private final JPanel mainPanel;
     private final CardLayout cardLayout;
     private static final Logger LOGGER = Logger.getLogger(AdminSystemViewGUI.class.getName());
     public AdminSystemViewGUI() {
+
         frame = new JFrame("MotorPH: Administrator Mode");
         frame.setSize(1920, 1080);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -136,28 +137,6 @@ public class AdminSystemViewGUI implements InterfaceEmployeeRecords, InterfaceAd
         inquiryPanel.setLayout(null);
 
         //PROFILE PANEL
-        InterfaceEmployeeRecords empRec = new InterfaceEmployeeRecords() {
-            @Override
-            public void getEmployeeRecords() {
-
-            }
-
-            @Override
-            public void addEmployee() {
-
-            }
-
-            @Override
-            public void removeEmployee() {
-
-            }
-
-            @Override
-            public void updateEmployeeDetails() {
-
-            }
-        };
-
 
         // Add components to the AbstractPayroll Panel
             payrollPanel.add(emp_ID_field);
