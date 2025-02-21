@@ -1,12 +1,15 @@
 package GUI;
 
+import AdminView.InterfaceAdminProfile;
+import AdminView.InterfaceEmployeeRecords;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-public class AdminSystemViewGUI {
+public class AdminSystemViewGUI implements InterfaceEmployeeRecords, InterfaceAdminProfile {
     private final JFrame frame;
     private final JPanel mainPanel;
     private final CardLayout cardLayout;
@@ -88,6 +91,37 @@ public class AdminSystemViewGUI {
         JPanel payrollPanel = new JPanel();
         payrollPanel.add(new JLabel("AbstractPayroll View"));
         payrollPanel.setLayout(null);
+            //2.PAYROLL PANEL
+            //Payslip No.
+            JLabel payslipNumLabel = new JLabel("Payslip No.:");
+            JTextField payslipNumField = new JTextField();
+
+
+            //Employee ID:
+            JLabel emp_ID_label = new JLabel("Employee ID:");
+            JTextField emp_ID_field = new JTextField("Enter employee ID");
+            emp_ID_label.setBounds(1,30,30,20);
+            emp_ID_field.setBounds(2, 30, 100, 20);
+
+            //Employee Name
+            JLabel emp_NameLabel = new JLabel("Employee Name:");
+            JTextField emp_firstNameTxt = new JTextField("Enter First Name:");
+            JLabel emp_surnameLabel = new JLabel("Employee Surname:");
+            JTextField emp_surnameTxt = new JTextField("Enter Last Name:");
+
+            //Period Start Date
+            JLabel period_start_date = new JLabel("Period Start Date:");
+            JSpinner period_start_dateSpinner = new JSpinner();
+
+            //Period End Date
+            JLabel period_end_date = new JLabel("Period End Date:");
+            JSpinner period_end_dateSpinner = new JSpinner();
+
+            //Employee Position
+            JLabel emp_position_label = new JLabel("Employee Position:");
+            JComboBox emp_position_comboBox = new JComboBox();
+            emp_position_comboBox.setModel(new DefaultComboBoxModel());
+            //Employee Department
 
         JPanel attendancePanel = new JPanel();
         attendancePanel.add(new JLabel("Attendance View"));
@@ -102,38 +136,28 @@ public class AdminSystemViewGUI {
         inquiryPanel.setLayout(null);
 
         //PROFILE PANEL
+        InterfaceEmployeeRecords empRec = new InterfaceEmployeeRecords() {
+            @Override
+            public void getEmployeeRecords() {
 
-        //2.PAYROLL PANEL
-        //Payslip No.
-        JLabel payslipNumLabel = new JLabel("Payslip No.:");
-        JTextField payslipNumField = new JTextField();
+            }
 
+            @Override
+            public void addEmployee() {
 
-        //Employee ID:
-        JLabel emp_ID_label = new JLabel("Employee ID:");
-        JTextField emp_ID_field = new JTextField("Enter employee ID");
-        emp_ID_label.setBounds(1,30,30,20);
-        emp_ID_field.setBounds(2, 30, 100, 20);
+            }
 
-        //Employee Name
-        JLabel emp_NameLabel = new JLabel("Employee Name:");
-        JTextField emp_firstNameTxt = new JTextField("Enter First Name:");
-        JLabel emp_surnameLabel = new JLabel("Employee Surname:");
-        JTextField emp_surnameTxt = new JTextField("Enter Last Name:");
+            @Override
+            public void removeEmployee() {
 
-        //Period Start Date
-        JLabel period_start_date = new JLabel("Period Start Date:");
-        JSpinner period_start_dateSpinner = new JSpinner();
+            }
 
-        //Period End Date
-        JLabel period_end_date = new JLabel("Period End Date:");
-        JSpinner period_end_dateSpinner = new JSpinner();
+            @Override
+            public void updateEmployeeDetails() {
 
-        //Employee Position
-        JLabel emp_position_label = new JLabel("Employee Position:");
-        JComboBox emp_position_comboBox = new JComboBox();
-        emp_position_comboBox.setModel(new DefaultComboBoxModel());
-        //Employee Department
+            }
+        };
+
 
         // Add components to the AbstractPayroll Panel
             payrollPanel.add(emp_ID_field);

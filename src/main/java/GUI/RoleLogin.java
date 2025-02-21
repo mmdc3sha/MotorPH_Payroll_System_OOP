@@ -41,7 +41,7 @@ public class RoleLogin extends javax.swing.JFrame {
 
         //Directs to AbstractPayroll Admin Login GUI
         administratorButton.addActionListener(e -> {
-            PayrollAdminEmployeeLoginGUI payrollAdminGUI = new PayrollAdminEmployeeLoginGUI();
+            PayrollAdminLoginGUI payrollAdminGUI = new PayrollAdminLoginGUI();
             payrollAdminGUI.setVisible(true);
             dispose();
         });

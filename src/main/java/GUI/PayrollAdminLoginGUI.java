@@ -5,8 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
 
-public class PayrollAdminEmployeeLoginGUI extends EmployeeLoginGUI {
-    public PayrollAdminEmployeeLoginGUI() {
+public class PayrollAdminLoginGUI extends EmployeeLoginGUI {
+    public PayrollAdminLoginGUI() {
         super();
 
         // Modify the title and UI components specific to AbstractPayroll Administrators
