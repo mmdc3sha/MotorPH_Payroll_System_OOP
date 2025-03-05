@@ -7,8 +7,6 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.sql.*;
@@ -48,7 +46,7 @@ public class AdminSystemViewGUI {
 
         // Panel for the Left Side
         JPanel menuPanel = new JPanel();
-        menuPanel.setBackground(new Color(203, 203, 203, 255));
+        menuPanel.setBackground(new Color(225, 249, 255, 255));
         menuPanel.setLayout(new GridBagLayout());
         menuPanel.setBounds(0, 0, 300, 1080);
 
@@ -66,10 +64,11 @@ public class AdminSystemViewGUI {
         adminIcon = new ImageIcon(resizedAdminIcon);
         JLabel adminIconLabel = new JLabel(adminIcon);
         JLabel adminLabel = new JLabel(" Administrator");
-        adminLabel.setFont(new Font("Lato", Font.BOLD, 16));
+        adminLabel.setFont(new Font("Lato", Font.BOLD, 23));
 
         JPanel adminPanel = new JPanel();
         adminPanel.setPreferredSize(new Dimension(300, 60));
+        adminPanel.setBackground(new Color(225, 249, 255, 255));
         adminPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         adminPanel.add(adminIconLabel);
         adminPanel.add(adminLabel);
@@ -97,8 +96,14 @@ public class AdminSystemViewGUI {
         inquiryBtn.setFont(latoFont);
         JButton leavesBtn = new JButton("Leave Requests");
         leavesBtn.setFont(latoFont);
-        JButton exitBtn = new JButton("Logout");
+        //Logout Button
+        ImageIcon logoutIcon = new ImageIcon("src/main/resources/logout.png");
+        Image resizedLogoutIcon = logoutIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+        ImageIcon resizedLogout = new ImageIcon(resizedLogoutIcon);
+        JButton exitBtn = new JButton("Logout", resizedLogout);
         exitBtn.setFont(latoFont);
+        exitBtn.setBackground(new Color(0, 76, 153));
+        exitBtn.setForeground(Color.WHITE);
 
         //GC.GRIDY Adds the Button in Order
             gbc.gridy = 0;
@@ -124,12 +129,13 @@ public class AdminSystemViewGUI {
 
         // Create individual panels for each button
         JPanel employeeRecordsPanel = new JPanel();
+        employeeRecordsPanel.setBackground(new Color(204, 245, 255));
         employeeRecordsPanel.add(new JLabel("Employee Records"));
         employeeRecordsPanel.setLayout(null);
             // Components for the Employee Records
             JLabel emp_record_label = new JLabel("Employee Record");
             emp_record_label.setFont(new Font("Lato", Font.BOLD, 20));
-            emp_record_label.setBounds(30, 30, 400, 20);
+            emp_record_label.setBounds(30, 30, 400, 50);
 
             JTextField emp_record_search = new JTextField();
             emp_record_search.setBounds(130, 80, 300, 40);
@@ -140,6 +146,7 @@ public class AdminSystemViewGUI {
             String placeholder = "Search";
             emp_record_search.setText(placeholder);
             emp_record_search.setForeground(Color.GRAY);
+            employeeRecordsPanel.setBackground(Color.WHITE);
             emp_record_search.addFocusListener(new FocusListener() {
 
                 /**
@@ -164,17 +171,23 @@ public class AdminSystemViewGUI {
                     }
                 }
             });
-            JButton refreshBtn = new JButton();
-            refreshBtn.setBounds(320, 80, 50,40);
+            ImageIcon refreshIcon = new ImageIcon("src/main/resources/reload.png");
+            Image resizedRefreshIcon = refreshIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+            ImageIcon resizedRefresh = new ImageIcon(resizedRefreshIcon);
+
+            JButton refreshBtn = new JButton(resizedRefresh);
+            refreshBtn.setBounds(420, 80, 50,40);
+            
             JButton addEmployeeBtn = new JButton("Add");
             addEmployeeBtn.setFont(latoFont);
-            addEmployeeBtn.setBounds(430, 80, 100, 40);
+            addEmployeeBtn.setBounds(470, 80, 100, 40);
+            addEmployeeBtn.setToolTipText("Adds New Employee to the List");
             JButton deleteEmployeeBtn = new JButton("Delete");
             deleteEmployeeBtn.setFont(latoFont);
-            deleteEmployeeBtn.setBounds(530, 80, 100, 40);
+            deleteEmployeeBtn.setBounds(570, 80, 100, 40);
             JButton updateEmployeeBtn = new JButton("Update");
             updateEmployeeBtn.setFont(latoFont);
-            updateEmployeeBtn.setBounds(630, 80, 100, 40);
+            updateEmployeeBtn.setBounds(670, 80, 100, 40);
 
             DefaultTableModel emp_table = new DefaultTableModel();
             emp_table.addColumn("ID");
@@ -225,6 +238,10 @@ public class AdminSystemViewGUI {
             }
         });
 
+        refreshBtn.addActionListener(e -> {
+           sorter.setRowFilter(null);
+           emp_record_search.setText("");
+        });
         // Add components to the Employee Records Panel
         employeeRecordsPanel.add(emp_record_label);
         employeeRecordsPanel.add(scrollPane);
