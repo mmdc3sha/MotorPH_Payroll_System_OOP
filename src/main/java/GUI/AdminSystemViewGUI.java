@@ -58,20 +58,33 @@ public class AdminSystemViewGUI {
         gbc.weightx = 1.0;
         gbc.ipady = 20; // This will increase the height of the buttons
 
+        //Image Icons
+        ImageIcon motorPHIcon = new ImageIcon("src/main/resources/motorph_logo.png");
         ImageIcon adminIcon = new ImageIcon("src/main/resources/user-gear.png");
         Image icon = adminIcon.getImage();
         Image resizedAdminIcon = icon.getScaledInstance(32, 32, Image.SCALE_SMOOTH);
         adminIcon = new ImageIcon(resizedAdminIcon);
+
+        // MotorPH Logo
+        JLabel motorph_logo = new JLabel(motorPHIcon);
+        menuPanel.add(motorph_logo);
+
+        //Admin Icon for Admin Panel
         JLabel adminIconLabel = new JLabel(adminIcon);
         JLabel adminLabel = new JLabel(" Administrator");
         adminLabel.setFont(new Font("Lato", Font.BOLD, 23));
 
+
+        // Admin Panel - Displays "Administrator Label" and current system date and time
         JPanel adminPanel = new JPanel();
         adminPanel.setPreferredSize(new Dimension(300, 60));
         adminPanel.setBackground(new Color(225, 249, 255, 255));
         adminPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         adminPanel.add(adminIconLabel);
         adminPanel.add(adminLabel);
+
+
+
         // Add date and time label
         JLabel dateTimeLabel = new JLabel();
         dateTimeLabel.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -84,6 +97,7 @@ public class AdminSystemViewGUI {
             dateTimeLabel.setFont(new Font("Lato", Font.BOLD, 14));
         });
         timer.start();
+
         // Creating new JButtons for the MenuPanel
         Font latoFont = new Font("Lato", Font.BOLD, 13);
         JButton employeeRecordsBtn = new JButton("Employee Records");
@@ -96,7 +110,8 @@ public class AdminSystemViewGUI {
         inquiryBtn.setFont(latoFont);
         JButton leavesBtn = new JButton("Leave Requests");
         leavesBtn.setFont(latoFont);
-        //Logout Button
+
+        // Logout Button
         ImageIcon logoutIcon = new ImageIcon("src/main/resources/logout.png");
         Image resizedLogoutIcon = logoutIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
         ImageIcon resizedLogout = new ImageIcon(resizedLogoutIcon);
@@ -105,34 +120,38 @@ public class AdminSystemViewGUI {
         exitBtn.setBackground(new Color(0, 76, 153));
         exitBtn.setForeground(Color.WHITE);
 
-        //GC.GRIDY Adds the Button in Order
+        // GC.GRIDY Adds the Button in Order
+            gbc.gridx = 0;
             gbc.gridy = 0;
-            menuPanel.add(adminPanel, gbc);
-            gbc.gridy = 1;
-            menuPanel.add(payrollBtn, gbc);
+            menuPanel.add(motorph_logo, gbc);
             gbc.gridy = 2;
-            menuPanel.add(employeeRecordsBtn, gbc);
+            menuPanel.add(adminPanel, gbc);
             gbc.gridy = 3;
-            menuPanel.add(attendanceBtn, gbc);
+            menuPanel.add(payrollBtn, gbc);
             gbc.gridy = 4;
-            menuPanel.add(leavesBtn, gbc);
+            menuPanel.add(employeeRecordsBtn, gbc);
             gbc.gridy = 5;
-            menuPanel.add(inquiryBtn, gbc);
+            menuPanel.add(attendanceBtn, gbc);
             gbc.gridy = 6;
+            menuPanel.add(leavesBtn, gbc);
+            gbc.gridy = 7;
+            menuPanel.add(inquiryBtn, gbc);
+            gbc.gridy = 8;
             menuPanel.add(exitBtn, gbc);
 
-        // Create the main panel with CardLayout
+        //Create the main panel with CardLayout
         mainPanel = new JPanel();
         cardLayout = new CardLayout();
         mainPanel.setLayout(cardLayout);
         mainPanel.setBounds(300, 0, 1620, 1080);
 
-        // Create individual panels for each button
+        //Create individual panels for each button
         JPanel employeeRecordsPanel = new JPanel();
         employeeRecordsPanel.setBackground(new Color(204, 245, 255));
         employeeRecordsPanel.add(new JLabel("Employee Records"));
         employeeRecordsPanel.setLayout(null);
-            // Components for the Employee Records
+
+        //Components for the Employee Records
             JLabel emp_record_label = new JLabel("Employee Record");
             emp_record_label.setFont(new Font("Lato", Font.BOLD, 20));
             emp_record_label.setBounds(30, 30, 400, 50);
@@ -142,6 +161,8 @@ public class AdminSystemViewGUI {
             JButton searchBtn = new JButton("Search");
             searchBtn.setFont(latoFont);
             searchBtn.setBounds(30, 80, 100, 40);
+
+
             //Placeholder text for the Search Textfield
             String placeholder = "Search";
             emp_record_search.setText(placeholder);
@@ -171,24 +192,34 @@ public class AdminSystemViewGUI {
                     }
                 }
             });
+
+            // Resizes the Refresh icon from 512 x 512 px -> 16 by 16.
             ImageIcon refreshIcon = new ImageIcon("src/main/resources/reload.png");
             Image resizedRefreshIcon = refreshIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
             ImageIcon resizedRefresh = new ImageIcon(resizedRefreshIcon);
 
+            //Adds the refresh Button
             JButton refreshBtn = new JButton(resizedRefresh);
             refreshBtn.setBounds(420, 80, 50,40);
-            
+
+            //Adds the Employee Button - Displays a Popup window where you can add new employees to the record
             JButton addEmployeeBtn = new JButton("Add");
             addEmployeeBtn.setFont(latoFont);
             addEmployeeBtn.setBounds(470, 80, 100, 40);
             addEmployeeBtn.setToolTipText("Adds New Employee to the List");
+            addEmployeeBtn.setBackground(Color.GREEN);
+
+            //Adds the Delete Employee Button - "Deletes a Cell in the Table"
             JButton deleteEmployeeBtn = new JButton("Delete");
             deleteEmployeeBtn.setFont(latoFont);
             deleteEmployeeBtn.setBounds(570, 80, 100, 40);
+
+            //Adds the Update Button - Updates the Table - "Commit New Changes"
             JButton updateEmployeeBtn = new JButton("Update");
             updateEmployeeBtn.setFont(latoFont);
             updateEmployeeBtn.setBounds(670, 80, 100, 40);
 
+            // Creates a Table Model
             DefaultTableModel emp_table = new DefaultTableModel();
             emp_table.addColumn("ID");
             emp_table.addColumn("Last Name");
