@@ -14,6 +14,7 @@ public class AddEmployeeGUI extends JDialog {
         JPanel panel = new JPanel();
         panel.add(new JLabel("Add Employee Form"));
         getContentPane().add(panel);
+        panel.setLayout(null);
 
         JTextField nameField = new JTextField(20);
         JTextField positionField = new JTextField(20);

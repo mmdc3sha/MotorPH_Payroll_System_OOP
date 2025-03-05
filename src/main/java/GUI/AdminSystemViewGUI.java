@@ -164,7 +164,8 @@ public class AdminSystemViewGUI {
                     }
                 }
             });
-
+            JButton refreshBtn = new JButton();
+            refreshBtn.setBounds(320, 80, 50,40);
             JButton addEmployeeBtn = new JButton("Add");
             addEmployeeBtn.setFont(latoFont);
             addEmployeeBtn.setBounds(430, 80, 100, 40);
@@ -204,6 +205,8 @@ public class AdminSystemViewGUI {
             employeeRecordsTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
             employeeRecordsTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
             JScrollPane scrollPane = new JScrollPane(employeeRecordsTable);
+            scrollPane.setWheelScrollingEnabled(true);
+            scrollPane.setViewportView(employeeRecordsTable);
             scrollPane.setBounds(30, 120, 1580, 840);
 
         //Buttons Functions - addEmployeeBtn, deleteEmployeeBtn, updateEmployeeBtn
@@ -236,6 +239,7 @@ public class AdminSystemViewGUI {
             employeeRecordsPanel.add(deleteEmployeeBtn);
             employeeRecordsPanel.add(updateEmployeeBtn);
             employeeRecordsPanel.add(emp_record_label);
+            employeeRecordsPanel.add(refreshBtn);
 
 
 
