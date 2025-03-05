@@ -4,7 +4,9 @@ import AdminView.InterfaceAdminProfile;
 import AdminView.InterfaceEmployeeRecords;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
@@ -140,8 +142,35 @@ public class AdminSystemViewGUI {
             updateEmployeeBtn.setFont(latoFont);
             updateEmployeeBtn.setBounds(630, 80, 100, 40);
 
-            JTable employeeRecordsTable = new JTable();
-            employeeRecordsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+            DefaultTableModel emp_table = new DefaultTableModel();
+            emp_table.addColumn("ID");
+            emp_table.addColumn("Last Name");
+            emp_table.addColumn("First Name");
+            emp_table.addColumn("Birthday");
+            emp_table.addColumn("Address");
+            emp_table.addColumn("Phone Number");
+            emp_table.addColumn("SSS No.");
+            emp_table.addColumn("Philhealth No.");
+            emp_table.addColumn("TIN No.");
+            emp_table.addColumn("Pag-ibig No.");
+            emp_table.addColumn("Employment Status");
+            emp_table.addColumn("Immediate Supervisor");
+            emp_table.addColumn("Basic Salary");
+            emp_table.addColumn("Rate /hr");
+            emp_table.addColumn("Rice Subsidy");
+            emp_table.addColumn("Phone Allowance");
+            emp_table.addColumn("Clothing Allowance");
+            emp_table.addColumn("Gross Semi-Monthly Rate");
+
+        JTable employeeRecordsTable = new JTable(emp_table);
+        JScrollPane scrollPane = new JScrollPane(employeeRecordsTable);
+
+        employeeRecordsPanel.add(emp_record_label, BorderLayout.NORTH);
+        employeeRecordsPanel.add(scrollPane, BorderLayout.SOUTH);
+
+        // Fetch data from the database and fill the table
+        fetchData(emp_table);
+
             //Add components to the Employee Records Panel
             employeeRecordsPanel.add(emp_record_label);
             employeeRecordsPanel.add(searchBtn);
@@ -149,7 +178,7 @@ public class AdminSystemViewGUI {
             employeeRecordsPanel.add(addEmployeeBtn);
             employeeRecordsPanel.add(deleteEmployeeBtn);
             employeeRecordsPanel.add(updateEmployeeBtn);
-            employeeRecordsPanel.add(employeeRecordsTable);
+            employeeRecordsPanel.add(emp_record_label);
 
 
 
@@ -260,6 +289,30 @@ public class AdminSystemViewGUI {
         frame.getContentPane().add(menuPanel);
         frame.getContentPane().add(mainPanel);
         frame.setVisible(true);
+    }
+    private void fetchData(DefaultTableModel employeeRecordsModel) {
+        String dbURL = "jdbc:sqlite:src/main/java/MotorPHDatabase.db";
+        String sql = "SELECT employee_id, first_name, last_name, birthday, address, phone_number, SSS_number, philhealth_number, TIN_number, employee_id, last_name, first_name, birthday, address, phone_number, SSS_number, philhealth_number, TIN_number, Pagibig_number, employment_status, job_position, Immediate_Supervisor, basic_salary, hourly_rate, rice_subsidy, phone_allowance, clothing_allowance, gross_semi_monthly_rate, * FROM Employee";
+
+        try (Connection conn = DriverManager.getConnection(dbURL);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql);) {
+            
+            employeeRecordsModel.setRowCount(0);
+            
+            while (rs.next()) {
+                Object[] row = {
+                        rs.getInt("ID"),
+                        rs.getString("Name"),
+                        rs.getString("FirstName"),
+                        rs.getString("Surname"),
+                };
+                employeeRecordsModel.addRow(row);
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setVisible(boolean visible) {
