@@ -5,7 +5,12 @@ import AdminView.InterfaceEmployeeRecords;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -75,7 +80,7 @@ public class AdminSystemViewGUI {
 
         // Timer to update the date and time label every second
         Timer timer = new Timer(1000, e -> {
-            SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy HH:mm:ss");
+            SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy HH:mm");
             dateTimeLabel.setText(sdf.format(new Date()));
             dateTimeLabel.setFont(new Font("Lato", Font.BOLD, 14));
         });
@@ -126,11 +131,39 @@ public class AdminSystemViewGUI {
             emp_record_label.setFont(new Font("Lato", Font.BOLD, 20));
             emp_record_label.setBounds(30, 30, 400, 20);
 
-            JTextField emp_record_search = new JTextField("Search...");
+            JTextField emp_record_search = new JTextField();
             emp_record_search.setBounds(130, 80, 300, 40);
             JButton searchBtn = new JButton("Search");
             searchBtn.setFont(latoFont);
             searchBtn.setBounds(30, 80, 100, 40);
+            //Placeholder text for the Search Textfield
+            String placeholder = "Search";
+            emp_record_search.setText(placeholder);
+            emp_record_search.setForeground(Color.GRAY);
+            emp_record_search.addFocusListener(new FocusListener() {
+
+                /**
+                 * @param e the event to be processed
+                 */
+                @Override
+                public void focusGained(FocusEvent e) {
+                    if (emp_record_search.getText().equals(placeholder)) {
+                        emp_record_search.setText("");
+                        emp_record_search.setForeground(Color.BLACK);
+                    }
+                }
+
+                /**
+                 * @param e the event to be processed
+                 */
+                @Override
+                public void focusLost(FocusEvent e) {
+                    if (emp_record_search.getText().isEmpty()) {
+                        emp_record_search.setText(placeholder);
+                        emp_record_search.setForeground(Color.GRAY);
+                    }
+                }
+            });
 
             JButton addEmployeeBtn = new JButton("Add");
             addEmployeeBtn.setFont(latoFont);
@@ -162,12 +195,36 @@ public class AdminSystemViewGUI {
             emp_table.addColumn("Clothing Allowance");
             emp_table.addColumn("Gross Semi-Monthly Rate");
 
-        JTable employeeRecordsTable = new JTable(emp_table);
-        JScrollPane scrollPane = new JScrollPane(employeeRecordsTable);
+            JTable employeeRecordsTable = new JTable(emp_table);
+            TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(emp_table);
+            employeeRecordsTable.setRowSorter(sorter);
+            employeeRecordsTable.setGridColor(Color.white);
+            employeeRecordsTable.setFont(new Font("Calibri", Font.PLAIN, 13));
+            employeeRecordsTable.setRowHeight(30);
+            employeeRecordsTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+            employeeRecordsTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+            JScrollPane scrollPane = new JScrollPane(employeeRecordsTable);
+            scrollPane.setBounds(30, 120, 1580, 840);
 
-        employeeRecordsPanel.add(emp_record_label, BorderLayout.NORTH);
-        employeeRecordsPanel.add(scrollPane, BorderLayout.SOUTH);
+        //Buttons Functions - addEmployeeBtn, deleteEmployeeBtn, updateEmployeeBtn
+        addEmployeeBtn.addActionListener(e -> {
+            AddEmployeeGUI gui = new AddEmployeeGUI(frame);
+            gui.setVisible(true);
+        });
 
+        // Sorts the table when a keyword is typed into the Search Textfield
+        searchBtn.addActionListener(e -> {
+            String keyword = emp_record_search.getText();
+            if (keyword.trim().isEmpty()) {
+                sorter.setRowFilter(null);
+            } else {
+                sorter.setRowFilter(RowFilter.regexFilter("(?i)" + keyword));
+            }
+        });
+
+        // Add components to the Employee Records Panel
+        employeeRecordsPanel.add(emp_record_label);
+        employeeRecordsPanel.add(scrollPane);
         // Fetch data from the database and fill the table
         fetchData(emp_table);
 
@@ -292,7 +349,9 @@ public class AdminSystemViewGUI {
     }
     private void fetchData(DefaultTableModel employeeRecordsModel) {
         String dbURL = "jdbc:sqlite:src/main/java/MotorPHDatabase.db";
-        String sql = "SELECT employee_id, first_name, last_name, birthday, address, phone_number, SSS_number, philhealth_number, TIN_number, employee_id, last_name, first_name, birthday, address, phone_number, SSS_number, philhealth_number, TIN_number, Pagibig_number, employment_status, job_position, Immediate_Supervisor, basic_salary, hourly_rate, rice_subsidy, phone_allowance, clothing_allowance, gross_semi_monthly_rate, * FROM Employee";
+        String sql = "SELECT employee_id, last_name, first_name, birthday, address, phone_number, SSS_number, philhealth_number, " +
+                "TIN_number, Pagibig_number, employment_status, job_position, Immediate_Supervisor, basic_salary, hourly_rate, " +
+                "rice_subsidy, phone_allowance, clothing_allowance, gross_semi_monthly_rate, * FROM Employee";
 
         try (Connection conn = DriverManager.getConnection(dbURL);
              Statement stmt = conn.createStatement();
@@ -302,10 +361,25 @@ public class AdminSystemViewGUI {
             
             while (rs.next()) {
                 Object[] row = {
-                        rs.getInt("ID"),
-                        rs.getString("Name"),
-                        rs.getString("FirstName"),
-                        rs.getString("Surname"),
+                        rs.getInt("Employee_id"),
+                        rs.getString("first_name"),
+                        rs.getString("last_name"),
+                        rs.getString("birthday"),
+                        rs.getString("address"),
+                        rs.getString("phone_number"),
+                        rs.getString("SSS_number"),
+                        rs.getString("philhealth_number"),
+                        rs.getString("TIN_number"),
+                        rs.getString("Pagibig_number"),
+                        rs.getString("employment_status"),
+                        rs.getString("job_position"),
+                        rs.getString("Immediate_Supervisor"),
+                        rs.getString("basic_salary"),
+                        rs.getString("hourly_rate"),
+                        rs.getString("rice_subsidy"),
+                        rs.getString("phone_allowance"),
+                        rs.getString("clothing_allowance"),
+                        rs.getDouble("gross_semi_monthly_rate")
                 };
                 employeeRecordsModel.addRow(row);
             }
