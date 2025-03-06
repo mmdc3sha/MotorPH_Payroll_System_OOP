@@ -1,6 +1,7 @@
 package GUI;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
@@ -8,7 +9,8 @@ import java.sql.*;
 public class PayrollAdminLoginGUI extends EmployeeLoginGUI {
     public PayrollAdminLoginGUI() {
         super();
-
+        Image appIcon = new ImageIcon(getClass().getResource("/motorph_logo.png")).getImage();
+        setIconImage(appIcon);
         // Modify the title and UI components specific to AbstractPayroll Administrators
         setTitle("MotorPH AbstractPayroll : Login as Admin");
 

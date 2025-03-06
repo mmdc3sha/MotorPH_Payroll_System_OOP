@@ -1,23 +1,23 @@
 package GUI;
 
 public abstract class AbstractPayroll {
-    protected String payslip_no;
-    protected int employee_id;
-    protected String payPeriodStart;
-    protected String payPeriodEnd;
-    protected String employeeName;
-    protected String firstName;
-    protected String lastName;
-    protected String emp_position;
-    protected double monthly_rate;
-    protected double daily_rate;
-    protected int days_worked;
-    protected int overtime;
-    protected double totalGrossIncome;
-    protected double rice_subsidy;
-    protected double phone_allowance;
-    protected double clothing_allowance;
-    protected double totalBenefits;
+    protected final String payslip_no;
+    protected final int employee_id;
+    protected final String payPeriodStart;
+    protected final String payPeriodEnd;
+    protected final String employeeName;
+    protected final String firstName;
+    protected final String lastName;
+    protected final String emp_position;
+    protected final double monthly_rate;
+    protected final double daily_rate;
+    protected final int days_worked;
+    protected final int overtime;
+    protected final double totalGrossIncome;
+    protected final double rice_subsidy;
+    protected final double phone_allowance;
+    protected final double clothing_allowance;
+    protected final double totalBenefits;
 
     public AbstractPayroll(int employee_id, String payslip_no, String payPeriodStart, String payPeriodEnd,
                            String employeeName, String firstName, String lastName, String emp_position,
@@ -49,12 +49,12 @@ public abstract class AbstractPayroll {
         this.totalNetIncome = totalNetIncome;
     }
 
-    protected double totalSSSDeduction;
-    protected double totalPhilHealthDeduction;
-    protected double totalPagIbigDeduction;
-    protected double totalWithholdingTax;
-    protected double totalDeductions;
-    protected double totalNetIncome;
+    protected final double totalSSSDeduction;
+    protected final double totalPhilHealthDeduction;
+    protected final double totalPagIbigDeduction;
+    protected final double totalWithholdingTax;
+    protected final double totalDeductions;
+    protected final double totalNetIncome;
 
 
     // Abstract method to be implemented by subclasses

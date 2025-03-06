@@ -1,8 +1,5 @@
 package GUI;
 
-import AdminView.InterfaceAdminProfile;
-import AdminView.InterfaceEmployeeRecords;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
@@ -24,6 +21,8 @@ public class AdminSystemViewGUI {
     public AdminSystemViewGUI() {
 
         frame = new JFrame("MotorPH: Administrator Mode");
+        Image appIcon = new ImageIcon(getClass().getResource("/motorph_logo.png")).getImage();
+        frame.setIconImage(appIcon);
         frame.setSize(1920, 1080);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
@@ -97,19 +96,35 @@ public class AdminSystemViewGUI {
             dateTimeLabel.setFont(new Font("Lato", Font.BOLD, 14));
         });
         timer.start();
+        //Buttons Background Color
+        Color bluish = new Color(0, 76, 153);
 
-        // Creating new JButtons for the MenuPanel
-        Font latoFont = new Font("Lato", Font.BOLD, 13);
+        // Creates new JButtons for the MenuPanel
+        Font latoFont = new Font("Lato", Font.BOLD, 14);
         JButton employeeRecordsBtn = new JButton("Employee Records");
         employeeRecordsBtn.setFont(latoFont);
+        employeeRecordsBtn.setBackground(bluish);
+        employeeRecordsBtn.setForeground(Color.WHITE);
+
         JButton payrollBtn = new JButton("Payroll");
         payrollBtn.setFont(latoFont);
+        payrollBtn.setBackground(bluish);
+        payrollBtn.setForeground(Color.WHITE);
+        
         JButton attendanceBtn = new JButton("Attendance");
         attendanceBtn.setFont(latoFont);
+        attendanceBtn.setBackground(bluish);
+        attendanceBtn.setForeground(Color.WHITE);
+
         JButton inquiryBtn = new JButton("Inquiry");
         inquiryBtn.setFont(latoFont);
+        inquiryBtn.setBackground(bluish);
+        inquiryBtn.setForeground(Color.WHITE);
+
         JButton leavesBtn = new JButton("Leave Requests");
         leavesBtn.setFont(latoFont);
+        leavesBtn.setBackground(bluish);
+        leavesBtn.setForeground(Color.WHITE);
 
         // Logout Button
         ImageIcon logoutIcon = new ImageIcon("src/main/resources/logout.png");
@@ -207,17 +222,23 @@ public class AdminSystemViewGUI {
             addEmployeeBtn.setFont(latoFont);
             addEmployeeBtn.setBounds(470, 80, 100, 40);
             addEmployeeBtn.setToolTipText("Adds New Employee to the List");
-            addEmployeeBtn.setBackground(Color.GREEN);
+            addEmployeeBtn.setBackground(new Color(5,153,10));
+            addEmployeeBtn.setForeground(Color.WHITE);
 
             //Adds the Delete Employee Button - "Deletes a Cell in the Table"
             JButton deleteEmployeeBtn = new JButton("Delete");
             deleteEmployeeBtn.setFont(latoFont);
             deleteEmployeeBtn.setBounds(570, 80, 100, 40);
+            deleteEmployeeBtn.setBackground(new Color(158,15,10));
+            deleteEmployeeBtn.setForeground(Color.WHITE);
 
             //Adds the Update Button - Updates the Table - "Commit New Changes"
             JButton updateEmployeeBtn = new JButton("Update");
             updateEmployeeBtn.setFont(latoFont);
             updateEmployeeBtn.setBounds(670, 80, 100, 40);
+            updateEmployeeBtn.setBackground(new Color(141,11,181));
+            updateEmployeeBtn.setForeground(Color.WHITE);
+
 
             // Creates a Table Model
             DefaultTableModel emp_table = new DefaultTableModel();
@@ -244,10 +265,12 @@ public class AdminSystemViewGUI {
             TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(emp_table);
             employeeRecordsTable.setRowSorter(sorter);
             employeeRecordsTable.setGridColor(Color.white);
-            employeeRecordsTable.setFont(new Font("Calibri", Font.PLAIN, 13));
-            employeeRecordsTable.setRowHeight(30);
+            employeeRecordsTable.setFont(new Font("Calibri", Font.PLAIN, 15));
+            employeeRecordsTable.setRowHeight(50);
             employeeRecordsTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
             employeeRecordsTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+
+            // Wraps the Table in a JScrollpane - adds a scrollbar
             JScrollPane scrollPane = new JScrollPane(employeeRecordsTable);
             scrollPane.setWheelScrollingEnabled(true);
             scrollPane.setViewportView(employeeRecordsTable);
@@ -276,6 +299,7 @@ public class AdminSystemViewGUI {
         // Add components to the Employee Records Panel
         employeeRecordsPanel.add(emp_record_label);
         employeeRecordsPanel.add(scrollPane);
+
         // Fetch data from the database and fill the table
         fetchData(emp_table);
 

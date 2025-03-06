@@ -8,11 +8,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public abstract class EmployeeLoginGUI extends JFrame {
-    protected JTextField emp_ID_field;
-    protected JTextField usernameField;
-    protected JPasswordField passwordField;
+    protected final JTextField emp_ID_field;
+    protected final JTextField usernameField;
+    protected final JPasswordField passwordField;
     protected Connection connection;
-    protected JButton loginButton;
+    protected final JButton loginButton;
     private static final Logger LOGGER = Logger.getLogger(EmployeeLoginGUI.class.getName());
 
     public EmployeeLoginGUI() {
