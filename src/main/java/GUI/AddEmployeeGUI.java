@@ -1,3 +1,5 @@
+package GUI;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -8,26 +10,26 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class AddEmployeeGUI extends JDialog {
-    private JTextField txtEmployeeID;
-    private JTextField txtFirstName;
-    private JTextField txtLastName;
-    private JTextField txtBirthday;
-    private JTextField txtAddress;
-    private JTextField txtPhoneNumber;
-    private JComboBox<String> cbEmploymentStatus;
-    private JTextField txtJobPosition;
-    private JTextField txtImmediateSupervisor;
-    private JTextField txtSSSNumber;
-    private JTextField txtPhilhealthNumber;
-    private JTextField txtTINNumber;
-    private JTextField txtPagIbigNumber;
-    private JTextField txtBasicSalary;
-    private JTextField txtHourlyRate;
-    private JTextField txtRiceSubsidy;
-    private JTextField txtPhoneAllowance;
-    private JTextField txtClothingAllowance;
-    private JTextField txtGrossSemiMonthlyRate;
-    private JButton saveButton;
+    private final JTextField txtEmployeeID;
+    private final JTextField txtFirstName;
+    private final JTextField txtLastName;
+    private final JTextField txtBirthday;
+    private final JTextField txtAddress;
+    private final JTextField txtPhoneNumber;
+    private final JComboBox<String> cbEmploymentStatus;
+    private final JTextField txtJobPosition;
+    private final JTextField txtImmediateSupervisor;
+    private final JTextField txtSSSNumber;
+    private final JTextField txtPhilhealthNumber;
+    private final JTextField txtTINNumber;
+    private final JTextField txtPagIbigNumber;
+    private final JTextField txtBasicSalary;
+    private final JTextField txtHourlyRate;
+    private final JTextField txtRiceSubsidy;
+    private final JTextField txtPhoneAllowance;
+    private final JTextField txtClothingAllowance;
+    private final JTextField txtGrossSemiMonthlyRate;
+    private final JButton saveButton;
 
     public AddEmployeeGUI(JFrame AdminSystemViewGUI) {
         super(AdminSystemViewGUI, "Add Employee", true);
@@ -292,7 +294,7 @@ public class AddEmployeeGUI extends JDialog {
         txtClothingAllowance.getDocument().addDocumentListener(documentListener);
         txtGrossSemiMonthlyRate.getDocument().addDocumentListener(documentListener);
 
-        // When cancel button has been pressed, it will automatically close the AddEmployeeGUI
+        // When save button is pressed, it will save the employee data
         saveButton.addActionListener(e -> {
             try {
                 saveEmployee();
@@ -303,6 +305,7 @@ public class AddEmployeeGUI extends JDialog {
             }
         });
 
+        // When cancel button is pressed, it will close the AddEmployeeGUI
         cancelButton.addActionListener(e -> {
             dispose();
             JOptionPane.showConfirmDialog(null, "Add Employee Cancelled.", "Cancel", JOptionPane.OK_CANCEL_OPTION);
@@ -310,24 +313,25 @@ public class AddEmployeeGUI extends JDialog {
     }
 
     private void checkFields() {
-        boolean allFieldsFilled = !txtEmployeeID.getText().isEmpty() &&
-                !txtFirstName.getText().isEmpty() &&
-                !txtLastName.getText().isEmpty() &&
-                !txtBirthday.getText().isEmpty() &&
-                !txtAddress.getText().isEmpty() &&
-                !txtPhoneNumber.getText().isEmpty() &&
-                !txtJobPosition.getText().isEmpty() &&
-                !txtImmediateSupervisor.getText().isEmpty() &&
-                !txtSSSNumber.getText().isEmpty() &&
-                !txtPhilhealthNumber.getText().isEmpty() &&
-                !txtTINNumber.getText().isEmpty() &&
-                !txtPagIbigNumber.getText().isEmpty() &&
-                !txtBasicSalary.getText().isEmpty() &&
-                !txtHourlyRate.getText().isEmpty() &&
-                !txtRiceSubsidy.getText().isEmpty() &&
-                !txtPhoneAllowance.getText().isEmpty() &&
-                !txtClothingAllowance.getText().isEmpty() &&
-                !txtGrossSemiMonthlyRate.getText().isEmpty();
+        boolean allFieldsFilled =
+                !txtEmployeeID.getText().isEmpty() &&
+                        !txtFirstName.getText().isEmpty() &&
+                        !txtLastName.getText().isEmpty() &&
+                        !txtBirthday.getText().isEmpty() &&
+                        !txtAddress.getText().isEmpty() &&
+                        !txtPhoneNumber.getText().isEmpty() &&
+                        !txtJobPosition.getText().isEmpty() &&
+                        !txtImmediateSupervisor.getText().isEmpty() &&
+                        !txtSSSNumber.getText().isEmpty() &&
+                        !txtPhilhealthNumber.getText().isEmpty() &&
+                        !txtTINNumber.getText().isEmpty() &&
+                        !txtPagIbigNumber.getText().isEmpty() &&
+                        !txtBasicSalary.getText().isEmpty() &&
+                        !txtHourlyRate.getText().isEmpty() &&
+                        !txtRiceSubsidy.getText().isEmpty() &&
+                        !txtPhoneAllowance.getText().isEmpty() &&
+                        !txtClothingAllowance.getText().isEmpty() &&
+                        !txtGrossSemiMonthlyRate.getText().isEmpty();
 
         saveButton.setEnabled(allFieldsFilled);
     }

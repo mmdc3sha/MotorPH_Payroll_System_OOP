@@ -1,6 +1,8 @@
 package GUI;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
@@ -12,14 +14,15 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 public class AdminSystemViewGUI {
     private final JFrame frame;
     private final JPanel mainPanel;
     private final CardLayout cardLayout;
     private static final Logger LOGGER = Logger.getLogger(AdminSystemViewGUI.class.getName());
-    public AdminSystemViewGUI() {
+    private DefaultTableModel employeeRecordsModel;
+    private JTable employeeRecordsTable;
 
+    public AdminSystemViewGUI() {
         frame = new JFrame("MotorPH: Administrator Mode");
         Image appIcon = new ImageIcon(getClass().getResource("/motorph_logo.png")).getImage();
         frame.setIconImage(appIcon);
@@ -73,7 +76,6 @@ public class AdminSystemViewGUI {
         JLabel adminLabel = new JLabel(" Administrator");
         adminLabel.setFont(new Font("Lato", Font.BOLD, 23));
 
-
         // Admin Panel - Displays "Administrator Label" and current system date and time
         JPanel adminPanel = new JPanel();
         adminPanel.setPreferredSize(new Dimension(300, 60));
@@ -81,8 +83,6 @@ public class AdminSystemViewGUI {
         adminPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         adminPanel.add(adminIconLabel);
         adminPanel.add(adminLabel);
-
-
 
         // Add date and time label
         JLabel dateTimeLabel = new JLabel();
@@ -96,6 +96,7 @@ public class AdminSystemViewGUI {
             dateTimeLabel.setFont(new Font("Lato", Font.BOLD, 14));
         });
         timer.start();
+
         //Buttons Background Color
         Color bluish = new Color(0, 76, 153);
 
@@ -110,7 +111,7 @@ public class AdminSystemViewGUI {
         payrollBtn.setFont(latoFont);
         payrollBtn.setBackground(bluish);
         payrollBtn.setForeground(Color.WHITE);
-        
+
         JButton attendanceBtn = new JButton("Attendance");
         attendanceBtn.setFont(latoFont);
         attendanceBtn.setBackground(bluish);
@@ -136,23 +137,23 @@ public class AdminSystemViewGUI {
         exitBtn.setForeground(Color.WHITE);
 
         // GC.GRIDY Adds the Button in Order
-            gbc.gridx = 0;
-            gbc.gridy = 0;
-            menuPanel.add(motorph_logo, gbc);
-            gbc.gridy = 2;
-            menuPanel.add(adminPanel, gbc);
-            gbc.gridy = 3;
-            menuPanel.add(payrollBtn, gbc);
-            gbc.gridy = 4;
-            menuPanel.add(employeeRecordsBtn, gbc);
-            gbc.gridy = 5;
-            menuPanel.add(attendanceBtn, gbc);
-            gbc.gridy = 6;
-            menuPanel.add(leavesBtn, gbc);
-            gbc.gridy = 7;
-            menuPanel.add(inquiryBtn, gbc);
-            gbc.gridy = 8;
-            menuPanel.add(exitBtn, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        menuPanel.add(motorph_logo, gbc);
+        gbc.gridy = 2;
+        menuPanel.add(adminPanel, gbc);
+        gbc.gridy = 3;
+        menuPanel.add(payrollBtn, gbc);
+        gbc.gridy = 4;
+        menuPanel.add(employeeRecordsBtn, gbc);
+        gbc.gridy = 5;
+        menuPanel.add(attendanceBtn, gbc);
+        gbc.gridy = 6;
+        menuPanel.add(leavesBtn, gbc);
+        gbc.gridy = 7;
+        menuPanel.add(inquiryBtn, gbc);
+        gbc.gridy = 8;
+        menuPanel.add(exitBtn, gbc);
 
         //Create the main panel with CardLayout
         mainPanel = new JPanel();
@@ -167,114 +168,112 @@ public class AdminSystemViewGUI {
         employeeRecordsPanel.setLayout(null);
 
         //Components for the Employee Records
-            JLabel emp_record_label = new JLabel("Employee Record");
-            emp_record_label.setFont(new Font("Lato", Font.BOLD, 20));
-            emp_record_label.setBounds(30, 30, 400, 50);
+        JLabel emp_record_label = new JLabel("Employee Record");
+        emp_record_label.setFont(new Font("Lato", Font.BOLD, 20));
+        emp_record_label.setBounds(30, 30, 400, 50);
 
-            JTextField emp_record_search = new JTextField();
-            emp_record_search.setBounds(130, 80, 300, 40);
-            JButton searchBtn = new JButton("Search");
-            searchBtn.setFont(latoFont);
-            searchBtn.setBounds(30, 80, 100, 40);
+        JTextField emp_record_search = new JTextField();
+        emp_record_search.setBounds(130, 80, 300, 40);
+        JButton searchBtn = new JButton("Search");
+        searchBtn.setFont(latoFont);
+        searchBtn.setBounds(30, 80, 100, 40);
 
+        //Placeholder text for the Search Textfield
+        String placeholder = "Search";
+        emp_record_search.setText(placeholder);
+        emp_record_search.setForeground(Color.GRAY);
+        employeeRecordsPanel.setBackground(Color.WHITE);
+        emp_record_search.addFocusListener(new FocusListener() {
 
-            //Placeholder text for the Search Textfield
-            String placeholder = "Search";
-            emp_record_search.setText(placeholder);
-            emp_record_search.setForeground(Color.GRAY);
-            employeeRecordsPanel.setBackground(Color.WHITE);
-            emp_record_search.addFocusListener(new FocusListener() {
-
-                /**
-                 * @param e the event to be processed
-                 */
-                @Override
-                public void focusGained(FocusEvent e) {
-                    if (emp_record_search.getText().equals(placeholder)) {
-                        emp_record_search.setText("");
-                        emp_record_search.setForeground(Color.BLACK);
-                    }
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (emp_record_search.getText().equals(placeholder)) {
+                    emp_record_search.setText("");
+                    emp_record_search.setForeground(Color.BLACK);
                 }
+            }
 
-                /**
-                 * @param e the event to be processed
-                 */
-                @Override
-                public void focusLost(FocusEvent e) {
-                    if (emp_record_search.getText().isEmpty()) {
-                        emp_record_search.setText(placeholder);
-                        emp_record_search.setForeground(Color.GRAY);
-                    }
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (emp_record_search.getText().isEmpty()) {
+                    emp_record_search.setText(placeholder);
+                    emp_record_search.setForeground(Color.GRAY);
                 }
-            });
+            }
+        });
 
-            // Resizes the Refresh icon from 512 x 512 px -> 16 by 16.
-            ImageIcon refreshIcon = new ImageIcon("src/main/resources/reload.png");
-            Image resizedRefreshIcon = refreshIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
-            ImageIcon resizedRefresh = new ImageIcon(resizedRefreshIcon);
+        // Resizes the Refresh icon from 512 x 512 px -> 16 by 16.
+        ImageIcon refreshIcon = new ImageIcon("src/main/resources/reload.png");
+        Image resizedRefreshIcon = refreshIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+        ImageIcon resizedRefresh = new ImageIcon(resizedRefreshIcon);
 
-            //Adds the refresh Button
-            JButton refreshBtn = new JButton(resizedRefresh);
-            refreshBtn.setBounds(420, 80, 50,40);
+        //Adds the refresh Button
+        JButton refreshBtn = new JButton(resizedRefresh);
+        refreshBtn.setBounds(420, 80, 50, 40);
 
-            //Adds the Employee Button - Displays a Popup window where you can add new employees to the record
-            JButton addEmployeeBtn = new JButton("Add");
-            addEmployeeBtn.setFont(latoFont);
-            addEmployeeBtn.setBounds(470, 80, 100, 40);
-            addEmployeeBtn.setToolTipText("Adds New Employee to the List");
-            addEmployeeBtn.setBackground(new Color(5,153,10));
-            addEmployeeBtn.setForeground(Color.WHITE);
+        //Adds the Employee Button - Displays a Popup window where you can add new employees to the record
+        ImageIcon addIcon = new ImageIcon("src/main/resources/add.png");
+        Image resizedAddIcon = addIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+        ImageIcon resizedAdd = new ImageIcon(resizedAddIcon);
+        JButton addEmployeeBtn = new JButton("Add", resizedAdd);
+        addEmployeeBtn.setFont(latoFont);
+        addEmployeeBtn.setBounds(470, 80, 100, 40);
+        addEmployeeBtn.setToolTipText("Adds New Employee to the List");
+        addEmployeeBtn.setBackground(new Color(5, 153, 10));
+        addEmployeeBtn.setForeground(Color.WHITE);
 
-            //Adds the Delete Employee Button - "Deletes a Cell in the Table"
-            JButton deleteEmployeeBtn = new JButton("Delete");
-            deleteEmployeeBtn.setFont(latoFont);
-            deleteEmployeeBtn.setBounds(570, 80, 100, 40);
-            deleteEmployeeBtn.setBackground(new Color(158,15,10));
-            deleteEmployeeBtn.setForeground(Color.WHITE);
+        //Adds the Delete Employee Button - "Deletes a Cell in the Table"
+        ImageIcon deleteIcon = new ImageIcon("src/main/resources/minus.png");
+        Image resizedMinus = deleteIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+        ImageIcon resizedMinusIcon = new ImageIcon(resizedMinus);
+        JButton deleteEmployeeBtn = new JButton("Delete", resizedMinusIcon);
+        deleteEmployeeBtn.setFont(latoFont);
+        deleteEmployeeBtn.setBounds(570, 80, 100, 40);
+        deleteEmployeeBtn.setBackground(new Color(158, 15, 10));
+        deleteEmployeeBtn.setForeground(Color.WHITE);
 
-            //Adds the Update Button - Updates the Table - "Commit New Changes"
-            JButton updateEmployeeBtn = new JButton("Update");
-            updateEmployeeBtn.setFont(latoFont);
-            updateEmployeeBtn.setBounds(670, 80, 100, 40);
-            updateEmployeeBtn.setBackground(new Color(141,11,181));
-            updateEmployeeBtn.setForeground(Color.WHITE);
+        //Adds the Update Button - Updates the Table - "Commit New Changes"
+        JButton updateEmployeeBtn = new JButton("Update");
+        updateEmployeeBtn.setFont(latoFont);
+        updateEmployeeBtn.setBounds(670, 80, 100, 40);
+        updateEmployeeBtn.setBackground(new Color(141, 11, 181));
+        updateEmployeeBtn.setForeground(Color.WHITE);
 
+        // Creates a Table Model
+        employeeRecordsModel = new DefaultTableModel();
+        employeeRecordsModel.addColumn("ID");
+        employeeRecordsModel.addColumn("Last Name");
+        employeeRecordsModel.addColumn("First Name");
+        employeeRecordsModel.addColumn("Birthday");
+        employeeRecordsModel.addColumn("Address");
+        employeeRecordsModel.addColumn("Phone Number");
+        employeeRecordsModel.addColumn("SSS No.");
+        employeeRecordsModel.addColumn("Philhealth No.");
+        employeeRecordsModel.addColumn("TIN No.");
+        employeeRecordsModel.addColumn("Pag-ibig No.");
+        employeeRecordsModel.addColumn("Employment Status");
+        employeeRecordsModel.addColumn("Immediate Supervisor");
+        employeeRecordsModel.addColumn("Basic Salary");
+        employeeRecordsModel.addColumn("Rate /hr");
+        employeeRecordsModel.addColumn("Rice Subsidy");
+        employeeRecordsModel.addColumn("Phone Allowance");
+        employeeRecordsModel.addColumn("Clothing Allowance");
+        employeeRecordsModel.addColumn("Gross Semi-Monthly Rate");
 
-            // Creates a Table Model
-            DefaultTableModel emp_table = new DefaultTableModel();
-            emp_table.addColumn("ID");
-            emp_table.addColumn("Last Name");
-            emp_table.addColumn("First Name");
-            emp_table.addColumn("Birthday");
-            emp_table.addColumn("Address");
-            emp_table.addColumn("Phone Number");
-            emp_table.addColumn("SSS No.");
-            emp_table.addColumn("Philhealth No.");
-            emp_table.addColumn("TIN No.");
-            emp_table.addColumn("Pag-ibig No.");
-            emp_table.addColumn("Employment Status");
-            emp_table.addColumn("Immediate Supervisor");
-            emp_table.addColumn("Basic Salary");
-            emp_table.addColumn("Rate /hr");
-            emp_table.addColumn("Rice Subsidy");
-            emp_table.addColumn("Phone Allowance");
-            emp_table.addColumn("Clothing Allowance");
-            emp_table.addColumn("Gross Semi-Monthly Rate");
+        employeeRecordsTable = new JTable(employeeRecordsModel);
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(employeeRecordsModel);
+        employeeRecordsTable.setRowSorter(sorter);
+        employeeRecordsTable.setGridColor(Color.white);
+        employeeRecordsTable.setFont(new Font("Calibri", Font.PLAIN, 15));
+        employeeRecordsTable.setRowHeight(50);
+        employeeRecordsTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        employeeRecordsTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
-            JTable employeeRecordsTable = new JTable(emp_table);
-            TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(emp_table);
-            employeeRecordsTable.setRowSorter(sorter);
-            employeeRecordsTable.setGridColor(Color.white);
-            employeeRecordsTable.setFont(new Font("Calibri", Font.PLAIN, 15));
-            employeeRecordsTable.setRowHeight(50);
-            employeeRecordsTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-            employeeRecordsTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-
-            // Wraps the Table in a JScrollpane - adds a scrollbar
-            JScrollPane scrollPane = new JScrollPane(employeeRecordsTable);
-            scrollPane.setWheelScrollingEnabled(true);
-            scrollPane.setViewportView(employeeRecordsTable);
-            scrollPane.setBounds(30, 120, 1580, 840);
+        // Wraps the Table in a JScrollpane - adds a scrollbar
+        JScrollPane scrollPane = new JScrollPane(employeeRecordsTable);
+        scrollPane.setWheelScrollingEnabled(true);
+        scrollPane.setViewportView(employeeRecordsTable);
+        scrollPane.setBounds(30, 120, 1580, 840);
 
         //Buttons Functions - addEmployeeBtn, deleteEmployeeBtn, updateEmployeeBtn
         addEmployeeBtn.addActionListener(e -> {
@@ -293,116 +292,49 @@ public class AdminSystemViewGUI {
         });
 
         refreshBtn.addActionListener(e -> {
-           sorter.setRowFilter(null);
-           emp_record_search.setText("");
+            sorter.setRowFilter(null);
+            emp_record_search.setText("");
         });
+
+        deleteEmployeeBtn.addActionListener(e -> {
+            try {
+                deleteEmployee();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        updateEmployeeBtn.addActionListener(e -> {
+            // Implement the update functionality here
+        });
+
         // Add components to the Employee Records Panel
         employeeRecordsPanel.add(emp_record_label);
         employeeRecordsPanel.add(scrollPane);
 
         // Fetch data from the database and fill the table
-        fetchData(emp_table);
+        fetchData(employeeRecordsModel);
 
-            //Add components to the Employee Records Panel
-            employeeRecordsPanel.add(emp_record_label);
-            employeeRecordsPanel.add(searchBtn);
-            employeeRecordsPanel.add(emp_record_search);
-            employeeRecordsPanel.add(addEmployeeBtn);
-            employeeRecordsPanel.add(deleteEmployeeBtn);
-            employeeRecordsPanel.add(updateEmployeeBtn);
-            employeeRecordsPanel.add(emp_record_label);
-            employeeRecordsPanel.add(refreshBtn);
-
-
+        //Add components to the Employee Records Panel
+        employeeRecordsPanel.add(emp_record_label);
+        employeeRecordsPanel.add(searchBtn);
+        employeeRecordsPanel.add(emp_record_search);
+        employeeRecordsPanel.add(addEmployeeBtn);
+        employeeRecordsPanel.add(deleteEmployeeBtn);
+        employeeRecordsPanel.add(updateEmployeeBtn);
+        employeeRecordsPanel.add(emp_record_label);
+        employeeRecordsPanel.add(refreshBtn);
 
         JPanel payrollPanel = new JPanel();
         payrollPanel.add(new JLabel("Payroll View"));
         payrollPanel.setLayout(null);
-            //2.PAYROLL PANEL
-            //Payslip No.
-            JLabel payslipNumLabel = new JLabel("Payslip No.:");
-            JTextField payslipNumField = new JTextField();
 
-            //Employee ID:
-            JLabel emp_ID_label = new JLabel("Employee ID:");
-            JTextField emp_ID_field = new JTextField("Enter employee ID");
-            emp_ID_label.setBounds(20,30,200,30);
-            emp_ID_field.setBounds(150, 30, 150, 30);
-
-            //Employee Name
-            JLabel emp_NameLabel = new JLabel("First Name:");
-            JTextField emp_firstNameTxt = new JTextField("Enter First Name:");
-                emp_NameLabel.setBounds(20, 80, 200, 30);
-                emp_firstNameTxt.setBounds(150, 80, 200, 30);
-
-            JLabel emp_surnameLabel = new JLabel("Last Name:");
-            JTextField emp_surnameTxt = new JTextField("Enter Last Name:");
-                emp_surnameLabel.setBounds(20, 120, 200, 30);
-                emp_surnameTxt.setBounds(150, 120, 200, 30);
-            //Period Start Date
-            JLabel period_start_date = new JLabel("Period Start Date:");
-            JTextField period_start_dateTxt = new JTextField("MM/DD/YYYY");
-                period_start_date.setBounds(20, 160, 200, 30);
-                period_start_dateTxt.setBounds(150, 160, 200, 30);
-            //Period End Date
-            JLabel period_end_date = new JLabel("Period End Date:");
-            JTextField period_end_dateTxt = new JTextField("MM/DD/YYYY");
-                period_end_date.setBounds(20, 200, 200, 30);
-                period_end_dateTxt.setBounds(150, 200, 200, 30);
-            //Employee Position
-            JComboBox<String> department = new JComboBox<>();
-            department.addItem("IT");
-            department.addItem("HR");
-            department.addItem("Employee");
-            department.addItem("Manager");
-            //Employee Department
-            JLabel employee_department_label = new JLabel();
-                employee_department_label.setText("Department:");
-            JComboBox<String> emp_department_box = new JComboBox<>();
-                emp_department_box.addItem("HR Department");
-                emp_department_box.addItem("IT Department");
-                emp_department_box.addItem("Sales & Marketing");
-                emp_department_box.addItem("Customer Service & Relations");
-                emp_department_box.addItem("Supply Chains and Logistic");
-                emp_department_box.addItem("Finance Department");
-                employee_department_label.setBounds(20, 240, 200, 30);
-                emp_department_box.setBounds(150, 240, 200, 30);
-
-
-        JPanel attendancePanel = new JPanel();
-        attendancePanel.add(new JLabel("Attendance View"));
-        attendancePanel.setLayout(null);
-
-        JPanel inquiryPanel = new JPanel();
-        inquiryPanel.add(new JLabel("Leave Requests View"));
-        inquiryPanel.setLayout(null);
-
-        JPanel leavesPanel = new JPanel();
-        leavesPanel.add(new JLabel("Report View"));
-        inquiryPanel.setLayout(null);
-
-        // Add components to the AbstractPayroll Panel
-            payrollPanel.add(emp_ID_field);
-            payrollPanel.add(emp_ID_label);
-            payrollPanel.add(emp_NameLabel);
-            payrollPanel.add(emp_firstNameTxt);
-            payrollPanel.add(emp_surnameLabel);
-            payrollPanel.add(emp_surnameTxt);
-            payrollPanel.add(period_start_date);
-            payrollPanel.add(period_start_dateTxt);
-            payrollPanel.add(period_end_date);
-            payrollPanel.add(period_end_dateTxt);
-            payrollPanel.add(department);
-            payrollPanel.add(employee_department_label);
-            payrollPanel.add(emp_department_box);
-
-
-        // Add individual panels to the main panel
+        // Adds individual panels to the main panel
         mainPanel.add(employeeRecordsPanel, "EmployeeRecords");
         mainPanel.add(payrollPanel, "AbstractPayroll");
-        mainPanel.add(attendancePanel, "Attendance");
-        mainPanel.add(inquiryPanel, "Inquiry");
-        mainPanel.add(leavesPanel, "Leave Requests");
+        mainPanel.add(new JPanel(), "Attendance");
+        mainPanel.add(new JPanel(), "Inquiry");
+        mainPanel.add(new JPanel(), "Leave Requests");
 
         // Add action listeners to the buttons
         employeeRecordsBtn.addActionListener(e -> cardLayout.show(mainPanel, "EmployeeRecords"));
@@ -412,10 +344,10 @@ public class AdminSystemViewGUI {
         leavesBtn.addActionListener(e -> cardLayout.show(mainPanel, "Leave Requests"));
 
         // Logs out of the System
-        exitBtn.addActionListener(e ->  {
-                AdminSystemViewGUI.this.frame.dispose();
-                RoleLogin roleLogin = new RoleLogin();
-                roleLogin.setVisible(true);
+        exitBtn.addActionListener(e -> {
+            AdminSystemViewGUI.this.frame.dispose();
+            RoleLogin roleLogin = new RoleLogin();
+            roleLogin.setVisible(true);
         });
 
         // Frame Components
@@ -423,23 +355,50 @@ public class AdminSystemViewGUI {
         frame.getContentPane().add(mainPanel);
         frame.setVisible(true);
     }
-    private void fetchData(DefaultTableModel employeeRecordsModel) {
+
+    private void deleteEmployee() throws SQLException {
+        int selectedRow = employeeRecordsTable.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(frame, "Please select an employee to delete.");
+            return;
+        }
+
+        String employeeID = employeeRecordsModel.getValueAt(selectedRow, 0).toString();
+
+        String url = "jdbc:sqlite:src/main/java/MotorPHDatabase.db";
+        String sql = "DELETE FROM Employee WHERE employee_id = ?";
+
+        try (Connection conn = DriverManager.getConnection(url);
+             PreparedStatement pstmnt = conn.prepareStatement(sql)
+        ) {
+            pstmnt.setString(1, employeeID);
+            int rowsAffected = pstmnt.executeUpdate();
+            if (rowsAffected > 0) {
+                JOptionPane.showMessageDialog(frame, "Employee Deleted Successfully.");
+                employeeRecordsModel.removeRow(selectedRow);
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(frame, "Error in Deleting Employee. Connection to Database Failed." + e.getMessage());
+        }
+    }
+
+    private void fetchData(DefaultTableModel emp_table) {
         String dbURL = "jdbc:sqlite:src/main/java/MotorPHDatabase.db";
-        String sql = "SELECT employee_id, last_name, first_name, birthday, address, phone_number, SSS_number, philhealth_number, " +
+        String sqlSelect = "SELECT employee_id, last_name, first_name, birthday, address, phone_number, SSS_number, philhealth_number, " +
                 "TIN_number, Pagibig_number, employment_status, job_position, Immediate_Supervisor, basic_salary, hourly_rate, " +
-                "rice_subsidy, phone_allowance, clothing_allowance, gross_semi_monthly_rate, * FROM Employee";
+                "rice_subsidy, phone_allowance, clothing_allowance, gross_semi_monthly_rate FROM Employee";
 
         try (Connection conn = DriverManager.getConnection(dbURL);
              Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql);) {
-            
-            employeeRecordsModel.setRowCount(0);
-            
+             ResultSet rs = stmt.executeQuery(sqlSelect);) {
+
+            emp_table.setRowCount(0);
+
             while (rs.next()) {
                 Object[] row = {
-                        rs.getInt("Employee_id"),
-                        rs.getString("first_name"),
+                        rs.getInt("employee_id"),
                         rs.getString("last_name"),
+                        rs.getString("first_name"),
                         rs.getString("birthday"),
                         rs.getString("address"),
                         rs.getString("phone_number"),
@@ -457,9 +416,9 @@ public class AdminSystemViewGUI {
                         rs.getString("clothing_allowance"),
                         rs.getDouble("gross_semi_monthly_rate")
                 };
-                employeeRecordsModel.addRow(row);
+                emp_table.addRow(row);
             }
-            
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -468,6 +427,7 @@ public class AdminSystemViewGUI {
     public void setVisible(boolean visible) {
         frame.setVisible(visible);
     }
+
     public static void main(String[] args) {
         new AdminSystemViewGUI();
     }
