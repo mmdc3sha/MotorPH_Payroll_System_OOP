@@ -243,7 +243,7 @@ public class AdminSystemViewGUI {
 
 
         // Creates a Table Model
-        employeeRecordsModel = new DefaultTableModel();
+        DefaultTableModel employeeRecordsModel = new DefaultTableModel();
         employeeRecordsModel.addColumn("ID");
         employeeRecordsModel.addColumn("Last Name");
         employeeRecordsModel.addColumn("First Name");
@@ -263,7 +263,8 @@ public class AdminSystemViewGUI {
         employeeRecordsModel.addColumn("Clothing Allowance");
         employeeRecordsModel.addColumn("Gross Semi-Monthly Rate");
 
-        employeeRecordsTable = new JTable(employeeRecordsModel);
+        // Creates the table
+        JTable employeeRecordsTable = new JTable(employeeRecordsModel);
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(employeeRecordsModel);
         employeeRecordsTable.setRowSorter(sorter);
         employeeRecordsTable.setGridColor(Color.white);
@@ -278,16 +279,19 @@ public class AdminSystemViewGUI {
         scrollPane.setViewportView(employeeRecordsTable);
         scrollPane.setBounds(30, 120, 1580, 840);
 
+        // Creates Register button - registers new employees to the system--give access to log into the system
         JButton registerBtn = new JButton("Register");
         registerBtn.setFont(latoFont);
         registerBtn.setBounds(970, 80, 100, 40);
         registerBtn.setVisible(false);
         employeeRecordsPanel.add(registerBtn);
 
+        // Creates toggle button for Account Table
         JToggleButton accountToggleBtn = new JToggleButton("Registered Accounts");
         accountToggleBtn.setFont(latoFont);
         accountToggleBtn.setBounds(770, 80, 200, 40);
         employeeRecordsPanel.add(accountToggleBtn);
+
         // View Accounts Table Toggle button - if toggled, it will display account table
         accountToggleBtn.addActionListener(e -> {
             if (accountToggleBtn.isSelected()) {
