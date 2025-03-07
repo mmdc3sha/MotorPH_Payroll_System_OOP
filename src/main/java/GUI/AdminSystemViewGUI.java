@@ -291,7 +291,6 @@ public class AdminSystemViewGUI {
         accountToggleBtn.setFont(latoFont);
         accountToggleBtn.setBounds(770, 80, 200, 40);
         employeeRecordsPanel.add(accountToggleBtn);
-
         // View Accounts Table Toggle button - if toggled, it will display account table
         accountToggleBtn.addActionListener(e -> {
             if (accountToggleBtn.isSelected()) {
@@ -307,6 +306,48 @@ public class AdminSystemViewGUI {
                 scrollPane.setVisible(true);
             }
         });
+
+        // Table Models for the Admin Accouns and Employee Accounts
+        DefaultTableModel registered_admin_accounts_model = new DefaultTableModel();
+        DefaultTableModel registered_employee_accounts_model = new DefaultTableModel();
+        String[] registered_accounts_columnNames = {"Employee ID","Username","Password"};
+        // For loop para di paulit-ulit - simplifies the code when adding column names, also most efficient for adding new columns and removing
+        for(String registered_adminModel : registered_accounts_columnNames ){
+            registered_admin_accounts_model.addColumn(registered_adminModel);
+        }
+        for (String registered_employeeModel : registered_accounts_columnNames){
+            registered_employee_accounts_model.addColumn(registered_employeeModel);
+        }
+
+        // Creates the JTable
+        JTable registered_employee_accounts_table = new JTable(registered_employee_accounts_model);
+        TableRowSorter<DefaultTableModel> employee_accounts_sorter = new TableRowSorter<>(registered_employee_accounts_model);
+        registered_employee_accounts_table.setRowSorter(employee_accounts_sorter);
+        registered_employee_accounts_table.setFont(new Font("Calibri", Font.PLAIN, 15));
+        registered_employee_accounts_table.setRowHeight(50);
+        registered_employee_accounts_table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        registered_employee_accounts_table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+
+        JTable registered_admin_accounts_table = new JTable(registered_admin_accounts_model);
+        TableRowSorter<DefaultTableModel> admin_accounts_sorter = new TableRowSorter<>(registered_admin_accounts_model);
+        registered_admin_accounts_table.setRowSorter(admin_accounts_sorter);
+        registered_admin_accounts_table.setFont(new Font("Calibri", Font.PLAIN, 15));
+        registered_admin_accounts_table.setRowHeight(50);
+        registered_admin_accounts_table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        registered_admin_accounts_table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+
+        JScrollPane adminTable_scrollPane = new JScrollPane(registered_admin_accounts_table);
+        adminTable_scrollPane.setWheelScrollingEnabled(true);
+        adminTable_scrollPane.setViewportView(registered_admin_accounts_table);
+        adminTable_scrollPane.setBounds(30, 120, 500, 870);
+        employeeRecordsPanel.add(adminTable_scrollPane);
+
+        JScrollPane employeeTable_scrollPane = new JScrollPane(registered_employee_accounts_table);
+        employeeTable_scrollPane.setWheelScrollingEnabled(true);
+        adminTable_scrollPane.setViewportView(employeeTable_scrollPane);
+        employeeTable_scrollPane.setBounds(500, 120, 500, 870);
+        employeeRecordsPanel.add(employeeTable_scrollPane);
+
 
         //Buttons Functions - addEmployeeBtn, deleteEmployeeBtn, updateEmployeeBtn
         addEmployeeBtn.addActionListener(e -> {
@@ -358,9 +399,11 @@ public class AdminSystemViewGUI {
         employeeRecordsPanel.add(emp_record_label);
         employeeRecordsPanel.add(refreshBtn);
 
+        //Creates Payroll Panel-
         JPanel payrollPanel = new JPanel();
         payrollPanel.add(new JLabel("Payroll View"));
         payrollPanel.setLayout(null);
+            // Payroll Panel Components
 
         // Adds individual panels to the main panel
         mainPanel.add(employeeRecordsPanel, "EmployeeRecords");
