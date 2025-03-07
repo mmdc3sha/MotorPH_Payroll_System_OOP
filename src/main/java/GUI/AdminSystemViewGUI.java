@@ -74,6 +74,7 @@ public class AdminSystemViewGUI {
         //Admin Icon for Admin Panel
         JLabel adminIconLabel = new JLabel(adminIcon);
         JLabel adminLabel = new JLabel(" Administrator");
+        adminLabel.setForeground(new Color(2, 2, 255));
         adminLabel.setFont(new Font("Lato", Font.BOLD, 23));
 
         // Admin Panel - Displays "Administrator Label" and current system date and time
@@ -86,7 +87,8 @@ public class AdminSystemViewGUI {
 
         // Add date and time label
         JLabel dateTimeLabel = new JLabel();
-        dateTimeLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        dateTimeLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        dateTimeLabel.setForeground(new Color(10, 255, 150));
         adminPanel.add(dateTimeLabel);
 
         // Timer to update the date and time label every second
@@ -239,6 +241,7 @@ public class AdminSystemViewGUI {
         updateEmployeeBtn.setBackground(new Color(141, 11, 181));
         updateEmployeeBtn.setForeground(Color.WHITE);
 
+
         // Creates a Table Model
         employeeRecordsModel = new DefaultTableModel();
         employeeRecordsModel.addColumn("ID");
@@ -274,6 +277,32 @@ public class AdminSystemViewGUI {
         scrollPane.setWheelScrollingEnabled(true);
         scrollPane.setViewportView(employeeRecordsTable);
         scrollPane.setBounds(30, 120, 1580, 840);
+
+        JButton registerBtn = new JButton("Register");
+        registerBtn.setFont(latoFont);
+        registerBtn.setBounds(970, 80, 100, 40);
+        registerBtn.setVisible(false);
+        employeeRecordsPanel.add(registerBtn);
+
+        JToggleButton accountToggleBtn = new JToggleButton("Registered Accounts");
+        accountToggleBtn.setFont(latoFont);
+        accountToggleBtn.setBounds(770, 80, 200, 40);
+        employeeRecordsPanel.add(accountToggleBtn);
+        // View Accounts Table Toggle button - if toggled, it will display account table
+        accountToggleBtn.addActionListener(e -> {
+            if (accountToggleBtn.isSelected()) {
+                emp_record_label.setText("Registered Accounts");
+                scrollPane.setVisible(false);
+                accountToggleBtn.setText("Hide Accounts Table");
+                accountToggleBtn.setToolTipText("Displayed Registered Accounts. Toggle to Display Employee Information.");
+                registerBtn.setVisible(true);
+            } else {
+                emp_record_label.setText("Employee Record");
+                accountToggleBtn.setText("Show Accounts Table");
+                registerBtn.setVisible(false);
+                scrollPane.setVisible(true);
+            }
+        });
 
         //Buttons Functions - addEmployeeBtn, deleteEmployeeBtn, updateEmployeeBtn
         addEmployeeBtn.addActionListener(e -> {
