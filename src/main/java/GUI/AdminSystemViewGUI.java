@@ -9,23 +9,24 @@ import java.awt.event.FocusListener;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
 public class AdminSystemViewGUI {
-    private String db_path = "jdbc:sqlite:src/main/java/MotorPHDatabase.db";
+    private final String db_path = "jdbc:sqlite:src/main/java/MotorPHDatabase.db";
     private final JFrame frame;
     private final JPanel mainPanel;
     private final CardLayout cardLayout;
     private static final Logger LOGGER = Logger.getLogger(AdminSystemViewGUI.class.getName());
     // --Commented out by Inspection (07/03/2025 6:44 PM// --Commented out by Inspection (07/03/2025 6:44 PM):):private DefaultTableModel employeeRecordsModel;
-    private DefaultTableModel employeeRecordsModel;
+    private final DefaultTableModel employeeRecordsModel;
     private final JTable employeeRecordsTable;
 
     public AdminSystemViewGUI() throws SQLException {
         frame = new JFrame("MotorPH: Administrator Mode");
-        Image appIcon = new ImageIcon(getClass().getResource("/motorph_logo.png")).getImage();
+        Image appIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/motorph_logo.png"))).getImage();
         frame.setIconImage(appIcon);
         frame.setSize(1920, 1080);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -461,6 +462,11 @@ public class AdminSystemViewGUI {
         payrollPanel.add(new JLabel("Payroll View"));
         payrollPanel.setLayout(null);
             // Payroll Panel Components
+            JTabbedPane payrollTabbedPane = new JTabbedPane();
+            JPanel calculateTab = new JPanel();
+            calculateTab.setBackground(Color.white);
+            JPanel payrollHistory = new JPanel();
+            payrollHistory.setBackground(Color.WHITE);
 
         // Adds individual panels to the main panel
         mainPanel.add(employeeRecordsPanel, "EmployeeRecords");
