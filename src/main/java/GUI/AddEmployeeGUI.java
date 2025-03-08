@@ -1,16 +1,16 @@
 package GUI;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class AddEmployeeGUI extends JDialog {
-    private final JTextField txtEmployeeID;
     private final JTextField txtFirstName;
     private final JTextField txtLastName;
     private final JTextField txtBirthday;
@@ -29,16 +29,19 @@ public class AddEmployeeGUI extends JDialog {
     private final JTextField txtPhoneAllowance;
     private final JTextField txtClothingAllowance;
     private final JTextField txtGrossSemiMonthlyRate;
-    private final JButton saveButton;
+
 
     public AddEmployeeGUI(JFrame AdminSystemViewGUI) {
+        final Logger LOGGER = Logger.getLogger(AddEmployeeGUI.class.getName());
+
         super(AdminSystemViewGUI, "Add Employee", true);
         setTitle("Add Employee");
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setSize(950, 650);
         setLocationRelativeTo(AdminSystemViewGUI);
-        Image appIcon = new ImageIcon(getClass().getResource("/user.png")).getImage();
+        Image appIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/user.png"))).getImage();
         setIconImage(appIcon);
+
         try {
             for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -47,19 +50,18 @@ public class AddEmployeeGUI extends JDialog {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Error setting Nimbus Look and Feel", e);
         }
-
+        //Panel for the labels and textfield
         JPanel panel = new JPanel();
         panel.setLayout(new GridBagLayout());
         getContentPane().add(panel);
+        panel.setBackground(new Color(240, 230, 255));
 
         Font labelFont = new Font("Lato", Font.PLAIN, 14);
         Font textfieldFont = new Font("Monospaced", Font.PLAIN, 14);
 
         // Labels and fields for personal information (Left Column)
-        JLabel lblEmployeeID = new JLabel("Employee ID:");
-        lblEmployeeID.setFont(labelFont);
         JLabel firstName = new JLabel("First Name:");
         firstName.setFont(labelFont);
         JLabel lastName = new JLabel("Last Name:");
@@ -75,16 +77,22 @@ public class AddEmployeeGUI extends JDialog {
         JLabel immediateSupervisor = new JLabel("Immediate Supervisor:");
         immediateSupervisor.setFont(labelFont);
 
-        txtEmployeeID = new JTextField(20);
         txtFirstName = new JTextField(20);
+        txtFirstName.setFont(textfieldFont);
         txtLastName = new JTextField(20);
+        txtLastName.setFont(textfieldFont);
         txtBirthday = new JTextField(20);
+        txtBirthday.setFont(textfieldFont);
         txtAddress = new JTextField(20);
+        txtAddress.setFont(textfieldFont);
         txtPhoneNumber = new JTextField(20);
+        txtPhoneNumber.setFont(textfieldFont);
         cbEmploymentStatus = new JComboBox<>(new String[]{"Regular", "Part-time", "Intern"});
+        cbEmploymentStatus.setFont(textfieldFont);
         txtJobPosition = new JTextField(20);
+        txtJobPosition.setFont(textfieldFont);
         txtImmediateSupervisor = new JTextField(20);
-
+        txtImmediateSupervisor.setFont(textfieldFont);
         // Labels and fields for security numbers and salary information (Right Column)
         JLabel lblSSSNumber = new JLabel("SSS Number:");
         lblSSSNumber.setFont(labelFont);
@@ -108,27 +116,32 @@ public class AddEmployeeGUI extends JDialog {
         lblGrossSemiMonthlyRate.setFont(labelFont);
 
         txtSSSNumber = new JTextField(20);
+        txtSSSNumber.setFont(textfieldFont);
         txtPhilhealthNumber = new JTextField(20);
+        txtPhilhealthNumber.setFont(textfieldFont);
         txtTINNumber = new JTextField(20);
+        txtTINNumber.setFont(textfieldFont);
         txtPagIbigNumber = new JTextField(20);
+        txtPagIbigNumber.setFont(textfieldFont);
         txtBasicSalary = new JTextField(20);
+        txtBasicSalary.setFont(textfieldFont);
         txtHourlyRate = new JTextField(20);
+        txtHourlyRate.setFont(textfieldFont);
         txtRiceSubsidy = new JTextField(20);
+        txtRiceSubsidy.setFont(textfieldFont);
         txtPhoneAllowance = new JTextField(20);
+        txtPhoneAllowance.setFont(textfieldFont);
         txtClothingAllowance = new JTextField(20);
+        txtClothingAllowance.setFont(textfieldFont);
         txtGrossSemiMonthlyRate = new JTextField(20);
+        txtGrossSemiMonthlyRate.setFont(textfieldFont);
+
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // Personal Information (Left Column)
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        panel.add(lblEmployeeID, gbc);
-        gbc.gridx = 1;
-        panel.add(txtEmployeeID, gbc);
-
         gbc.gridx = 0;
         gbc.gridy = 1;
         panel.add(firstName, gbc);
@@ -238,15 +251,20 @@ public class AddEmployeeGUI extends JDialog {
         panel.add(Box.createRigidArea(new Dimension(0, 40)), gbc);
 
         // Button Panel
+        JButton saveButton;
+        // Panel for the buttons
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout());
         saveButton = new JButton("Save");
+        // Sets the Preferred Size of the buttons
         JButton cancelButton = new JButton("Cancel");
         Dimension buttonSize = new Dimension(100, 40);
         saveButton.setPreferredSize(buttonSize);
         cancelButton.setPreferredSize(buttonSize);
+        //Add components to the button panel
         buttonPanel.add(saveButton);
         buttonPanel.add(cancelButton);
+        buttonPanel.setBackground(new Color(240, 230, 255));
 
         gbc.gridx = 0;
         gbc.gridy = 11;
@@ -254,90 +272,29 @@ public class AddEmployeeGUI extends JDialog {
         gbc.anchor = GridBagConstraints.CENTER;
         panel.add(buttonPanel, gbc);
 
-        // Disable save button initially
-        saveButton.setEnabled(false);
-
-        // Add document listeners to text fields
-        DocumentListener documentListener = new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                checkFields();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                checkFields();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                checkFields();
-            }
-        };
-
-        txtEmployeeID.getDocument().addDocumentListener(documentListener);
-        txtFirstName.getDocument().addDocumentListener(documentListener);
-        txtLastName.getDocument().addDocumentListener(documentListener);
-        txtBirthday.getDocument().addDocumentListener(documentListener);
-        txtAddress.getDocument().addDocumentListener(documentListener);
-        txtPhoneNumber.getDocument().addDocumentListener(documentListener);
-        txtJobPosition.getDocument().addDocumentListener(documentListener);
-        txtImmediateSupervisor.getDocument().addDocumentListener(documentListener);
-        txtSSSNumber.getDocument().addDocumentListener(documentListener);
-        txtPhilhealthNumber.getDocument().addDocumentListener(documentListener);
-        txtTINNumber.getDocument().addDocumentListener(documentListener);
-        txtPagIbigNumber.getDocument().addDocumentListener(documentListener);
-        txtBasicSalary.getDocument().addDocumentListener(documentListener);
-        txtHourlyRate.getDocument().addDocumentListener(documentListener);
-        txtRiceSubsidy.getDocument().addDocumentListener(documentListener);
-        txtPhoneAllowance.getDocument().addDocumentListener(documentListener);
-        txtClothingAllowance.getDocument().addDocumentListener(documentListener);
-        txtGrossSemiMonthlyRate.getDocument().addDocumentListener(documentListener);
 
         // When save button is pressed, it will save the employee data
         saveButton.addActionListener(e -> {
-            try {
-                saveEmployee();
-            } catch (SQLException ex) {
-                throw new RuntimeException(ex);
-            } finally {
-                dispose();
-            }
+                // Save data
+                try {
+                    saveEmployee();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }finally {
+                    JOptionPane.showMessageDialog(null, "Employee saved successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    dispose();
+                }
         });
 
         // When cancel button is pressed, it will close the AddEmployeeGUI
         cancelButton.addActionListener(e -> {
             dispose();
-            JOptionPane.showConfirmDialog(null, "Add Employee Cancelled.", "Cancel", JOptionPane.OK_CANCEL_OPTION);
+            JOptionPane.showMessageDialog(null, "Employee not Added.", "Cancelled", JOptionPane.INFORMATION_MESSAGE);
         });
     }
 
-    private void checkFields() {
-        boolean allFieldsFilled =
-                !txtEmployeeID.getText().isEmpty() &&
-                        !txtFirstName.getText().isEmpty() &&
-                        !txtLastName.getText().isEmpty() &&
-                        !txtBirthday.getText().isEmpty() &&
-                        !txtAddress.getText().isEmpty() &&
-                        !txtPhoneNumber.getText().isEmpty() &&
-                        !txtJobPosition.getText().isEmpty() &&
-                        !txtImmediateSupervisor.getText().isEmpty() &&
-                        !txtSSSNumber.getText().isEmpty() &&
-                        !txtPhilhealthNumber.getText().isEmpty() &&
-                        !txtTINNumber.getText().isEmpty() &&
-                        !txtPagIbigNumber.getText().isEmpty() &&
-                        !txtBasicSalary.getText().isEmpty() &&
-                        !txtHourlyRate.getText().isEmpty() &&
-                        !txtRiceSubsidy.getText().isEmpty() &&
-                        !txtPhoneAllowance.getText().isEmpty() &&
-                        !txtClothingAllowance.getText().isEmpty() &&
-                        !txtGrossSemiMonthlyRate.getText().isEmpty();
-
-        saveButton.setEnabled(allFieldsFilled);
-    }
 
     private void saveEmployee() throws SQLException {
-        String employeeID = txtEmployeeID.getText();
         String firstName = txtFirstName.getText();
         String lastName = txtLastName.getText();
         String birthday = txtBirthday.getText();
@@ -364,7 +321,6 @@ public class AddEmployeeGUI extends JDialog {
         try (Connection conn = DriverManager.getConnection(url);
              PreparedStatement pstmnt = conn.prepareStatement(sql)
         ) {
-            pstmnt.setString(1, employeeID);
             pstmnt.setString(2, lastName);
             pstmnt.setString(3, firstName);
             pstmnt.setString(4, birthday);
@@ -389,7 +345,6 @@ public class AddEmployeeGUI extends JDialog {
             JOptionPane.showMessageDialog(this, "Error in Adding Employee. Connection to Database Failed." + e.getMessage());
         }
     }
-
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new AddEmployeeGUI(new JFrame()).setVisible(true));
     }

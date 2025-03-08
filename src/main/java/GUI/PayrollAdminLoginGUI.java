@@ -27,7 +27,12 @@ public class PayrollAdminLoginGUI extends EmployeeLoginGUI {
                     JOptionPane.showMessageDialog(null, "Admin login successful!");
                     // Proceed to the admin dashboard or functionality
                     dispose();
-                    AdminSystemViewGUI adminSystemView = new AdminSystemViewGUI();
+                    AdminSystemViewGUI adminSystemView = null;
+                    try {
+                        adminSystemView = new AdminSystemViewGUI();
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex);
+                    }
                     adminSystemView.setVisible(true);
                     System.out.println("Logged in as Admin Successful.");
                 } else {

@@ -1,8 +1,6 @@
 package GUI;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
@@ -14,15 +12,18 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
 public class AdminSystemViewGUI {
+    private String db_path = "jdbc:sqlite:src/main/java/MotorPHDatabase.db";
     private final JFrame frame;
     private final JPanel mainPanel;
     private final CardLayout cardLayout;
     private static final Logger LOGGER = Logger.getLogger(AdminSystemViewGUI.class.getName());
+    // --Commented out by Inspection (07/03/2025 6:44 PM// --Commented out by Inspection (07/03/2025 6:44 PM):):private DefaultTableModel employeeRecordsModel;
     private DefaultTableModel employeeRecordsModel;
-    private JTable employeeRecordsTable;
+    private final JTable employeeRecordsTable;
 
-    public AdminSystemViewGUI() {
+    public AdminSystemViewGUI() throws SQLException {
         frame = new JFrame("MotorPH: Administrator Mode");
         Image appIcon = new ImageIcon(getClass().getResource("/motorph_logo.png")).getImage();
         frame.setIconImage(appIcon);
@@ -88,7 +89,7 @@ public class AdminSystemViewGUI {
         // Add date and time label
         JLabel dateTimeLabel = new JLabel();
         dateTimeLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-        dateTimeLabel.setForeground(new Color(10, 255, 150));
+        dateTimeLabel.setForeground(new Color(1, 255, 0));
         adminPanel.add(dateTimeLabel);
 
         // Timer to update the date and time label every second
@@ -241,9 +242,8 @@ public class AdminSystemViewGUI {
         updateEmployeeBtn.setBackground(new Color(141, 11, 181));
         updateEmployeeBtn.setForeground(Color.WHITE);
 
-
         // Creates a Table Model
-        DefaultTableModel employeeRecordsModel = new DefaultTableModel();
+        employeeRecordsModel = new DefaultTableModel();
         employeeRecordsModel.addColumn("ID");
         employeeRecordsModel.addColumn("Last Name");
         employeeRecordsModel.addColumn("First Name");
@@ -264,7 +264,7 @@ public class AdminSystemViewGUI {
         employeeRecordsModel.addColumn("Gross Semi-Monthly Rate");
 
         // Creates the table
-        JTable employeeRecordsTable = new JTable(employeeRecordsModel);
+        employeeRecordsTable = new JTable(employeeRecordsModel);
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(employeeRecordsModel);
         employeeRecordsTable.setRowSorter(sorter);
         employeeRecordsTable.setGridColor(Color.white);
@@ -277,35 +277,7 @@ public class AdminSystemViewGUI {
         JScrollPane scrollPane = new JScrollPane(employeeRecordsTable);
         scrollPane.setWheelScrollingEnabled(true);
         scrollPane.setViewportView(employeeRecordsTable);
-        scrollPane.setBounds(30, 120, 1580, 840);
-
-        // Creates Register button - registers new employees to the system--give access to log into the system
-        JButton registerBtn = new JButton("Register");
-        registerBtn.setFont(latoFont);
-        registerBtn.setBounds(970, 80, 100, 40);
-        registerBtn.setVisible(false);
-        employeeRecordsPanel.add(registerBtn);
-
-        // Creates toggle button for Account Table
-        JToggleButton accountToggleBtn = new JToggleButton("Registered Accounts");
-        accountToggleBtn.setFont(latoFont);
-        accountToggleBtn.setBounds(770, 80, 200, 40);
-        employeeRecordsPanel.add(accountToggleBtn);
-        // View Accounts Table Toggle button - if toggled, it will display account table
-        accountToggleBtn.addActionListener(e -> {
-            if (accountToggleBtn.isSelected()) {
-                emp_record_label.setText("Registered Accounts");
-                scrollPane.setVisible(false);
-                accountToggleBtn.setText("Hide Accounts Table");
-                accountToggleBtn.setToolTipText("Displayed Registered Accounts. Toggle to Display Employee Information.");
-                registerBtn.setVisible(true);
-            } else {
-                emp_record_label.setText("Employee Record");
-                accountToggleBtn.setText("Show Accounts Table");
-                registerBtn.setVisible(false);
-                scrollPane.setVisible(true);
-            }
-        });
+        scrollPane.setBounds(30, 150, 1580, 840);
 
         // Table Models for the Admin Accouns and Employee Accounts
         DefaultTableModel registered_admin_accounts_model = new DefaultTableModel();
@@ -319,7 +291,9 @@ public class AdminSystemViewGUI {
             registered_employee_accounts_model.addColumn(registered_employeeModel);
         }
 
-        // Creates the JTable
+
+
+        // Creates the JTable for Employee Accounts
         JTable registered_employee_accounts_table = new JTable(registered_employee_accounts_model);
         TableRowSorter<DefaultTableModel> employee_accounts_sorter = new TableRowSorter<>(registered_employee_accounts_model);
         registered_employee_accounts_table.setRowSorter(employee_accounts_sorter);
@@ -328,6 +302,7 @@ public class AdminSystemViewGUI {
         registered_employee_accounts_table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         registered_employee_accounts_table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
+        //Creates the JTable for Admin Accounts
         JTable registered_admin_accounts_table = new JTable(registered_admin_accounts_model);
         TableRowSorter<DefaultTableModel> admin_accounts_sorter = new TableRowSorter<>(registered_admin_accounts_model);
         registered_admin_accounts_table.setRowSorter(admin_accounts_sorter);
@@ -336,18 +311,70 @@ public class AdminSystemViewGUI {
         registered_admin_accounts_table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         registered_admin_accounts_table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
+        // Labels for the Employee and Admin Accounts Table
+        JLabel registered_employeeLbl = new JLabel("Registered Employee");
+        JLabel registered_adminLbl = new JLabel("Registered Admin");
+        registered_adminLbl.setFont(latoFont);
+        registered_adminLbl.setBounds(30,140,400, 50);
+        registered_employeeLbl.setFont(latoFont);
+        registered_employeeLbl.setBounds(850, 140, 400, 50);
+        employeeRecordsPanel.add(registered_employeeLbl);
+        employeeRecordsPanel.add(registered_adminLbl);
+
+        // Creates Scrolling within the Admin Table
         JScrollPane adminTable_scrollPane = new JScrollPane(registered_admin_accounts_table);
         adminTable_scrollPane.setWheelScrollingEnabled(true);
-        adminTable_scrollPane.setViewportView(registered_admin_accounts_table);
-        adminTable_scrollPane.setBounds(30, 120, 500, 870);
+        adminTable_scrollPane.setBounds(30, 180, 800, 770);
+        adminTable_scrollPane.setVisible(false);
         employeeRecordsPanel.add(adminTable_scrollPane);
 
+        // Creates Scrolling within the Employee Table
         JScrollPane employeeTable_scrollPane = new JScrollPane(registered_employee_accounts_table);
         employeeTable_scrollPane.setWheelScrollingEnabled(true);
-        adminTable_scrollPane.setViewportView(employeeTable_scrollPane);
-        employeeTable_scrollPane.setBounds(500, 120, 500, 870);
+        employeeTable_scrollPane.setBounds(850, 180, 750, 770);
+        employeeTable_scrollPane.setVisible(false);
         employeeRecordsPanel.add(employeeTable_scrollPane);
 
+        // Creates Register button - registers new employees to the system--give access to log into the system
+        JButton registerBtn = new JButton("Register");
+        registerBtn.setFont(latoFont);
+        registerBtn.setBounds(970, 80, 100, 40);
+        registerBtn.setVisible(false);
+        registerBtn.addActionListener(e ->{
+            new RegisterAccountGUI(frame);
+        });
+        employeeRecordsPanel.add(registerBtn);
+
+
+        // Creates toggle button for Account Table
+        JToggleButton accountToggleBtn = new JToggleButton("Registered Accounts");
+        accountToggleBtn.setFont(latoFont);
+        accountToggleBtn.setBounds(770, 80, 200, 40);
+        employeeRecordsPanel.add(accountToggleBtn);
+
+        // View Accounts Table Toggle button - if toggled, it will display account table
+        accountToggleBtn.addActionListener(e -> {
+            if (accountToggleBtn.isSelected()) {
+                registered_adminLbl.setVisible(true);
+                registered_employeeLbl.setVisible(true);
+                adminTable_scrollPane.setVisible(true);
+                employeeTable_scrollPane.setVisible(true);
+                emp_record_label.setText("Registered Accounts");
+                scrollPane.setVisible(false);
+                accountToggleBtn.setText("Hide Accounts Table");
+                accountToggleBtn.setToolTipText("Displayed Registered Accounts. Toggle to Display Employee Information.");
+                registerBtn.setVisible(true);
+            } else {
+                registered_adminLbl.setVisible(false);
+                registered_employeeLbl.setVisible(false);
+                adminTable_scrollPane.setVisible(false);
+                employeeTable_scrollPane.setVisible(false);
+                emp_record_label.setText("Employee Record");
+                accountToggleBtn.setText("Show Accounts Table");
+                registerBtn.setVisible(false);
+                scrollPane.setVisible(true);
+            }
+        });
 
         //Buttons Functions - addEmployeeBtn, deleteEmployeeBtn, updateEmployeeBtn
         addEmployeeBtn.addActionListener(e -> {
@@ -379,7 +406,36 @@ public class AdminSystemViewGUI {
         });
 
         updateEmployeeBtn.addActionListener(e -> {
-            // Implement the update functionality here
+            String selectQuery = "SELECT * FROM Employee";
+
+            try (Connection updateConn = DriverManager.getConnection(db_path);
+                 Statement selectStmt = updateConn.createStatement();
+                 ResultSet rs = selectStmt.executeQuery(selectQuery)) {
+
+                // Clear the existing table model
+                employeeRecordsModel.setRowCount(0);
+                employeeRecordsModel.setColumnCount(0);
+
+                // Get Column Names from the ResultSet and add to the model
+                int columnCount = rs.getMetaData().getColumnCount();
+                for (int i = 1; i <= columnCount; i++) {
+                    employeeRecordsModel.addColumn(rs.getMetaData().getColumnName(i));
+                }
+
+                // Add rows from the ResultSet to the model
+                while (rs.next()) {
+                    Object[] row = new Object[columnCount];
+                    for (int i = 1; i <= columnCount; i++) {
+                        row[i - 1] = rs.getObject(i);
+                    }
+                    employeeRecordsModel.addRow(row);
+                }
+
+                JOptionPane.showMessageDialog(frame, "Update Successful.");
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(frame, "Error while updating Employee Record", "Failed", JOptionPane.ERROR_MESSAGE);
+            }
+
         });
 
         // Add components to the Employee Records Panel
@@ -388,7 +444,8 @@ public class AdminSystemViewGUI {
 
         // Fetch data from the database and fill the table
         fetchData(employeeRecordsModel);
-
+        fetchData_empAccounts(registered_employee_accounts_model);
+        fetchData_adminAccounts(registered_admin_accounts_model);
         //Add components to the Employee Records Panel
         employeeRecordsPanel.add(emp_record_label);
         employeeRecordsPanel.add(searchBtn);
@@ -432,19 +489,16 @@ public class AdminSystemViewGUI {
         frame.setVisible(true);
     }
 
-    private void deleteEmployee() throws SQLException {
+    public void deleteEmployee() throws SQLException {
         int selectedRow = employeeRecordsTable.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(frame, "Please select an employee to delete.");
             return;
         }
-
         String employeeID = employeeRecordsModel.getValueAt(selectedRow, 0).toString();
-
-        String url = "jdbc:sqlite:src/main/java/MotorPHDatabase.db";
         String sql = "DELETE FROM Employee WHERE employee_id = ?";
 
-        try (Connection conn = DriverManager.getConnection(url);
+        try (Connection conn = DriverManager.getConnection(db_path);
              PreparedStatement pstmnt = conn.prepareStatement(sql)
         ) {
             pstmnt.setString(1, employeeID);
@@ -458,6 +512,51 @@ public class AdminSystemViewGUI {
         }
     }
 
+    // Fetches Data from 'LoginCredentials' Table
+    private  void fetchData_adminAccounts(DefaultTableModel registered_admin_accounts_table) {
+        String dbURL2 = "jdbc:sqlite:src/main/java/MotorPHDatabase.db";
+        String sqlSelect = "SELECT emp_id, username, password FROM AdminLoginCredentials";
+
+
+        try (Connection connect = DriverManager.getConnection(dbURL2);
+             PreparedStatement pstmnt = connect.prepareStatement(sqlSelect);
+             ResultSet rs = pstmnt.executeQuery()) {
+
+            while (rs.next()) {
+                int empId = rs.getInt("emp_id");
+                String username = rs.getString("username");
+                String password = rs.getString("password");
+
+                // Add row to table model
+                registered_admin_accounts_table.addRow(new Object[]{empId, username, password});
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void fetchData_empAccounts(DefaultTableModel registered_emp_accounts_table) throws SQLException {
+        String dbURL = "jdbc:sqlite:src/main/java/MotorPHDatabase.db";
+        String sqlSelect = "SELECT emp_id, username, password FROM LoginCredentials";
+
+
+        try (Connection connection = DriverManager.getConnection(dbURL);
+             PreparedStatement pstmnt = connection.prepareStatement(sqlSelect);
+             ResultSet rs = pstmnt.executeQuery()) {
+
+            while (rs.next()) {
+                int empId = rs.getInt("emp_id");
+                String username = rs.getString("username");
+                String password = rs.getString("password");
+
+                // Add row to table model
+                registered_emp_accounts_table.addRow(new Object[]{empId, username, password});
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    //Fetches data from Employee Table
     private void fetchData(DefaultTableModel emp_table) {
         String dbURL = "jdbc:sqlite:src/main/java/MotorPHDatabase.db";
         String sqlSelect = "SELECT employee_id, last_name, first_name, birthday, address, phone_number, SSS_number, philhealth_number, " +
@@ -466,7 +565,7 @@ public class AdminSystemViewGUI {
 
         try (Connection conn = DriverManager.getConnection(dbURL);
              Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sqlSelect);) {
+             ResultSet rs = stmt.executeQuery(sqlSelect)) {
 
             emp_table.setRowCount(0);
 
@@ -505,6 +604,12 @@ public class AdminSystemViewGUI {
     }
 
     public static void main(String[] args) {
-        new AdminSystemViewGUI();
+        SwingUtilities.invokeLater(() -> {
+            try {
+                new AdminSystemViewGUI();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 }
