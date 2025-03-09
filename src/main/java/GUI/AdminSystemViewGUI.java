@@ -477,6 +477,168 @@ public class AdminSystemViewGUI {
             // CALCULATE TAB
             JPanel calculateTab = new JPanel();
             calculateTab.setBackground(Color.white);
+            calculateTab.setLayout(null);
+
+            // Create the Textarea - Displays the Output when "Generate" Button is pressed
+            JTextArea textArea = new JTextArea();
+            textArea.setEditable(true);
+            textArea.setBackground(Color.white);
+            textArea.setFont(new Font("Monospaced", Font.BOLD, 13));
+            textArea.setLineWrap(true);
+            textArea.setWrapStyleWord(true);
+            textArea.setColumns(2);
+            textArea.setBounds(10,30,400,850);
+            calculateTab.add(textArea);
+
+            // Creates the Save File and Print Button
+            JButton saveFileBtn = new JButton("Save File");
+            JButton printPayslipBtn = new JButton("Print");
+            saveFileBtn.setBounds(10,900,121,45);
+            printPayslipBtn.setBounds(135,900,121,45);
+            calculateTab.add(saveFileBtn);
+            calculateTab.add(printPayslipBtn);
+                //Pay Period
+                JLabel PayPeriodlbl = new JLabel("Pay Period");
+                PayPeriodlbl.setFont(new Font("Lato", Font.BOLD, 25));
+                PayPeriodlbl.setForeground(Color.BLACK);
+                PayPeriodlbl.setBounds(440,30,150,30);
+                calculateTab.add(PayPeriodlbl);
+                //Creates the JLabel for Period Start
+                JLabel payStartDateLbl = new JLabel("Start Date:");
+                payStartDateLbl.setFont(new Font("Lato", Font.PLAIN, 15));
+                payStartDateLbl.setForeground(Color.BLACK);
+                payStartDateLbl.setBounds(440,80,150,30);
+                calculateTab.add(payStartDateLbl);
+                // Creates the Date Chooser
+                JDateChooser dateChooser = new JDateChooser();
+                dateChooser.setBackground(Color.white);
+                dateChooser.setFont(new Font("Lato", Font.PLAIN, 15));
+                dateChooser.setBounds(570,80,200,30);
+                calculateTab.add(dateChooser);
+                // Creates the JLabel for Period End
+                JLabel payEndDateLbl = new JLabel("End Date:");
+                payEndDateLbl.setFont(new Font("Lato", Font.PLAIN, 15));
+                payEndDateLbl.setForeground(Color.BLACK);
+                payEndDateLbl.setBounds(800,80,150,30);
+                calculateTab.add(payEndDateLbl);
+                // Creates the Date Chooser
+                JDateChooser dateChooser2 = new JDateChooser();
+                dateChooser2.setBackground(Color.white);
+                dateChooser2.setFont(new Font("Lato", Font.PLAIN, 15));
+                dateChooser2.setBounds(870,80,200,30);
+                calculateTab.add(dateChooser2);
+
+        Font labelFont2 = new Font("Lato", Font.PLAIN, 16);
+        Color blackColor = Color.BLACK;
+
+        // Create and add components
+        JLabel empIDlbl = new JLabel("Employee ID:");
+        empIDlbl.setFont(labelFont2);
+        empIDlbl.setForeground(blackColor);
+        empIDlbl.setBounds(440,130,150,40);
+        JTextField empIDTextField = new JTextField();
+        empIDTextField.setBounds(570,130,100,40);
+        empIDTextField.setFont(labelFont2);
+        empIDTextField.setForeground(blackColor);
+
+        JLabel fNameLbl = new JLabel("First Name:");
+        fNameLbl.setBounds(440,190,200,40);
+        fNameLbl.setFont(labelFont2);
+        fNameLbl.setForeground(blackColor);
+        JTextField fNameTextField = new JTextField();
+        fNameTextField.setBounds(570,190,250,40);
+        fNameTextField.setFont(labelFont2);
+        fNameTextField.setForeground(blackColor);
+
+        JLabel lastNameLbl = new JLabel("Last Name:");
+        lastNameLbl.setBounds(440,250,200,40);
+        lastNameLbl.setFont(labelFont2);
+        lastNameLbl.setForeground(blackColor);
+        JTextField lastNameTextField = new JTextField();
+        lastNameTextField.setBounds(570,250,250,40);
+        lastNameTextField.setFont(labelFont2);
+        lastNameTextField.setForeground(blackColor);
+
+        JLabel positionLbl = new JLabel("Position:");
+        positionLbl.setBounds(440,310,200,40);
+        positionLbl.setFont(labelFont2);
+        positionLbl.setForeground(blackColor);
+        JTextField positionTextField = new JTextField();
+        positionTextField.setBounds(570,310,250,40);
+        positionTextField.setFont(labelFont2);
+        positionTextField.setForeground(blackColor);
+
+        JLabel daysWorkedLbl = new JLabel("Days Worked:");
+        daysWorkedLbl.setBounds(440,370,120,40);
+        daysWorkedLbl.setFont(labelFont2);
+        daysWorkedLbl.setForeground(blackColor);
+        JTextField daysWorkedTextField = new JTextField();
+        daysWorkedTextField.setBounds(570,370,250,40);
+        daysWorkedTextField.setFont(labelFont2);
+        daysWorkedTextField.setForeground(blackColor);
+
+        JLabel hoursWorkedLbl = new JLabel("Hours Worked:");
+        hoursWorkedLbl.setBounds(440,430,150,40);
+        hoursWorkedLbl.setFont(labelFont2);
+        hoursWorkedLbl.setForeground(blackColor);
+        JTextField hoursWorkedTextField = new JTextField();
+        hoursWorkedTextField.setBounds(570,430,250,40);
+        hoursWorkedTextField.setFont(labelFont2);
+        hoursWorkedTextField.setForeground(blackColor);
+
+        JLabel overtimeLbl = new JLabel("Overtime(Hours):");
+        overtimeLbl.setBounds(440,490,150,40);
+        overtimeLbl.setFont(labelFont2);
+        overtimeLbl.setForeground(blackColor);
+        JTextField overtimeTextField = new JTextField();
+        overtimeTextField.setBounds(570,490,250,40);
+        overtimeTextField.setFont(labelFont2);
+        overtimeTextField.setForeground(blackColor);
+
+        JLabel basicSalaryLbl = new JLabel("Basic Salary:");
+        basicSalaryLbl.setBounds(440,550,150,40);
+        basicSalaryLbl.setFont(labelFont2);
+        basicSalaryLbl.setForeground(blackColor);
+        JTextField basicSalaryTextField = new JTextField();
+        basicSalaryTextField.setBounds(570,550,250,40);
+        basicSalaryTextField.setFont(labelFont2);
+        basicSalaryTextField.setForeground(blackColor);
+
+        JLabel hrlyRateLbl = new JLabel("Hourly Rate:");
+        hrlyRateLbl.setBounds(440,610,150,40);
+        hrlyRateLbl.setFont(labelFont2);
+        hrlyRateLbl.setForeground(blackColor);
+        JTextField hrlyRateTextField = new JTextField();
+        hrlyRateTextField.setBounds(570,610,250,40);
+        hrlyRateTextField.setFont(labelFont2);
+        hrlyRateTextField.setForeground(blackColor);
+
+        JLabel grossIncomeLbl = new JLabel("Gross Income:");
+        grossIncomeLbl.setBounds(440,670,150,40);
+        grossIncomeLbl.setFont(labelFont2);
+        grossIncomeLbl.setForeground(blackColor);
+        JTextField grossIncomeField = new JTextField();
+        grossIncomeField.setBounds(570,670,250,40);
+        grossIncomeField.setFont(labelFont2);
+        grossIncomeField.setForeground(blackColor);
+
+        JLabel benefitsLbl = new JLabel("Benefits");
+        benefitsLbl.setFont(labelFont2);
+        benefitsLbl.setForeground(blackColor);
+
+        JLabel riceSubsidyLbl = new JLabel("Rice Subsidy:");
+        riceSubsidyLbl.setFont(labelFont2);
+        riceSubsidyLbl.setForeground(blackColor);
+        JTextField riceSubsidyTextField = new JTextField();
+        riceSubsidyTextField.setFont(labelFont2);
+        riceSubsidyTextField.setForeground(blackColor);
+
+        JLabel phoneAllowanceLbl = new JLabel("Phone Allowance:");
+        phoneAllowanceLbl.setFont(labelFont2);
+        phoneAllowanceLbl.setForeground(blackColor);
+        JTextField phoneAllowanceTextField = new JTextField();
+        phoneAllowanceTextField.setFont(labelFont2);
+        phoneAllowanceTextField.setForeground(blackColor);
 
             // PAYROLL HISTORY TABLE
             JPanel payrollHistory = new JPanel();
