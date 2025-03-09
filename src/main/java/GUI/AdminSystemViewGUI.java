@@ -4,6 +4,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.sql.*;
@@ -90,7 +92,7 @@ public class AdminSystemViewGUI {
         // Add date and time label
         JLabel dateTimeLabel = new JLabel();
         dateTimeLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-        dateTimeLabel.setForeground(new Color(1, 255, 0));
+        dateTimeLabel.setForeground(new Color(0, 0, 0));
         adminPanel.add(dateTimeLabel);
 
         // Timer to update the date and time label every second
@@ -315,12 +317,15 @@ public class AdminSystemViewGUI {
         // Labels for the Employee and Admin Accounts Table
         JLabel registered_employeeLbl = new JLabel("Registered Employee");
         JLabel registered_adminLbl = new JLabel("Registered Admin");
+
         registered_adminLbl.setFont(latoFont);
         registered_adminLbl.setBounds(30,140,400, 50);
         registered_employeeLbl.setFont(latoFont);
         registered_employeeLbl.setBounds(850, 140, 400, 50);
         employeeRecordsPanel.add(registered_employeeLbl);
         employeeRecordsPanel.add(registered_adminLbl);
+        registered_adminLbl.setVisible(false);
+        registered_employeeLbl.setVisible(false);
 
         // Creates Scrolling within the Admin Table
         JScrollPane adminTable_scrollPane = new JScrollPane(registered_admin_accounts_table);
@@ -356,11 +361,12 @@ public class AdminSystemViewGUI {
         // View Accounts Table Toggle button - if toggled, it will display account table
         accountToggleBtn.addActionListener(e -> {
             if (accountToggleBtn.isSelected()) {
-                registered_adminLbl.setVisible(true);
-                registered_employeeLbl.setVisible(true);
+
                 adminTable_scrollPane.setVisible(true);
                 employeeTable_scrollPane.setVisible(true);
                 emp_record_label.setText("Registered Accounts");
+                registered_adminLbl.setVisible(true);
+                registered_employeeLbl.setVisible(true);
                 scrollPane.setVisible(false);
                 accountToggleBtn.setText("Hide Accounts Table");
                 accountToggleBtn.setToolTipText("Displayed Registered Accounts. Toggle to Display Employee Information.");
@@ -457,27 +463,47 @@ public class AdminSystemViewGUI {
         employeeRecordsPanel.add(emp_record_label);
         employeeRecordsPanel.add(refreshBtn);
 
-        //Creates Payroll Panel-
+
+
+
+        //Create a Payroll Panel
         JPanel payrollPanel = new JPanel();
-        payrollPanel.add(new JLabel("Payroll View"));
-        payrollPanel.setLayout(null);
-            // Payroll Panel Components
+        payrollPanel.setBackground(new Color(0, 150, 255));
+        payrollPanel.setLayout(new BoxLayout(payrollPanel, BoxLayout.Y_AXIS));
+
+        // Payroll Panel Components
             JTabbedPane payrollTabbedPane = new JTabbedPane();
+            payrollTabbedPane.setFont(new Font("Lato", Font.BOLD, 18));
+            // CALCULATE TAB
             JPanel calculateTab = new JPanel();
             calculateTab.setBackground(Color.white);
+
+            // PAYROLL HISTORY TABLE
             JPanel payrollHistory = new JPanel();
-            payrollHistory.setBackground(Color.WHITE);
+            payrollHistory.setBackground(Color.cyan);
+
+            // ADDED THE TABBED PANE TO THE PAYROLL PANEL
+            payrollTabbedPane.addTab("Calculate", calculateTab);
+            payrollTabbedPane.addTab("Payroll History", payrollHistory);
+            payrollPanel.add(payrollTabbedPane);
+
+
+
+
+
+
+
 
         // Adds individual panels to the main panel
         mainPanel.add(employeeRecordsPanel, "EmployeeRecords");
-        mainPanel.add(payrollPanel, "AbstractPayroll");
+        mainPanel.add(payrollPanel, "Payroll");
         mainPanel.add(new JPanel(), "Attendance");
         mainPanel.add(new JPanel(), "Inquiry");
         mainPanel.add(new JPanel(), "Leave Requests");
 
         // Add action listeners to the buttons
         employeeRecordsBtn.addActionListener(e -> cardLayout.show(mainPanel, "EmployeeRecords"));
-        payrollBtn.addActionListener(e -> cardLayout.show(mainPanel, "AbstractPayroll"));
+        payrollBtn.addActionListener(e -> cardLayout.show(mainPanel, "Payroll"));
         attendanceBtn.addActionListener(e -> cardLayout.show(mainPanel, "Attendance"));
         inquiryBtn.addActionListener(e -> cardLayout.show(mainPanel, "Inquiry"));
         leavesBtn.addActionListener(e -> cardLayout.show(mainPanel, "Leave Requests"));
