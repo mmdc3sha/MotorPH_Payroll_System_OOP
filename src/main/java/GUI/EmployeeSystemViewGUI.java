@@ -169,10 +169,15 @@ public class EmployeeSystemViewGUI {
 
         // Logs out of the System
         exitBtn.addActionListener(e -> {
-            frame.dispose();
-            // Assuming RoleLogin is another class responsible for login
-            RoleLogin roleLogin = new RoleLogin();
-            roleLogin.setVisible(true);
+            try {
+                int result = JOptionPane.showConfirmDialog(frame, "Would you like to log out?", "Log Out", JOptionPane.YES_NO_OPTION);
+                if (result == JOptionPane.YES_OPTION) {
+                    frame.dispose();
+                    new LoginGUI();
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            };
         });
 
         // Frame Components
@@ -184,5 +189,9 @@ public class EmployeeSystemViewGUI {
     public static void main(String[] args) {
         // Create an instance of MainSystem to display the frame
         new EmployeeSystemViewGUI();
+    }
+
+    public void setVisible(boolean b) {
+
     }
 }
