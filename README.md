@@ -9,3 +9,7 @@ The MotorPH Payroll System is an object-oriented payroll management system desig
 - Java
 - JSwing, Object-Oriented
 - SQLite Database
+
+# Features
+The payroll system has two modes, one for the Payroll Administrator and the other for Regular MotorPH employees. The Administrator mode features consists of the following:
+1. Payroll Calculation - allows the admin to create/generate payslips. It also has a Payroll History table wherein the admin can view recent and past payslips.
