@@ -743,7 +743,11 @@ public class AdminSystemViewGUI extends PayrollServices {
                  */
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    //fillEmployeeInfo();
+                    try {
+                        fillEmployeeInfo();
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             });
             //Calculate Payroll Button
@@ -810,6 +814,12 @@ public class AdminSystemViewGUI extends PayrollServices {
         JButton phistory_searchBtn = new JButton("Search");
         phistory_searchBtn.setBounds(750, 20,80,30);
 
+
+        // Creates the Print Button for the JTable
+        JButton phistory_printBtn = new JButton("Print");
+        phistory_printBtn.setBounds(1520, 20,80,30);
+        payrollHistory.add(phistory_printBtn);
+
         //Creates the Search Textfield
         JTextField phistorySearchTextField = new JTextField();
         phistorySearchTextField.setBounds(830,20,300,30);
@@ -862,10 +872,15 @@ public class AdminSystemViewGUI extends PayrollServices {
         payrollPanel.add(payrollTabbedPane);
 
 
+        //Creates the Attendance GUI
+        JPanel attendancePanel = new JPanel();
+        attendancePanel.setBackground(new Color(208, 237, 255));
+
+
         // Adds individual panels to the main panel
         mainPanel.add(employeeRecordsPanel, "EmployeeRecords");
         mainPanel.add(payrollPanel, "Payroll");
-        mainPanel.add(new JPanel(), "Attendance");
+        mainPanel.add(attendancePanel, "Attendance");
         mainPanel.add(new JPanel(), "Inquiry");
         mainPanel.add(new JPanel(), "Leave Requests");
 
@@ -897,7 +912,7 @@ public class AdminSystemViewGUI extends PayrollServices {
             return;
         }
         String dbURL = "jdbc:sqlite:src/main/java/MotorPHDatabase.db";
-        String fillQuery = "SELECT first_name, last_name, position FROM employees WHERE employee_id = ?";
+        String fillQuery = "SELECT first_name, last_name, job_position FROM Employee WHERE employee_id = ?";
 
         try(Connection connect =DriverManager.getConnection(dbURL);
             PreparedStatement ps = connect.prepareStatement(fillQuery);
@@ -907,11 +922,15 @@ public class AdminSystemViewGUI extends PayrollServices {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-
+                fNameTextField.setText(rs.getString("first_name"));
+                lastNameTextField.setText(rs.getString("last_name"));
+                positionTextField.setText(rs.getString("job_position"));
+            } else {
+                JOptionPane.showMessageDialog(null, "Employee ID does not exist");
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Erro Fetching Employee First Name, Last Name and Job Position." + ex.getMessage());
+            JOptionPane.showMessageDialog(null, ex.getMessage());
         }
 
 
