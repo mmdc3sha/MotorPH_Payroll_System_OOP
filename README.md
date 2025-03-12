@@ -3,7 +3,7 @@
 Description: Created by Trisha Belle B. Quismundo for Object-Oriented Programming Course @Mapua Malayan Digital College T2-Y2
 
 ---
-
+![Alt Text](URL_to_image)
 The MotorPH Payroll System is an object-oriented payroll management system designed to efficiently manage employee payrolls.
 
 - Java
