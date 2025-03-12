@@ -874,8 +874,46 @@ public class AdminSystemViewGUI extends PayrollServices {
 
         //Creates the Attendance GUI
         JPanel attendancePanel = new JPanel();
-        attendancePanel.setBackground(new Color(208, 237, 255));
+        attendancePanel.setBackground(new Color(208, 237, 255)); // Changes the Color of the Attendance Panel to a bluish color
+        attendancePanel.setLayout(null); // sets the Layout of the Attendance Panel to Null
 
+        //Creates a TableModel for the Attendance Tabel
+        DefaultTableModel attendanceTableModel = new DefaultTableModel();
+        JTable attendanceTable = new JTable(attendanceTableModel);
+        attendanceTable.setRowHeight(20);
+        attendanceTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        attendanceTable.setFont(new Font("Calibri", Font.PLAIN, 14));
+
+
+        //Fetches the Attendance Record Table from the SQLite Database
+        try (Connection conn = DriverManager.getConnection(db_path)) {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("select * from AttendanceRecord");
+
+            //Get metadata to dynamically set columns
+            ResultSetMetaData metaData = rs.getMetaData();
+            int columnCount = metaData.getColumnCount();
+            //Add columns to table Model
+            for (int column = 1; column <= columnCount; column++) {
+                attendanceTableModel.addColumn(metaData.getColumnName(column));
+            }
+
+            //Add rows to table model
+            while (rs.next()) {
+                Object[] row = new Object[columnCount];
+                for (int column = 1; column <= columnCount; column++) {
+                    row[column - 1] = rs.getObject(column);
+                }
+                attendanceTableModel.addRow(row);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        JScrollPane attendanceScrollPane = new JScrollPane(attendanceTable);
+        attendanceScrollPane.setBounds(100, 60, 860, 850);
+        attendanceScrollPane.setWheelScrollingEnabled(true);
+        attendancePanel.add(attendanceScrollPane);
 
         // Adds individual panels to the main panel
         mainPanel.add(employeeRecordsPanel, "EmployeeRecords");
