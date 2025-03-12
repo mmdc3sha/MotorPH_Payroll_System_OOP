@@ -167,6 +167,21 @@ public class AdminSystemViewGUI extends PayrollServices {
         exitBtn.setBackground(new Color(0, 76, 153));
         exitBtn.setForeground(Color.WHITE);
 
+        exitBtn.addActionListener(new ActionListener() {
+           @Override
+           public void actionPerformed(ActionEvent e) {
+               try {
+                   int result = JOptionPane.showConfirmDialog(frame, "Would you like to log out?", "Log Out", JOptionPane.YES_NO_OPTION);
+                   if (result == JOptionPane.YES_OPTION) {
+                       frame.dispose();
+                       new LoginGUI();
+                   }
+               } catch (Exception ex) {
+                   ex.printStackTrace();
+               };
+           }
+        });
+
         // GC.GRIDY Adds the Button in Order
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -730,6 +745,41 @@ public class AdminSystemViewGUI extends PayrollServices {
             withholdingTextField.setFont(labelFont2);
             withholdingTextField.setForeground(blackColor);
 
+            // Font and Color for the Totals Labels
+            Font totalsLabelFont = new Font("Lato", Font.BOLD, 16);
+            Color totalsLabelColor = new Color(2, 95, 5);
+            // Total benefits Label
+            JLabel totalBenefitsLbl = new JLabel("Total Benefits:");
+            totalBenefitsLbl.setBounds(1180,670,150,40);
+            totalBenefitsLbl.setFont(totalsLabelFont);
+            totalBenefitsLbl.setForeground(totalsLabelColor);
+            // Total Benefits Textfield
+            totalBenefitsTextField = new JTextField();
+            totalBenefitsTextField.setEditable(false);
+            totalBenefitsTextField.setBounds(1330,670,250,40);
+            totalBenefitsTextField.setFont(totalsLabelFont);
+            totalBenefitsTextField.setForeground(totalsLabelColor);
+            totalBenefitsTextField.setBorder(new LineBorder(totalsLabelColor));
+            //total Deductions
+            JLabel totalDeductionsLbl = new JLabel("Total Deductions:");
+            totalDeductionsLbl.setFont(totalsLabelFont);
+            totalDeductionsLbl.setForeground(totalsLabelColor);
+            totalDeductionsLbl.setBounds(1180,730,150,40);
+            totalDeductionsTextField = new JTextField();
+            totalDeductionsTextField.setEditable(false);
+            totalDeductionsTextField.setBounds(1330,730,250,40);
+            totalDeductionsTextField.setBorder(new LineBorder(totalsLabelColor));
+
+            //Net Income
+            JLabel netIncomeLbl = new JLabel("Net Income:");
+            netIncomeLbl.setFont(totalsLabelFont);
+            netIncomeLbl.setForeground(totalsLabelColor);
+            netIncomeLbl.setBounds(1180,790,150,40);
+            netIncomeTextField = new JTextField();
+            netIncomeTextField.setEditable(false);
+            netIncomeTextField.setBorder(new LineBorder(totalsLabelColor));
+            netIncomeTextField.setBounds(1330,790,250,40);
+
             //Fill Button
             JButton fillBtn = new JButton("Fill");
             fillBtn.setBounds(1020,130,100,40);
@@ -876,6 +926,15 @@ public class AdminSystemViewGUI extends PayrollServices {
         JPanel attendancePanel = new JPanel();
         attendancePanel.setBackground(new Color(208, 237, 255)); // Changes the Color of the Attendance Panel to a bluish color
         attendancePanel.setLayout(null); // sets the Layout of the Attendance Panel to Null
+
+        JLabel attendanceLabel = new JLabel("Attendance");
+        attendanceLabel.setFont(new Font("Lato", Font.BOLD, 20));
+        attendanceLabel.setBounds(30, 10, 200, 50);
+        attendancePanel.add(attendanceLabel);
+
+        JSeparator attendanceSeperator = new JSeparator();
+        attendancePanel.add(attendanceSeperator);
+        attendanceSeperator.setBounds(30, 55, 200, 50);
 
         //Creates a TableModel for the Attendance Tabel
         DefaultTableModel attendanceTableModel = new DefaultTableModel();

@@ -87,7 +87,7 @@ public class AddEmployeeGUI extends JDialog {
         txtAddress.setFont(textfieldFont);
         txtPhoneNumber = new JTextField(20);
         txtPhoneNumber.setFont(textfieldFont);
-        cbEmploymentStatus = new JComboBox<>(new String[]{"Regular", "Part-time", "Intern"});
+        cbEmploymentStatus = new JComboBox<>(new String[]{"Regular", "Part-time", "Intern", "Probationary"});
         cbEmploymentStatus.setFont(textfieldFont);
         txtJobPosition = new JTextField(20);
         txtJobPosition.setFont(textfieldFont);
