@@ -743,7 +743,11 @@ public class AdminSystemViewGUI extends PayrollServices {
                  */
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    //fillEmployeeInfo();
+                    try {
+                        fillEmployeeInfo();
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             });
             //Calculate Payroll Button
@@ -897,7 +901,7 @@ public class AdminSystemViewGUI extends PayrollServices {
             return;
         }
         String dbURL = "jdbc:sqlite:src/main/java/MotorPHDatabase.db";
-        String fillQuery = "SELECT first_name, last_name, position FROM employees WHERE employee_id = ?";
+        String fillQuery = "SELECT first_name, last_name, job_position FROM Employee WHERE employee_id = ?";
 
         try(Connection connect =DriverManager.getConnection(dbURL);
             PreparedStatement ps = connect.prepareStatement(fillQuery);
@@ -907,11 +911,15 @@ public class AdminSystemViewGUI extends PayrollServices {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-
+                fNameTextField.setText(rs.getString("first_name"));
+                lastNameTextField.setText(rs.getString("last_name"));
+                positionTextField.setText(rs.getString("job_position"));
+            } else {
+                JOptionPane.showMessageDialog(null, "Employee ID does not exist");
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Erro Fetching Employee First Name, Last Name and Job Position." + ex.getMessage());
+            JOptionPane.showMessageDialog(null, ex.getMessage());
         }
 
 
