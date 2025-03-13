@@ -3,6 +3,10 @@ package GUI;
 import AdminView.PayrollServices;
 import com.toedter.calendar.JDateChooser;
 import javax.swing.*;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.border.SoftBevelBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
@@ -18,37 +22,44 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class AdminSystemViewGUI extends PayrollServices {
+    private static final Logger LOGGER = Logger.getLogger(AdminSystemViewGUI.class.getName());
     private final String db_path = "jdbc:sqlite:src/main/java/MotorPHDatabase.db";
     private final JFrame frame;
     private final JPanel mainPanel;
     private final CardLayout cardLayout;
-    private static final Logger LOGGER = Logger.getLogger(AdminSystemViewGUI.class.getName());
-    // --Commented out by Inspection (07/03/2025 6:44 PM// --Commented out by Inspection (07/03/2025 6:44 PM):):private DefaultTableModel employeeRecordsModel;
     private final DefaultTableModel employeeRecordsModel;
     private final JTable employeeRecordsTable;
     private final DefaultTableModel payrollRecordsModel;
     private final JTable payrollRecordsTable;
-    private final JDateChooser dateChooser;
-    private final JDateChooser dateChooser2;
+    private static JDateChooser dateChooser;
+    private static JDateChooser dateChooser2;
     private static JTextField empIDTextField = null;
     private static JTextField fNameTextField = null;
     private static JTextField lastNameTextField = null;
     private static JTextField positionTextField = null;
-    private final JTextField daysWorkedTextField;
-    private final JTextField hoursWorkedTextField;
-    private final JTextField overtimeTextField;
-    private final JTextField basicSalaryTextField;
-    private final JTextField hrlyRateTextField;
-    private final JTextField grossIncomeField;
-    private final JTextField riceSubsidyTextField;
-    private final JTextField phoneAllowanceTextField;
-    private final JTextField clothAllowanceTextField;
-    private final JTextField sssTextField;
-    private final JTextField philHealthTextField;
-    private final JTextField pagIBIGTextField;
-    private final JTextField withholdingTextField;
+    private static JTextField daysWorkedTextField = null;
+    private static JTextField hoursWorkedTextField = null;
+    private static JTextField overtimeTextField = null;
+    private static JTextField basicSalaryTextField = null;
+    private static JTextField hrlyRateTextField = null;
+    private static JTextField grossIncomeField = null;
+    private static JTextField riceSubsidyTextField = null;
+    private static JTextField phoneAllowanceTextField = null;
+    private static JTextField clothAllowanceTextField = null;
+    private static JTextField sssTextField = null;
+    private static JTextField philHealthTextField = null;
+    private static JTextField pagIBIGTextField = null;
+    private static JTextField withholdingTextField = null;
+    private static JTextField totalBenefitsTextField = null;
+    private static JTextField totalDeductionsTextField = null;
+    private static JTextField netIncomeTextField = null;
 
     public AdminSystemViewGUI() throws SQLException {
+        super(dateChooser, dateChooser2,  empIDTextField,  fNameTextField,  lastNameTextField,  positionTextField,  daysWorkedTextField,
+                 hoursWorkedTextField,  overtimeTextField,  basicSalaryTextField,  hrlyRateTextField,  grossIncomeField,  riceSubsidyTextField,
+                 phoneAllowanceTextField,  clothAllowanceTextField, sssTextField,  philHealthTextField,  pagIBIGTextField,  withholdingTextField,
+                totalBenefitsTextField,  totalDeductionsTextField,  netIncomeTextField);
+
         frame = new JFrame("MotorPH: Administrator Mode");
         Image appIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/motorph_logo.png"))).getImage();
         frame.setIconImage(appIcon);
@@ -514,7 +525,7 @@ public class AdminSystemViewGUI extends PayrollServices {
 
         //Create a Payroll Panel
         JPanel payrollPanel = new JPanel();
-        payrollPanel.setBackground(new Color(0, 150, 255));
+        payrollPanel.setBackground(new Color(0, 12, 20));
         payrollPanel.setLayout(new BoxLayout(payrollPanel, BoxLayout.Y_AXIS));
         // Payroll Panel Components
             JTabbedPane payrollTabbedPane = new JTabbedPane(); // Creates the Tabbed Pane
@@ -523,7 +534,7 @@ public class AdminSystemViewGUI extends PayrollServices {
 
             // CALCULATE TAB
             JPanel calculateTab = new JPanel();
-            calculateTab.setBackground(Color.white);
+            calculateTab.setBackground(new Color(233, 247, 255, 255));
             calculateTab.setLayout(null);
 
             // Creates the Save File and Print Button
@@ -668,6 +679,7 @@ public class AdminSystemViewGUI extends PayrollServices {
             grossIncomeField.setBounds(870,670,250,40);
             grossIncomeField.setFont(labelFont2);
             grossIncomeField.setForeground(blackColor);
+            grossIncomeField.setEditable(false);
 
             JLabel benefitsLbl = new JLabel("Benefits");
             benefitsLbl.setBounds(1180, 130,150,50);
@@ -735,11 +747,12 @@ public class AdminSystemViewGUI extends PayrollServices {
             pagIBIGTextField.setFont(labelFont2);
             pagIBIGTextField.setForeground(blackColor);
 
+            //Withholding Label
             JLabel withholdingLbl = new JLabel("Withholding Tax:");
             withholdingLbl.setFont(labelFont2);
             withholdingLbl.setForeground(blackColor);
             withholdingLbl.setBounds(1180,610,150,40);
-
+            // Withholding Textfield
             withholdingTextField = new JTextField();
             withholdingTextField.setBounds(1330,610,250,40);
             withholdingTextField.setFont(labelFont2);
@@ -785,7 +798,6 @@ public class AdminSystemViewGUI extends PayrollServices {
             fillBtn.setBounds(1020,130,100,40);
             fillBtn.setFont(labelFont2);
             fillBtn.setForeground(blackColor);
-
             fillBtn.addActionListener(new ActionListener() {
 
                 /**
@@ -802,9 +814,10 @@ public class AdminSystemViewGUI extends PayrollServices {
             });
             //Calculate Payroll Button
             JButton calculateBtn = new JButton("Calculate");
-            calculateBtn.setFont(labelFont2);
-            calculateBtn.setForeground(blackColor);
-            calculateBtn.setBounds(1170,670,100,50);
+            calculateBtn.setFont(new Font("Lato", Font.BOLD, 15));
+            calculateBtn.setForeground(Color.white);
+            calculateBtn.setBounds(982,900,121,45);
+            calculateBtn.setBackground(new Color(6, 129, 181));
 
         JPanel outputPanel = new JPanel();
         calculateTab.add(outputPanel);
@@ -850,6 +863,12 @@ public class AdminSystemViewGUI extends PayrollServices {
                 calculateTab.add(pagIBIGTextField);
                 calculateTab.add(withholdingLbl);
                 calculateTab.add(withholdingTextField);
+                calculateTab.add(totalBenefitsLbl);
+                calculateTab.add(totalBenefitsTextField);
+                calculateTab.add(totalDeductionsLbl);
+                calculateTab.add(totalDeductionsTextField);
+                calculateTab.add(netIncomeLbl);
+                calculateTab.add(netIncomeTextField);
                 calculateTab.add(fillBtn);
                 calculateTab.add(calculateBtn);
 
@@ -868,7 +887,8 @@ public class AdminSystemViewGUI extends PayrollServices {
         // Creates the Print Button for the JTable
         JButton phistory_printBtn = new JButton("Print");
         phistory_printBtn.setBounds(1520, 20,80,30);
-        payrollHistory.add(phistory_printBtn);
+
+
 
         //Creates the Search Textfield
         JTextField phistorySearchTextField = new JTextField();
@@ -882,7 +902,17 @@ public class AdminSystemViewGUI extends PayrollServices {
         payrollHistoryOutput.setLayout(null);
         payrollHistoryOutput.setBounds(20, 40, 700, 900);
         payrollHistoryOutput.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        payrollHistory.add(payrollHistoryOutput);
+
+
+        //Components of Payroll History Output
+
+        //Prints the Payroll History Output panel
+        phistory_printBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
 
         //Creates the Table Model
         payrollRecordsModel = new DefaultTableModel();
@@ -910,10 +940,9 @@ public class AdminSystemViewGUI extends PayrollServices {
         payrollHistoryScrollPane.setBounds(750, 60, 860, 850);
         payrollHistoryScrollPane.setWheelScrollingEnabled(true);
         payrollHistory.add(payrollHistoryScrollPane);
+        payrollHistory.add(phistory_printBtn);
 
         // Retrieves the Data from the Payroll Table
-        PayrollServices payrollServices = new PayrollServices();
-        payrollServices.fetchPayrollHistory(payrollRecordsModel);
 
 
         // ADDED THE TABBED PANE TO THE PAYROLL PANEL
@@ -938,11 +967,13 @@ public class AdminSystemViewGUI extends PayrollServices {
 
         //Creates a TableModel for the Attendance Tabel
         DefaultTableModel attendanceTableModel = new DefaultTableModel();
+        TableRowSorter<DefaultTableModel> attendanceTable_sorter = new TableRowSorter<>(attendanceTableModel);
+        attendanceTable_sorter.setSortsOnUpdates(true);
         JTable attendanceTable = new JTable(attendanceTableModel);
         attendanceTable.setRowHeight(20);
         attendanceTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         attendanceTable.setFont(new Font("Calibri", Font.PLAIN, 14));
-
+        attendanceTable.setRowSorter(attendanceTable_sorter);
 
         //Fetches the Attendance Record Table from the SQLite Database
         try (Connection conn = DriverManager.getConnection(db_path)) {
@@ -969,8 +1000,9 @@ public class AdminSystemViewGUI extends PayrollServices {
             e.printStackTrace();
         }
 
+        //creates a ScrollPane and wraps the AttendanceTable
         JScrollPane attendanceScrollPane = new JScrollPane(attendanceTable);
-        attendanceScrollPane.setBounds(100, 60, 860, 850);
+        attendanceScrollPane.setBounds(30, 70, 860, 950);
         attendanceScrollPane.setWheelScrollingEnabled(true);
         attendancePanel.add(attendanceScrollPane);
 
@@ -987,12 +1019,6 @@ public class AdminSystemViewGUI extends PayrollServices {
         attendanceBtn.addActionListener(e -> cardLayout.show(mainPanel, "Attendance"));
         inquiryBtn.addActionListener(e -> cardLayout.show(mainPanel, "Inquiry"));
         leavesBtn.addActionListener(e -> cardLayout.show(mainPanel, "Leave Requests"));
-
-        // Logs out of the System
-        exitBtn.addActionListener(e -> {
-            AdminSystemViewGUI.this.frame.dispose();
-
-        });
 
         // Frame Components
         frame.getContentPane().add(menuPanel);

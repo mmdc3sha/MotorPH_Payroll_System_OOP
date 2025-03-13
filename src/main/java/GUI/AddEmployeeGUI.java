@@ -281,7 +281,6 @@ public class AddEmployeeGUI extends JDialog {
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }finally {
-                    JOptionPane.showMessageDialog(null, "Employee saved successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
                     dispose();
                 }
         });
