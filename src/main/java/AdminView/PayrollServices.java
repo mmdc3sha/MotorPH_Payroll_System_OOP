@@ -8,62 +8,83 @@ import java.util.logging.Logger;
 
 public class PayrollServices implements PayrollServiceInterface {
     private static final Logger LOGGER = Logger.getLogger(PayrollServices.class.getName());
+    private static final String DB_URL = "jdbc:sqlite:src/main/java/MotorPHDatabase.db"; // Externalize Database Path
 
-    private static JDateChooser dateChooser = null;
-    private static JDateChooser dateChooser2 = null;
-    private static JTextField empIDTextField = null;
-    private static JTextField fNameTextField = null;
-    private static JTextField lastNameTextField = null;
-    private static JTextField positionTextField = null;
-    private static JTextField daysWorkedTextField = null;
-    private static JTextField hoursWorkedTextField = null;
-    private static JTextField overtimeTextField = null;
-    private static JTextField basicSalaryTextField = null;
-    private static JTextField hrlyRateTextField = null;
-    private static JTextField grossIncomeField = null;
-    private static JTextField riceSubsidyTextField = null;
-    private static JTextField phoneAllowanceTextField = null;
-    private static JTextField clothAllowanceTextField = null;
-    private static JTextField sssTextField = null;
-    private static JTextField philHealthTextField = null;
-    private static JTextField pagIBIGTextField = null;
-    private static JTextField withholdingTextField = null;
-    private static JTextField totalBenefitsTextField = null;
-    private static JTextField totalDeductionsTextField = null;
-    private static JTextField netIncomeTextField = null;
-    private static final String DB_URL = "jdbc:sqlite:src/main/java/MotorPHDatabase.db"; // Externalize this configuration
+    private JDateChooser dateChooser;
+    private JDateChooser dateChooser2;
+    private JTextField empIDTextField;
+    private JTextField fNameTextField;
+    private JTextField lastNameTextField;
+    private JTextField positionTextField;
+    private JTextField daysWorkedTextField;
+    private JTextField hoursWorkedTextField;
+    private JTextField overtimeTextField;
+    private JTextField basicSalaryTextField;
+    private JTextField hrlyRateTextField;
+    private JTextField grossIncomeField;
+    private JTextField riceSubsidyTextField;
+    private JTextField phoneAllowanceTextField;
+    private JTextField clothAllowanceTextField;
+    private JTextField sssTextField;
+    private JTextField philHealthTextField;
+    private JTextField pagIBIGTextField;
+    private JTextField withholdingTextField;
+    private JTextField totalBenefitsTextField;
+    private JTextField totalDeductionsTextField;
+    private JTextField netIncomeTextField;
 
-    public PayrollServices(JDateChooser dateChooser, JDateChooser dateChooser2, JTextField empIDTextField, JTextField fNameTextField, JTextField lastNameTextField, JTextField positionTextField, JTextField daysWorkedTextField,
-                           JTextField hoursWorkedTextField, JTextField overtimeTextField, JTextField basicSalaryTextField, JTextField hrlyRateTextField, JTextField grossIncomeField, JTextField riceSubsidyTextField,
-                           JTextField phoneAllowanceTextField, JTextField clothAllowanceTextField,JTextField sssTextField, JTextField philHealthTextField, JTextField pagIBIGTextField, JTextField withholdingTextField, JTextField totalBenefitsTextField, JTextField totalDeductionsTextField, JTextField netIncomeTextField) {
-        PayrollServices.dateChooser = dateChooser;
-        PayrollServices.dateChooser2 = dateChooser2;
-        PayrollServices.empIDTextField = empIDTextField;
-        PayrollServices.fNameTextField = fNameTextField;
-        PayrollServices.lastNameTextField = lastNameTextField;
-        PayrollServices.positionTextField = positionTextField;
-        PayrollServices.daysWorkedTextField = daysWorkedTextField;
-        PayrollServices.hoursWorkedTextField = hoursWorkedTextField;
-        PayrollServices.overtimeTextField = overtimeTextField;
-        PayrollServices.basicSalaryTextField = basicSalaryTextField;
-        PayrollServices.hrlyRateTextField = hrlyRateTextField;
-        PayrollServices.grossIncomeField = grossIncomeField;
-        PayrollServices.riceSubsidyTextField = riceSubsidyTextField;
-        PayrollServices.phoneAllowanceTextField = phoneAllowanceTextField;
-        PayrollServices.clothAllowanceTextField = clothAllowanceTextField;
-        PayrollServices.sssTextField = sssTextField;
-        PayrollServices.philHealthTextField = philHealthTextField;
-        PayrollServices.pagIBIGTextField = pagIBIGTextField;
-        PayrollServices.withholdingTextField = withholdingTextField;
-        PayrollServices.totalBenefitsTextField = totalBenefitsTextField;
-        PayrollServices.totalDeductionsTextField = totalDeductionsTextField;
-        PayrollServices.netIncomeTextField = netIncomeTextField;
+    public PayrollServices(JDateChooser dateChooser,
+                           JDateChooser dateChooser2,
+                           JTextField empIDTextField,
+                           JTextField fNameTextField,
+                           JTextField lastNameTextField,
+                           JTextField positionTextField,
+                           JTextField daysWorkedTextField,
+                           JTextField hoursWorkedTextField,
+                           JTextField overtimeTextField,
+                           JTextField basicSalaryTextField,
+                           JTextField hrlyRateTextField,
+                           JTextField grossIncomeField,
+                           JTextField riceSubsidyTextField,
+                           JTextField phoneAllowanceTextField,
+                           JTextField clothAllowanceTextField,
+                           JTextField sssTextField,
+                           JTextField philHealthTextField,
+                           JTextField pagIBIGTextField,
+                           JTextField withholdingTextField,
+                           JTextField totalBenefitsTextField,
+                           JTextField totalDeductionsTextField,
+                           JTextField netIncomeTextField) {
+
+        this.dateChooser = dateChooser;
+        this.dateChooser2 = dateChooser2;
+        this.empIDTextField = empIDTextField;
+        this.fNameTextField = fNameTextField;
+        this.lastNameTextField = lastNameTextField;
+        this.positionTextField = positionTextField;
+        this.daysWorkedTextField = daysWorkedTextField;
+        this.hoursWorkedTextField = hoursWorkedTextField;
+        this.overtimeTextField = overtimeTextField;
+        this.basicSalaryTextField = basicSalaryTextField;
+        this.hrlyRateTextField = hrlyRateTextField;
+        this.grossIncomeField = grossIncomeField;
+        this.riceSubsidyTextField = riceSubsidyTextField;
+        this.phoneAllowanceTextField = phoneAllowanceTextField;
+        this.clothAllowanceTextField = clothAllowanceTextField;
+        this.sssTextField = sssTextField;
+        this.philHealthTextField = philHealthTextField;
+        this.pagIBIGTextField = pagIBIGTextField;
+        this.withholdingTextField = withholdingTextField;
+        this.totalBenefitsTextField = totalBenefitsTextField;
+        this.totalDeductionsTextField = totalDeductionsTextField;
+        this.netIncomeTextField = netIncomeTextField;
+
     }
 
 
     // Calculates the Payroll
     @Override
-    public void calculatePayroll() {
+    public void calculatePayroll() throws SQLException {
         try {
             String startDate = dateChooser.getDate().toString();
             String endDate = dateChooser2.getDate().toString();
@@ -110,7 +131,7 @@ public class PayrollServices implements PayrollServiceInterface {
             insertPayrollData(Integer.parseInt(empID), startDate, endDate, fName, lastName, position, basicSalary, hourlyRate, daysWorked, hoursWorked,
                     overtime, grossIncome, riceSubsidy, phoneAllowance, clothAllowance, totalBenefits, sss, philHealth, pagIBIG, totalDeductions, taxableIncome, withholdingTax, netIncome);
         } catch (NumberFormatException e) {
-            throw new RuntimeException(e);
+            JOptionPane.showMessageDialog(null, "Invalid number format! Please check your input.", "Input Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -211,7 +232,6 @@ public class PayrollServices implements PayrollServiceInterface {
                 };
                 tableModel.addRow(rowData);
             }
-            JOptionPane.showMessageDialog(null, "Payroll History Retrieved.");
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "An error occurred." + e.getMessage());
         } finally {
