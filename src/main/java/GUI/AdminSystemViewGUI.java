@@ -31,8 +31,8 @@ public class AdminSystemViewGUI extends PayrollServices {
     private final JTable employeeRecordsTable;
     private final DefaultTableModel payrollRecordsModel;
     private final JTable payrollRecordsTable;
-    private static JDateChooser dateChooser;
-    private static JDateChooser dateChooser2;
+    private static JDateChooser dateChooser = null;
+    private static JDateChooser dateChooser2 = null;
     private static JTextField empIDTextField = null;
     private static JTextField fNameTextField = null;
     private static JTextField lastNameTextField = null;
@@ -55,10 +55,9 @@ public class AdminSystemViewGUI extends PayrollServices {
     private static JTextField netIncomeTextField = null;
 
     public AdminSystemViewGUI() throws SQLException {
-        super(dateChooser, dateChooser2,  empIDTextField,  fNameTextField,  lastNameTextField,  positionTextField,  daysWorkedTextField,
-                 hoursWorkedTextField,  overtimeTextField,  basicSalaryTextField,  hrlyRateTextField,  grossIncomeField,  riceSubsidyTextField,
-                 phoneAllowanceTextField,  clothAllowanceTextField, sssTextField,  philHealthTextField,  pagIBIGTextField,  withholdingTextField,
-                totalBenefitsTextField,  totalDeductionsTextField,  netIncomeTextField);
+        super(dateChooser, dateChooser2, empIDTextField, fNameTextField, lastNameTextField, positionTextField, daysWorkedTextField, hoursWorkedTextField, overtimeTextField, basicSalaryTextField, hrlyRateTextField, grossIncomeField, riceSubsidyTextField, phoneAllowanceTextField, clothAllowanceTextField,
+                sssTextField, philHealthTextField, pagIBIGTextField, withholdingTextField, totalBenefitsTextField, totalDeductionsTextField, netIncomeTextField);
+
 
         frame = new JFrame("MotorPH: Administrator Mode");
         Image appIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/motorph_logo.png"))).getImage();
@@ -812,6 +811,7 @@ public class AdminSystemViewGUI extends PayrollServices {
                     }
                 }
             });
+
             //Calculate Payroll Button
             JButton calculateBtn = new JButton("Calculate");
             calculateBtn.setFont(new Font("Lato", Font.BOLD, 15));
@@ -831,14 +831,14 @@ public class AdminSystemViewGUI extends PayrollServices {
             });
 
 
+
+
         JPanel outputPanel = new JPanel();
         calculateTab.add(outputPanel);
         outputPanel.setBackground(new Color(255, 255, 255));
         outputPanel.setLayout(null);
         outputPanel.setBounds(20,40,700,900);
         outputPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-
-
                calculateTab.add(empIDlbl);
                 calculateTab.add(empIDTextField);
                 calculateTab.add(fNameLbl);
@@ -946,6 +946,8 @@ public class AdminSystemViewGUI extends PayrollServices {
         for (int i = 0; i < payrollRecordsTable.getColumnModel().getColumnCount(); i++) {
             payrollRecordsTable.getColumnModel().getColumn(i).setPreferredWidth(100);
         }
+        fetchPayrollHistory(payrollRecordsModel); // Retrieves the Data from the Payroll Table
+
 
         //Adds a scrollpane to the JTable
         JScrollPane payrollHistoryScrollPane = new JScrollPane(payrollRecordsTable);
@@ -953,9 +955,6 @@ public class AdminSystemViewGUI extends PayrollServices {
         payrollHistoryScrollPane.setWheelScrollingEnabled(true);
         payrollHistory.add(payrollHistoryScrollPane);
         payrollHistory.add(phistory_printBtn);
-
-        // Retrieves the Data from the Payroll Table
-
 
         // ADDED THE TABBED PANE TO THE PAYROLL PANEL
         payrollTabbedPane.addTab("Calculate", calculateTab);
@@ -1047,7 +1046,7 @@ public class AdminSystemViewGUI extends PayrollServices {
             return;
         }
         String dbURL = "jdbc:sqlite:src/main/java/MotorPHDatabase.db";
-        String fillQuery = "SELECT first_name, last_name, job_position FROM Employee WHERE employee_id = ?";
+        String fillQuery = "SELECT first_name, last_name, job_position, basic_salary, hourly_rate, rice_subsidy, phone_allowance,clothing_allowance FROM Employee WHERE employee_id = ?";
 
         try(Connection connect =DriverManager.getConnection(dbURL);
             PreparedStatement ps = connect.prepareStatement(fillQuery);
@@ -1060,6 +1059,11 @@ public class AdminSystemViewGUI extends PayrollServices {
                 fNameTextField.setText(rs.getString("first_name"));
                 lastNameTextField.setText(rs.getString("last_name"));
                 positionTextField.setText(rs.getString("job_position"));
+                basicSalaryTextField.setText(rs.getString("basic_salary"));
+                hrlyRateTextField.setText(rs.getString("hourly_rate"));
+                riceSubsidyTextField.setText(rs.getString("rice_subsidy"));
+                phoneAllowanceTextField.setText(rs.getString("phone_allowance"));
+                clothAllowanceTextField.setText(rs.getString("clothing_allowance"));
             } else {
                 JOptionPane.showMessageDialog(null, "Employee ID does not exist");
             }
@@ -1193,6 +1197,93 @@ public class AdminSystemViewGUI extends PayrollServices {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+    public static JDateChooser getDateChooser() {
+        return dateChooser;
+    }
+
+    public static JDateChooser getDateChooser2() {
+        return dateChooser2;
+    }
+
+    public static JTextField getEmpIDTextField() {
+        return empIDTextField;
+    }
+
+    public static JTextField getfNameTextField() {
+        return fNameTextField;
+    }
+
+    public static JTextField getLastNameTextField() {
+        return lastNameTextField;
+    }
+
+    public static JTextField getPositionTextField() {
+        return positionTextField;
+    }
+
+    public static JTextField getDaysWorkedTextField() {
+        return daysWorkedTextField;
+    }
+
+    public static JTextField getHoursWorkedTextField() {
+        return hoursWorkedTextField;
+    }
+
+    public static JTextField getOvertimeTextField() {
+        return overtimeTextField;
+    }
+
+    public static JTextField getBasicSalaryTextField() {
+        return basicSalaryTextField;
+    }
+
+    public static JTextField getHrlyRateTextField() {
+        return hrlyRateTextField;
+    }
+
+    public static JTextField getGrossIncomeField() {
+        return grossIncomeField;
+    }
+
+    public static JTextField getRiceSubsidyTextField() {
+        return riceSubsidyTextField;
+    }
+
+    public static JTextField getPhoneAllowanceTextField() {
+        return phoneAllowanceTextField;
+    }
+
+    public static JTextField getClothAllowanceTextField() {
+        return clothAllowanceTextField;
+    }
+
+    public static JTextField getSssTextField() {
+        return sssTextField;
+    }
+
+    public static JTextField getPhilHealthTextField() {
+        return philHealthTextField;
+    }
+
+    public static JTextField getPagIBIGTextField() {
+        return pagIBIGTextField;
+    }
+
+    public static JTextField getWithholdingTextField() {
+        return withholdingTextField;
+    }
+
+    public static JTextField getTotalBenefitsTextField() {
+        return totalBenefitsTextField;
+    }
+
+    public static JTextField getTotalDeductionsTextField() {
+        return totalDeductionsTextField;
+    }
+
+    public static JTextField getNetIncomeTextField() {
+        return netIncomeTextField;
     }
 
     //Sets the frame to Visible
