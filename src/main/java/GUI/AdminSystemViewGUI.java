@@ -944,6 +944,7 @@ public class AdminSystemViewGUI extends PayrollServices {
         payrollRecordsModel.addColumn("Pay Period End");
         payrollRecordsModel.addColumn("First Name");
         payrollRecordsModel.addColumn("Last Name");
+        payrollRecordsModel.addColumn("Position");
         payrollRecordsModel.addColumn("Total Benefits");
         payrollRecordsModel.addColumn("Total Gross");
         payrollRecordsModel.addColumn("Total Deductions");
@@ -956,8 +957,6 @@ public class AdminSystemViewGUI extends PayrollServices {
         for (int i = 0; i < payrollRecordsTable.getColumnModel().getColumnCount(); i++) {
             payrollRecordsTable.getColumnModel().getColumn(i).setPreferredWidth(100);
         }
-        fetchPayrollHistory(payrollRecordsModel); // Retrieves the Data from the Payroll Table
-
 
         //Adds a scrollpane to the JTable
         JScrollPane payrollHistoryScrollPane = new JScrollPane(payrollRecordsTable);
@@ -967,6 +966,7 @@ public class AdminSystemViewGUI extends PayrollServices {
         payrollHistory.add(phistory_printBtn);
 
         // ADDED THE TABBED PANE TO THE PAYROLL PANEL
+        displayPayrollRecord(payrollRecordsModel);
         payrollTabbedPane.addTab("Calculate", calculateTab);
         payrollTabbedPane.addTab("Payroll History", payrollHistory);
         payrollPanel.add(payrollTabbedPane);
@@ -1129,10 +1129,10 @@ public class AdminSystemViewGUI extends PayrollServices {
                 int empId = rs.getInt("emp_id");
                 String username = rs.getString("username");
                 String password = rs.getString("password");
-
                 // Add row to table model
                 registered_admin_accounts_table.addRow(new Object[]{empId, username, password});
             }
+            registered_admin_accounts_table.fireTableDataChanged();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -1158,7 +1158,9 @@ public class AdminSystemViewGUI extends PayrollServices {
 
                 // Add row to table model
                 registered_emp_accounts_table.addRow(new Object[]{empId, username, password});
+
             }
+            registered_emp_accounts_table.fireTableDataChanged();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -1203,12 +1205,42 @@ public class AdminSystemViewGUI extends PayrollServices {
                         rs.getDouble("gross_semi_monthly_rate")
                 };
                 emp_table.addRow(row);
-            }
 
+            }
+            emp_table.fireTableDataChanged();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
+    private void displayPayrollRecord(DefaultTableModel payrollRecordsModel) {
+        String sql = "SELECT payroll_id, emp_id, pay_period_start, pay_period_end, first_name, last_name, job_position, gross_income, total_benefits, total_deductions, net_income FROM Payroll";
+        try (Connection conn = DriverManager.getConnection(db_path);
+             Statement stmnt = conn.createStatement();
+             ResultSet rs = stmnt.executeQuery(sql)
+        ) {
+            while ((rs.next())) {
+                payrollRecordsModel.addRow(new Object[]{
+                        rs.getInt("payroll_id"),
+                        rs.getInt("emp_id"),
+                        rs.getInt("pay_period_start"),
+                        rs.getString("pay_period_end"),
+                        rs.getString("first_name"),
+                        rs.getString("last_name"),
+                        rs.getString("job_position"),
+                        rs.getString("gross_income"),
+                        rs.getDouble("total_benefits"),
+                        rs.getDouble("total_deductions"),
+                        rs.getDouble("net_income")
+                });
+            }
+            payrollRecordsModel.fireTableDataChanged();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     public static JDateChooser getDateChooser() {
         return dateChooser;
     }

@@ -1,10 +1,11 @@
 package AdminView;
 import com.toedter.calendar.JDateChooser;
-import org.sqlite.core.DB;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -84,28 +85,13 @@ public class PayrollServices implements PayrollServiceInterface {
     // Calculates the Payroll
     @Override
     public void calculatePayroll() throws SQLException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+
+        if (dateChooser.getDate() == null || dateChooser2.getDate() == null) {
+            JOptionPane.showMessageDialog(null, "Please choose valid pay period dates.", "Date Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         try {
-            // Ensure dateChooser is not null before accessing getDate()
-            if (dateChooser == null) {
-                JOptionPane.showMessageDialog(null, "Error: Date Picker is not initialized!", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            if (dateChooser.getDate() == null) {
-                JOptionPane.showMessageDialog(null, "Please choose a pay period start date.", "Start Date Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            if (dateChooser2 == null) {
-                JOptionPane.showMessageDialog(null, "Error: Date Picker 2 is not initialized!", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            if (dateChooser2.getDate() == null) {
-                JOptionPane.showMessageDialog(null, "Please choose a pay period end date.", "End Date Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
             if (empIDTextField == null) {
                 JOptionPane.showMessageDialog(null, "Error: Employee ID TextField is not initialized!", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -114,8 +100,8 @@ public class PayrollServices implements PayrollServiceInterface {
             }
 
             // Convert Date to String
-            String startDate = dateChooser.getDate().toString();
-            String endDate = dateChooser2.getDate().toString();
+            String startDate = dateFormat.format(dateChooser.getDate());
+            String endDate = dateFormat.format(dateChooser2.getDate());
             String empID = empIDTextField.getText();
             String fName = fNameTextField.getText();
             String lastName = lastNameTextField.getText();
@@ -131,28 +117,17 @@ public class PayrollServices implements PayrollServiceInterface {
             double riceSubsidy = riceSubsidyTextField.getText().trim().isEmpty() ? 0.0 : Double.parseDouble(riceSubsidyTextField.getText().trim());
             double phoneAllowance = phoneAllowanceTextField.getText().trim().isEmpty() ? 0.0 : Double.parseDouble(phoneAllowanceTextField.getText().trim());
             double clothAllowance = clothAllowanceTextField.getText().trim().isEmpty() ? 0.0 : Double.parseDouble(clothAllowanceTextField.getText().trim());
-
             double sss = sssTextField.getText().trim().isEmpty() ? 0.0 : Double.parseDouble(sssTextField.getText().trim());
             double philHealth = philHealthTextField.getText().trim().isEmpty() ? 0.0 : Double.parseDouble(philHealthTextField.getText().trim());
             double pagIBIG = pagIBIGTextField.getText().trim().isEmpty() ? 0.0 : Double.parseDouble(pagIBIGTextField.getText().trim());
 
-            // ✅ Step 1: Compute Gross Income
             double grossIncome = basicSalary + (hourlyRate * overtime);
-
-            // ✅ Step 2: Compute Total Benefits and Deductions
             double totalBenefits = riceSubsidy + phoneAllowance + clothAllowance;
             double totalDeductions = sss + philHealth + pagIBIG;
-
-            // ✅ Step 3: Compute Taxable Income
             double taxableIncome = grossIncome - totalDeductions;
-
-            // ✅ Step 4: Compute Withholding Tax
             double withholdingTax = calculateWithholdingTax(taxableIncome);
-
-            // ✅ Step 5: Compute Net Income
             double netIncome = taxableIncome - withholdingTax;
 
-            // ✅ Step 6: Update UI Fields
             grossIncomeField.setText(String.format("%.2f", grossIncome));
             totalBenefitsTextField.setText(String.format("%.2f", totalBenefits));
             totalDeductionsTextField.setText(String.format("%.2f", totalDeductions));
@@ -192,9 +167,13 @@ public class PayrollServices implements PayrollServiceInterface {
                                   int daysWorked, int hoursWorked, int overtime, double grossIncome, double riceSubsidy, double phoneAllowance, double clothAllowance,
                                   double totalBenefits, double sss, double philHealth, double pagIBIG, double totalDeductions, double taxableIncome, double withholdingTax,
                                   double netIncome) {
-        String sql = "INSERT INTO Payroll (emp_id, pay_period_start, pay_period_end, first_name, last_name, job_position, basic_salary, hourly_rate, days_worked, hours_worked, overtime_hours, " +
-                "gross_income, rice_subsidy, phone_allowance, clothing_allowance, total_benefits, sss_deduction, philhealth_deduction, pagibig_deduction, total_deductions, taxable_income, withholding_tax, net_income) " +
+        String sql = "INSERT INTO Payroll (emp_id, pay_period_start, pay_period_end, first_name, last_name, job_position, " +
+                "basic_salary, hourly_rate, days_worked, hours_worked, overtime_hours, gross_income, " +
+                "rice_subsidy, phone_allowance, clothing_allowance, total_benefits, " +
+                "sss_deduction, philhealth_deduction, pagibig_deduction, total_deductions, taxable_income, " +
+                "withholding_tax, net_income) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
 
         try (Connection conn = DriverManager.getConnection(DB_URL);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -227,54 +206,6 @@ public class PayrollServices implements PayrollServiceInterface {
             JOptionPane.showMessageDialog(null, "Payroll Calculation Completed.");
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, String.format("Calculation Failed: %s", e.getMessage()));
-        }
-    }
-    // Displays the data in the payroll history tab
-
-    @Override
-    public void fetchPayrollHistory(DefaultTableModel tableModel) {
-        Connection connection = null;
-        Statement statement = null;
-        ResultSet resultSet = null;
-
-        try {
-            connection = DriverManager.getConnection(DB_URL);
-            statement = connection.createStatement();
-
-            //Execute the SQL Query to retrieve certain columns
-            String selectQuery = "SELECT payroll_id, emp_ID, pay_period_start, pay_period_end, first_name, last_name, total_benefits," +
-                    " gross_income, total_deductions, taxable_income, net_income FROM Payroll";
-            resultSet = statement.executeQuery(selectQuery);
-
-            tableModel.setRowCount(0);
-
-            while (resultSet.next()) {
-                Object[] rowData = {
-                        resultSet.getInt("payroll_id"),
-                        resultSet.getInt("emp_ID"),
-                        resultSet.getDate("pay_period_start"),
-                        resultSet.getDate("pay_period_end"),
-                        resultSet.getString("first_name"),
-                        resultSet.getString("last_name"),
-                        resultSet.getString("total_benefits"),
-                        resultSet.getString("taxable_income"),
-                        resultSet.getString("gross_income"),
-                        resultSet.getDouble("total_deductions"),
-                        resultSet.getDouble("net_income"),
-                };
-                tableModel.addRow(rowData);
-            }
-        } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "An error occurred." + e.getMessage());
-        } finally {
-            //Close the resources
-            try {
-                if (resultSet != null) resultSet.close();
-                if (statement != null) statement.close();
-                if (connection != null) connection.close();
-            } catch (Exception e) {
-                LOGGER.log(Level.SEVERE, "An error occurred.", e);
-            }
         }
     }
 }
