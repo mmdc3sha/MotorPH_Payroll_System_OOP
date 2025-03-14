@@ -31,34 +31,69 @@ public class AdminSystemViewGUI extends PayrollServices {
     private final JTable employeeRecordsTable;
     private final DefaultTableModel payrollRecordsModel;
     private final JTable payrollRecordsTable;
-    private static JDateChooser dateChooser = null;
-    private static JDateChooser dateChooser2 = null;
-    private static JTextField empIDTextField = null;
-    private static JTextField fNameTextField = null;
-    private static JTextField lastNameTextField = null;
-    private static JTextField positionTextField = null;
-    private static JTextField daysWorkedTextField = null;
-    private static JTextField hoursWorkedTextField = null;
-    private static JTextField overtimeTextField = null;
-    private static JTextField basicSalaryTextField = null;
-    private static JTextField hrlyRateTextField = null;
-    private static JTextField grossIncomeField = null;
-    private static JTextField riceSubsidyTextField = null;
-    private static JTextField phoneAllowanceTextField = null;
-    private static JTextField clothAllowanceTextField = null;
-    private static JTextField sssTextField = null;
-    private static JTextField philHealthTextField = null;
-    private static JTextField pagIBIGTextField = null;
-    private static JTextField withholdingTextField = null;
-    private static JTextField totalBenefitsTextField = null;
-    private static JTextField totalDeductionsTextField = null;
-    private static JTextField netIncomeTextField = null;
+    private static JDateChooser dateChooser;
+    private static JDateChooser dateChooser2;
+    private static JTextField empIDTextField;
+    private static JTextField fNameTextField;
+    private static JTextField lastNameTextField;
+    private static JTextField positionTextField;
+    private static JTextField daysWorkedTextField;
+    private static JTextField hoursWorkedTextField;
+    private static JTextField overtimeTextField;
+    private static JTextField basicSalaryTextField;
+    private static JTextField hrlyRateTextField;
+    private static JTextField grossIncomeField;
+    private static JTextField riceSubsidyTextField;
+    private static JTextField phoneAllowanceTextField;
+    private static JTextField clothAllowanceTextField;
+    private static JTextField sssTextField;
+    private static JTextField philHealthTextField;
+    private static JTextField pagIBIGTextField;
+    private static JTextField withholdingTextField;
+    private static JTextField totalBenefitsTextField;
+    private static JTextField totalDeductionsTextField;
+    private static JTextField netIncomeTextField;
 
     public AdminSystemViewGUI() throws SQLException {
+        dateChooser = new JDateChooser();
+        dateChooser.setBackground(Color.white);
+        dateChooser.setFont(new Font("Lato", Font.PLAIN, 15));
+        dateChooser.setBounds(870,80,200,30);
+        dateChooser.setDateFormatString("MM/dd/yyyy"); // Set the date format
+        dateChooser.setDate(new Date()); // Set default date to current date
+        // Creates the Date Chooser
+        dateChooser2 = new JDateChooser();
+        dateChooser2.setBackground(Color.white);
+        dateChooser2.setFont(new Font("Lato", Font.PLAIN, 15));
+        dateChooser2.setBounds(1200,80,200,30);
+        dateChooser2.setDateFormatString("MM/dd/yyyy"); // Set the date format
+        dateChooser2.setDate(new Date()); // Set default date to current date
+
+        empIDTextField = new JTextField();
+        empIDTextField.setBounds(870,130,150,40);
+        empIDTextField.setFont(new Font("Lato", Font.PLAIN, 16));
+        fNameTextField = new JTextField();
+        lastNameTextField = new JTextField();
+        positionTextField = new JTextField();
+        daysWorkedTextField = new JTextField();
+        hoursWorkedTextField = new JTextField();
+        overtimeTextField = new JTextField();
+        basicSalaryTextField = new JTextField();
+        hrlyRateTextField = new JTextField();
+        grossIncomeField = new JTextField();
+        riceSubsidyTextField = new JTextField();
+        phoneAllowanceTextField = new JTextField();
+        clothAllowanceTextField = new JTextField();
+        sssTextField = new JTextField();
+        philHealthTextField = new JTextField();
+        pagIBIGTextField = new JTextField();
+        withholdingTextField = new JTextField();
+        totalBenefitsTextField = new JTextField();
+        totalDeductionsTextField = new JTextField();
+        netIncomeTextField = new JTextField();
+
         super(dateChooser, dateChooser2, empIDTextField, fNameTextField, lastNameTextField, positionTextField, daysWorkedTextField, hoursWorkedTextField, overtimeTextField, basicSalaryTextField, hrlyRateTextField, grossIncomeField, riceSubsidyTextField, phoneAllowanceTextField, clothAllowanceTextField,
                 sssTextField, philHealthTextField, pagIBIGTextField, withholdingTextField, totalBenefitsTextField, totalDeductionsTextField, netIncomeTextField);
-
-
         frame = new JFrame("MotorPH: Administrator Mode");
         Image appIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/motorph_logo.png"))).getImage();
         frame.setIconImage(appIcon);
@@ -560,31 +595,27 @@ public class AdminSystemViewGUI extends PayrollServices {
                 PayPeriodlbl.setForeground(Color.BLACK);
                 PayPeriodlbl.setBounds(740,30,150,30);
                 calculateTab.add(PayPeriodlbl);
+
                 //Creates the JLabel for Period Start
                 JLabel payStartDateLbl = new JLabel("Start Date:");
                 payStartDateLbl.setFont(new Font("Lato", Font.PLAIN, 15));
                 payStartDateLbl.setForeground(Color.BLACK);
                 payStartDateLbl.setBounds(740,80,150,30);
                 calculateTab.add(payStartDateLbl);
-                // Creates the Date Chooser
-                dateChooser = new JDateChooser();
-                dateChooser.setBackground(Color.white);
-                dateChooser.setFont(new Font("Lato", Font.PLAIN, 15));
-                dateChooser.setBounds(870,80,200,30);
-                calculateTab.add(dateChooser);
-                // Creates the JLabel for Period End
-                JLabel payEndDateLbl = new JLabel("End Date:");
-                payEndDateLbl.setFont(new Font("Lato", Font.PLAIN, 15));
-                payEndDateLbl.setForeground(Color.BLACK);
-                payEndDateLbl.setBounds(1120,80,150,30);
-                calculateTab.add(payEndDateLbl);
-                // Creates the Date Chooser
-                dateChooser2 = new JDateChooser();
-                dateChooser2.setBackground(Color.white);
-                dateChooser2.setFont(new Font("Lato", Font.PLAIN, 15));
-                dateChooser2.setBounds(1200,80,200,30);
-                calculateTab.add(dateChooser2);
 
+                // Creates the Date Chooser
+
+
+
+        // Creates the JLabel for Period End
+        JLabel payEndDateLbl = new JLabel("End Date:");
+        payEndDateLbl.setFont(new Font("Lato", Font.PLAIN, 15));
+        payEndDateLbl.setForeground(Color.BLACK);
+        payEndDateLbl.setBounds(1120,80,150,30);
+        calculateTab.add(payEndDateLbl);
+
+                calculateTab.add(dateChooser2);
+                calculateTab.add(dateChooser);
             Font labelFont2 = new Font("Lato", Font.PLAIN, 16);
             Color blackColor = Color.BLACK;
 
@@ -593,16 +624,12 @@ public class AdminSystemViewGUI extends PayrollServices {
             empIDlbl.setFont(labelFont2);
             empIDlbl.setForeground(blackColor);
             empIDlbl.setBounds(740,130,200,40);
-            empIDTextField = new JTextField();
-            empIDTextField.setBounds(870,130,150,40);
-            empIDTextField.setFont(labelFont2);
-            empIDTextField.setForeground(blackColor);
+
 
             JLabel fNameLbl = new JLabel("First Name:");
             fNameLbl.setBounds(740,190,200,40);
             fNameLbl.setFont(labelFont2);
             fNameLbl.setForeground(blackColor);
-            fNameTextField = new JTextField();
             fNameTextField.setBounds(870,190,250,40);
             fNameTextField.setFont(labelFont2);
             fNameTextField.setForeground(blackColor);
@@ -611,7 +638,6 @@ public class AdminSystemViewGUI extends PayrollServices {
             lastNameLbl.setBounds(740,250,200,40);
             lastNameLbl.setFont(labelFont2);
             lastNameLbl.setForeground(blackColor);
-            lastNameTextField = new JTextField();
             lastNameTextField.setBounds(870,250,250,40);
             lastNameTextField.setFont(labelFont2);
             lastNameTextField.setForeground(blackColor);
@@ -620,7 +646,6 @@ public class AdminSystemViewGUI extends PayrollServices {
             positionLbl.setBounds(740,310,200,40);
             positionLbl.setFont(labelFont2);
             positionLbl.setForeground(blackColor);
-            positionTextField = new JTextField();
             positionTextField.setBounds(870,310,250,40);
             positionTextField.setFont(labelFont2);
             positionTextField.setForeground(blackColor);
@@ -638,7 +663,6 @@ public class AdminSystemViewGUI extends PayrollServices {
             hoursWorkedLbl.setBounds(740,430,150,40);
             hoursWorkedLbl.setFont(labelFont2);
             hoursWorkedLbl.setForeground(blackColor);
-            hoursWorkedTextField = new JTextField();
             hoursWorkedTextField.setBounds(870,430,250,40);
             hoursWorkedTextField.setFont(labelFont2);
             hoursWorkedTextField.setForeground(blackColor);
@@ -647,7 +671,6 @@ public class AdminSystemViewGUI extends PayrollServices {
             overtimeLbl.setBounds(740,490,150,40);
             overtimeLbl.setFont(labelFont2);
             overtimeLbl.setForeground(blackColor);
-            overtimeTextField = new JTextField();
             overtimeTextField.setBounds(870,490,250,40);
             overtimeTextField.setFont(labelFont2);
             overtimeTextField.setForeground(blackColor);
@@ -656,7 +679,6 @@ public class AdminSystemViewGUI extends PayrollServices {
             basicSalaryLbl.setBounds(740,550,150,40);
             basicSalaryLbl.setFont(labelFont2);
             basicSalaryLbl.setForeground(blackColor);
-            basicSalaryTextField = new JTextField();
             basicSalaryTextField.setBounds(870,550,250,40);
             basicSalaryTextField.setFont(labelFont2);
             basicSalaryTextField.setForeground(blackColor);
@@ -665,7 +687,6 @@ public class AdminSystemViewGUI extends PayrollServices {
             hrlyRateLbl.setBounds(740,610,150,40);
             hrlyRateLbl.setFont(labelFont2);
             hrlyRateLbl.setForeground(blackColor);
-            hrlyRateTextField = new JTextField();
             hrlyRateTextField.setBounds(870,610,250,40);
             hrlyRateTextField.setFont(labelFont2);
             hrlyRateTextField.setForeground(blackColor);
@@ -674,7 +695,6 @@ public class AdminSystemViewGUI extends PayrollServices {
             grossIncomeLbl.setBounds(740,670,150,40);
             grossIncomeLbl.setFont(labelFont2);
             grossIncomeLbl.setForeground(blackColor);
-            grossIncomeField = new JTextField();
             grossIncomeField.setBounds(870,670,250,40);
             grossIncomeField.setFont(labelFont2);
             grossIncomeField.setForeground(blackColor);
@@ -689,8 +709,6 @@ public class AdminSystemViewGUI extends PayrollServices {
             riceSubsidyLbl.setFont(labelFont2);
             riceSubsidyLbl.setForeground(blackColor);
             riceSubsidyLbl.setBounds(1180,190,150,40);
-
-            riceSubsidyTextField = new JTextField();
             riceSubsidyTextField.setBounds(1330,190,250,40);
             riceSubsidyTextField.setFont(labelFont2);
             riceSubsidyTextField.setForeground(blackColor);
@@ -699,7 +717,6 @@ public class AdminSystemViewGUI extends PayrollServices {
             phoneAllowanceLbl.setBounds(1180,250,150,40);
             phoneAllowanceLbl.setFont(labelFont2);
             phoneAllowanceLbl.setForeground(blackColor);
-            phoneAllowanceTextField = new JTextField();
             phoneAllowanceTextField.setBounds(1330,250,250,40);
             phoneAllowanceTextField.setFont(labelFont2);
             phoneAllowanceTextField.setForeground(blackColor);
@@ -708,7 +725,6 @@ public class AdminSystemViewGUI extends PayrollServices {
             clothAllowanceLbl.setBounds(1180,310,150,40);
             clothAllowanceLbl.setFont(labelFont2);
             clothAllowanceLbl.setForeground(blackColor);
-            clothAllowanceTextField = new JTextField();
             clothAllowanceTextField.setBounds(1330,310,250,40);
             clothAllowanceTextField.setFont(labelFont2);
             clothAllowanceTextField.setForeground(blackColor);
@@ -723,7 +739,6 @@ public class AdminSystemViewGUI extends PayrollServices {
             sssLbl.setBounds(1180,430,150,40);
             sssLbl.setFont(labelFont2);
             sssLbl.setForeground(blackColor);
-            sssTextField = new JTextField();
             sssTextField.setBounds(1330,430,250,40);
             sssTextField.setFont(labelFont2);
             sssTextField.setForeground(blackColor);
@@ -732,7 +747,6 @@ public class AdminSystemViewGUI extends PayrollServices {
             philHealthLbl.setBounds(1180,490,150,40);
             philHealthLbl.setFont(labelFont2);
             philHealthLbl.setForeground(blackColor);
-            philHealthTextField = new JTextField();
             philHealthTextField.setBounds(1330,490,250,40);
             philHealthTextField.setFont(labelFont2);
             philHealthTextField.setForeground(blackColor);
@@ -741,7 +755,6 @@ public class AdminSystemViewGUI extends PayrollServices {
             pagIBIGlbl.setBounds(1180,550,150,40);
             pagIBIGlbl.setFont(labelFont2);
             pagIBIGlbl.setForeground(blackColor);
-            pagIBIGTextField = new JTextField();
             pagIBIGTextField.setBounds(1330,550,250,40);
             pagIBIGTextField.setFont(labelFont2);
             pagIBIGTextField.setForeground(blackColor);
@@ -752,7 +765,6 @@ public class AdminSystemViewGUI extends PayrollServices {
             withholdingLbl.setForeground(blackColor);
             withholdingLbl.setBounds(1180,610,150,40);
             // Withholding Textfield
-            withholdingTextField = new JTextField();
             withholdingTextField.setBounds(1330,610,250,40);
             withholdingTextField.setFont(labelFont2);
             withholdingTextField.setForeground(blackColor);
@@ -766,7 +778,6 @@ public class AdminSystemViewGUI extends PayrollServices {
             totalBenefitsLbl.setFont(totalsLabelFont);
             totalBenefitsLbl.setForeground(totalsLabelColor);
             // Total Benefits Textfield
-            totalBenefitsTextField = new JTextField();
             totalBenefitsTextField.setEditable(false);
             totalBenefitsTextField.setBounds(1330,670,250,40);
             totalBenefitsTextField.setFont(totalsLabelFont);
@@ -777,7 +788,6 @@ public class AdminSystemViewGUI extends PayrollServices {
             totalDeductionsLbl.setFont(totalsLabelFont);
             totalDeductionsLbl.setForeground(totalsLabelColor);
             totalDeductionsLbl.setBounds(1180,730,150,40);
-            totalDeductionsTextField = new JTextField();
             totalDeductionsTextField.setEditable(false);
             totalDeductionsTextField.setBounds(1330,730,250,40);
             totalDeductionsTextField.setBorder(new LineBorder(totalsLabelColor));
@@ -787,7 +797,6 @@ public class AdminSystemViewGUI extends PayrollServices {
             netIncomeLbl.setFont(totalsLabelFont);
             netIncomeLbl.setForeground(totalsLabelColor);
             netIncomeLbl.setBounds(1180,790,150,40);
-            netIncomeTextField = new JTextField();
             netIncomeTextField.setEditable(false);
             netIncomeTextField.setBorder(new LineBorder(totalsLabelColor));
             netIncomeTextField.setBounds(1330,790,250,40);
@@ -883,7 +892,8 @@ public class AdminSystemViewGUI extends PayrollServices {
                 calculateTab.add(netIncomeTextField);
                 calculateTab.add(fillBtn);
                 calculateTab.add(calculateBtn);
-
+                payrollPanel.revalidate();
+                payrollPanel.repaint();
 
 
         // PAYROLL HISTORY TAB
@@ -1016,6 +1026,7 @@ public class AdminSystemViewGUI extends PayrollServices {
         attendanceScrollPane.setBounds(30, 70, 860, 950);
         attendanceScrollPane.setWheelScrollingEnabled(true);
         attendancePanel.add(attendanceScrollPane);
+
 
         // Adds individual panels to the main panel
         mainPanel.add(employeeRecordsPanel, "EmployeeRecords");

@@ -1,5 +1,7 @@
 package AdminView;
 import com.toedter.calendar.JDateChooser;
+import org.sqlite.core.DB;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;
@@ -10,28 +12,28 @@ public class PayrollServices implements PayrollServiceInterface {
     private static final Logger LOGGER = Logger.getLogger(PayrollServices.class.getName());
     private static final String DB_URL = "jdbc:sqlite:src/main/java/MotorPHDatabase.db"; // Externalize Database Path
 
-    private JDateChooser dateChooser;
-    private JDateChooser dateChooser2;
-    private JTextField empIDTextField;
-    private JTextField fNameTextField;
-    private JTextField lastNameTextField;
-    private JTextField positionTextField;
-    private JTextField daysWorkedTextField;
-    private JTextField hoursWorkedTextField;
-    private JTextField overtimeTextField;
-    private JTextField basicSalaryTextField;
-    private JTextField hrlyRateTextField;
-    private JTextField grossIncomeField;
-    private JTextField riceSubsidyTextField;
-    private JTextField phoneAllowanceTextField;
-    private JTextField clothAllowanceTextField;
-    private JTextField sssTextField;
-    private JTextField philHealthTextField;
-    private JTextField pagIBIGTextField;
-    private JTextField withholdingTextField;
-    private JTextField totalBenefitsTextField;
-    private JTextField totalDeductionsTextField;
-    private JTextField netIncomeTextField;
+    private final JDateChooser dateChooser;
+    private final JDateChooser dateChooser2;
+    private final JTextField empIDTextField;
+    private final JTextField fNameTextField;
+    private final JTextField lastNameTextField;
+    private final JTextField positionTextField;
+    private final JTextField daysWorkedTextField;
+    private final JTextField hoursWorkedTextField;
+    private final JTextField overtimeTextField;
+    private final JTextField basicSalaryTextField;
+    private final JTextField hrlyRateTextField;
+    private final JTextField grossIncomeField;
+    private final JTextField riceSubsidyTextField;
+    private final JTextField phoneAllowanceTextField;
+    private final JTextField clothAllowanceTextField;
+    private final JTextField sssTextField;
+    private final JTextField philHealthTextField;
+    private final JTextField pagIBIGTextField;
+    private final JTextField withholdingTextField;
+    private final JTextField totalBenefitsTextField;
+    private final JTextField totalDeductionsTextField;
+    private final JTextField netIncomeTextField;
 
     public PayrollServices(JDateChooser dateChooser,
                            JDateChooser dateChooser2,
@@ -78,31 +80,61 @@ public class PayrollServices implements PayrollServiceInterface {
         this.totalBenefitsTextField = totalBenefitsTextField;
         this.totalDeductionsTextField = totalDeductionsTextField;
         this.netIncomeTextField = netIncomeTextField;
-
     }
-
-
     // Calculates the Payroll
     @Override
     public void calculatePayroll() throws SQLException {
         try {
+            // Ensure dateChooser is not null before accessing getDate()
+            if (dateChooser == null) {
+                JOptionPane.showMessageDialog(null, "Error: Date Picker is not initialized!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if (dateChooser.getDate() == null) {
+                JOptionPane.showMessageDialog(null, "Please choose a pay period start date.", "Start Date Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if (dateChooser2 == null) {
+                JOptionPane.showMessageDialog(null, "Error: Date Picker 2 is not initialized!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if (dateChooser2.getDate() == null) {
+                JOptionPane.showMessageDialog(null, "Please choose a pay period end date.", "End Date Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if (empIDTextField == null) {
+                JOptionPane.showMessageDialog(null, "Error: Employee ID TextField is not initialized!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            } else {
+                empIDTextField.setText(empIDTextField.getText());
+            }
+
+            // Convert Date to String
             String startDate = dateChooser.getDate().toString();
             String endDate = dateChooser2.getDate().toString();
             String empID = empIDTextField.getText();
             String fName = fNameTextField.getText();
             String lastName = lastNameTextField.getText();
             String position = positionTextField.getText();
-            int daysWorked = Integer.parseInt(daysWorkedTextField.getText());
-            int hoursWorked = Integer.parseInt(hoursWorkedTextField.getText());
-            int overtime = Integer.parseInt(overtimeTextField.getText());
-            double basicSalary = Double.parseDouble(basicSalaryTextField.getText());
-            double hourlyRate = Double.parseDouble(hrlyRateTextField.getText());
-            double riceSubsidy = Double.parseDouble(riceSubsidyTextField.getText());
-            double phoneAllowance = Double.parseDouble(phoneAllowanceTextField.getText());
-            double clothAllowance = Double.parseDouble(clothAllowanceTextField.getText());
-            double sss = Double.parseDouble(sssTextField.getText());
-            double philHealth = Double.parseDouble(philHealthTextField.getText());
-            double pagIBIG = Double.parseDouble(pagIBIGTextField.getText());
+
+            // ✅ Apply default values if the text fields are empty
+            int daysWorked = daysWorkedTextField.getText().trim().isEmpty() ? 0 : Integer.parseInt(daysWorkedTextField.getText().trim());
+            int hoursWorked = hoursWorkedTextField.getText().trim().isEmpty() ? 0 : Integer.parseInt(hoursWorkedTextField.getText().trim());
+            int overtime = overtimeTextField.getText().trim().isEmpty() ? 0 : Integer.parseInt(overtimeTextField.getText().trim());
+
+            double basicSalary = basicSalaryTextField.getText().trim().isEmpty() ? 0.0 : Double.parseDouble(basicSalaryTextField.getText().trim());
+            double hourlyRate = hrlyRateTextField.getText().trim().isEmpty() ? 0.0 : Double.parseDouble(hrlyRateTextField.getText().trim());
+            double riceSubsidy = riceSubsidyTextField.getText().trim().isEmpty() ? 0.0 : Double.parseDouble(riceSubsidyTextField.getText().trim());
+            double phoneAllowance = phoneAllowanceTextField.getText().trim().isEmpty() ? 0.0 : Double.parseDouble(phoneAllowanceTextField.getText().trim());
+            double clothAllowance = clothAllowanceTextField.getText().trim().isEmpty() ? 0.0 : Double.parseDouble(clothAllowanceTextField.getText().trim());
+
+            double sss = sssTextField.getText().trim().isEmpty() ? 0.0 : Double.parseDouble(sssTextField.getText().trim());
+            double philHealth = philHealthTextField.getText().trim().isEmpty() ? 0.0 : Double.parseDouble(philHealthTextField.getText().trim());
+            double pagIBIG = pagIBIGTextField.getText().trim().isEmpty() ? 0.0 : Double.parseDouble(pagIBIGTextField.getText().trim());
 
             // ✅ Step 1: Compute Gross Income
             double grossIncome = basicSalary + (hourlyRate * overtime);
@@ -128,7 +160,7 @@ public class PayrollServices implements PayrollServiceInterface {
             netIncomeTextField.setText(String.format("%.2f", netIncome));
 
             // ✅ Step 7: Insert into Database
-            insertPayrollData(Integer.parseInt(empID), startDate, endDate, fName, lastName, position, basicSalary, hourlyRate, daysWorked, hoursWorked,
+            insertPayrollData(Integer.parseInt(empID), String.format(startDate), String.format(endDate), fName, lastName, position, basicSalary, hourlyRate, daysWorked, hoursWorked,
                     overtime, grossIncome, riceSubsidy, phoneAllowance, clothAllowance, totalBenefits, sss, philHealth, pagIBIG, totalDeductions, taxableIncome, withholdingTax, netIncome);
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Invalid number format! Please check your input.", "Input Error", JOptionPane.ERROR_MESSAGE);
@@ -164,7 +196,7 @@ public class PayrollServices implements PayrollServiceInterface {
                 "gross_income, rice_subsidy, phone_allowance, clothing_allowance, total_benefits, sss_deduction, philhealth_deduction, pagibig_deduction, total_deductions, taxable_income, withholding_tax, net_income) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:path_to_your_database.db");
+        try (Connection conn = DriverManager.getConnection(DB_URL);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, empID);
