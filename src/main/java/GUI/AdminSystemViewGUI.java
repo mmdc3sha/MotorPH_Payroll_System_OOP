@@ -10,14 +10,12 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
+import java.awt.event.*;
 import java.awt.print.PrinterException;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.TimerTask;
 import java.util.logging.Level;
@@ -59,6 +57,7 @@ public class AdminSystemViewGUI extends PayrollServices {
     private static JTextField netIncomeTextField;
     private static JTextArea outputTextArea;
     private static JScrollPane outputScrollPane;
+    private static JTextArea payrollHistoryOutput;
 
     public AdminSystemViewGUI() throws SQLException {
         dateChooser = new JDateChooser();
@@ -267,7 +266,7 @@ public class AdminSystemViewGUI extends PayrollServices {
 
         //Create individual panels for each button
         JPanel employeeRecordsPanel = new JPanel();
-        employeeRecordsPanel.setBackground(new Color(204, 245, 255));
+        employeeRecordsPanel.setBackground(new Color(2, 88, 173));
         employeeRecordsPanel.add(new JLabel("Employee Records"));
         employeeRecordsPanel.setLayout(null);
 
@@ -556,7 +555,7 @@ public class AdminSystemViewGUI extends PayrollServices {
         fetchData(employeeRecordsModel);
         fetchData_empAccounts(registered_employee_accounts_model);
         fetchData_adminAccounts(registered_admin_accounts_model);
-        
+
         //Add components to the Employee Records Panel
         employeeRecordsPanel.add(emp_record_label);
         employeeRecordsPanel.add(searchBtn);
@@ -569,7 +568,7 @@ public class AdminSystemViewGUI extends PayrollServices {
 
         //Create a Payroll Panel
         JPanel payrollPanel = new JPanel();
-        payrollPanel.setBackground(new Color(0, 12, 20));
+        payrollPanel.setBackground(new Color(25, 136, 173));
         payrollPanel.setLayout(new BoxLayout(payrollPanel, BoxLayout.Y_AXIS));
         // Payroll Panel Components
             JTabbedPane payrollTabbedPane = new JTabbedPane(); // Creates the Tabbed Pane
@@ -578,21 +577,52 @@ public class AdminSystemViewGUI extends PayrollServices {
 
             // CALCULATE TAB
             JPanel calculateTab = new JPanel();
-            calculateTab.setBackground(new Color(233, 247, 255, 255));
+            calculateTab.setBackground(new Color(204, 242, 255, 255));
             calculateTab.setLayout(null);
 
             // Creates the Save File and Print Button
-            JButton saveFileBtn = new JButton("Save File");
-            saveFileBtn.setFont(new Font("Lato", Font.BOLD, 15));
-            saveFileBtn.setForeground(Color.white);
-            saveFileBtn.setBackground(new Color(29, 141, 53));
+            JButton newFileBtn = new JButton("New");
+            newFileBtn.setFont(new Font("Lato", Font.BOLD, 15));
+            newFileBtn.setForeground(Color.white);
+            newFileBtn.setBackground(new Color(29, 141, 53));
+            newFileBtn.setToolTipText("Create New Payslip");
+            // Resets the textfields to default
+            newFileBtn.addActionListener(e -> {
+                int newFilemsg = JOptionPane.showConfirmDialog(null, "Create New File?", "New", JOptionPane.YES_NO_OPTION);
+
+                if (newFilemsg == JOptionPane.YES_OPTION) {
+                    empIDTextField.setText("");
+                    fNameTextField.setText("");
+                    lastNameTextField.setText("");
+                    positionTextField.setText("");
+                    hoursWorkedTextField.setText("");
+                    daysWorkedTextField.setText("");
+                    overtimeTextField.setText("");
+                    basicSalaryTextField.setText("");
+                    hrlyRateTextField.setText("");
+                    grossIncomeField.setText("");
+                    riceSubsidyTextField.setText("");
+                    clothAllowanceTextField.setText("");
+                    phoneAllowanceTextField.setText("");
+                    sssTextField.setText("");
+                    philHealthTextField.setText("");
+                    pagIBIGTextField.setText("");
+                    withholdingTextField.setText("");
+                    totalDeductionsTextField.setText("");
+                    totalBenefitsTextField.setText("");
+                    netIncomeTextField.setText("");
+                    outputTextArea.setText("");
+                }
+            });
+
 
             JButton printPayslipBtn = new JButton("Print");
             printPayslipBtn.setBackground(new Color(114, 13, 119));
             printPayslipBtn.setForeground(Color.white);
             printPayslipBtn.setFont(new Font("Lato", Font.BOLD, 15));
-            saveFileBtn.setBounds(740,900,121,45);
+            newFileBtn.setBounds(740,900,121,45);
             printPayslipBtn.setBounds(861,900,121,45);
+            //Prints the Payslip
             printPayslipBtn.addActionListener(e -> {
                try {
                    boolean complete = outputTextArea.print();
@@ -607,7 +637,7 @@ public class AdminSystemViewGUI extends PayrollServices {
             });
 
             // Adds the Save File Button and Print Payslip Button
-            calculateTab.add(saveFileBtn);
+            calculateTab.add(newFileBtn);
             calculateTab.add(printPayslipBtn);
 
                 //Pay Period
@@ -813,6 +843,7 @@ public class AdminSystemViewGUI extends PayrollServices {
             totalDeductionsTextField.setEditable(false);
             totalDeductionsTextField.setBounds(1330,730,250,40);
             totalDeductionsTextField.setBorder(new LineBorder(totalsLabelColor));
+            totalDeductionsTextField.setFont(totalsLabelFont);
 
             //Net Income
             JLabel netIncomeLbl = new JLabel("Net Income:");
@@ -822,6 +853,7 @@ public class AdminSystemViewGUI extends PayrollServices {
             netIncomeTextField.setEditable(false);
             netIncomeTextField.setBorder(new LineBorder(totalsLabelColor));
             netIncomeTextField.setBounds(1330,790,250,40);
+            netIncomeTextField.setFont(totalsLabelFont);
 
             //Fill Button
             JButton fillBtn = new JButton("Fill");
@@ -829,7 +861,6 @@ public class AdminSystemViewGUI extends PayrollServices {
             fillBtn.setFont(labelFont2);
             fillBtn.setForeground(blackColor);
             fillBtn.addActionListener(new ActionListener() {
-
                 /**
                  * @param e the event to be processed
                  */
@@ -849,6 +880,7 @@ public class AdminSystemViewGUI extends PayrollServices {
             calculateBtn.setForeground(Color.white);
             calculateBtn.setBounds(982,900,121,45);
             calculateBtn.setBackground(new Color(6, 129, 181));
+
             calculateBtn.addActionListener(e -> {
                 try {
                     calculatePayroll(); // ✅ Attempt to calculate payroll
@@ -861,14 +893,62 @@ public class AdminSystemViewGUI extends PayrollServices {
                 }
             });
 
-            // JTextArea that displays the Payroll History
+            //Creates the Save Button
+            JButton saveBtn = new JButton();
+            saveBtn.setIcon(new ImageIcon(getClass().getResource("/save_icon.png")));
+            saveBtn.setBounds(1105,900,60,45);
+            saveBtn.setBackground(new Color(96, 152, 255));
 
+            // Saves the Calculated Payslip
+            saveBtn.addActionListener(e -> {
+
+                    int choice = JOptionPane.showConfirmDialog(null,
+                            "Do you want to save this Payslip?",
+                            "Save Payslip",
+                            JOptionPane.YES_NO_OPTION);
+
+                    if(choice == JOptionPane.YES_NO_OPTION) {
+                        try {
+                            calculatePayroll();
+                        } catch (SQLException ex) {
+                            ex.printStackTrace();
+                        }
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+                        insertPayrollData(
+                                Integer.parseInt(empIDTextField.getText()),
+                                dateFormat.format(dateChooser.getDate()),
+                                dateFormat.format(dateChooser2.getDate()),
+                                fNameTextField.getText(),
+                                lastNameTextField.getText(),
+                                positionTextField.getText(),
+                                Double.parseDouble(basicSalaryTextField.getText()),
+                                Double.parseDouble(hrlyRateTextField.getText()),
+                                Integer.parseInt(daysWorkedTextField.getText()),
+                                Integer.parseInt(hoursWorkedTextField.getText()),
+                                Integer.parseInt(overtimeTextField.getText()),
+                                Double.parseDouble(grossIncomeField.getText()),
+                                Double.parseDouble(riceSubsidyTextField.getText()),
+                                Double.parseDouble(phoneAllowanceTextField.getText()),
+                                Double.parseDouble(clothAllowanceTextField.getText()),
+                                Double.parseDouble(totalBenefitsTextField.getText()),
+                                Double.parseDouble(sssTextField.getText()),
+                                Double.parseDouble(philHealthTextField.getText()),
+                                Double.parseDouble(pagIBIGTextField.getText()),
+                                Double.parseDouble(totalDeductionsTextField.getText()),
+                                getTaxableIncome(),
+                                Double.parseDouble(withholdingTextField.getText()),
+                                Double.parseDouble(netIncomeTextField.getText())
+                        );
+                    }
+
+            });
+
+            // JTextArea that displays the Payroll History
             outputTextArea.setEditable(false);
             outputTextArea.setBackground(new Color(255, 255, 255));
             outputTextArea.setBounds(20, 40,700,900);
-            outputTextArea.setMargin(new Insets(13,10,13,10));
+            outputTextArea.setMargin(new Insets(50,45,10,40));
             outputTextArea.setFont(new Font("Monospaced", Font.PLAIN, 22));
-
                 calculateTab.add(outputTextArea);
                 calculateTab.add(empIDlbl);
                 calculateTab.add(empIDTextField);
@@ -914,10 +994,7 @@ public class AdminSystemViewGUI extends PayrollServices {
                 calculateTab.add(netIncomeTextField);
                 calculateTab.add(fillBtn);
                 calculateTab.add(calculateBtn);
-                payrollPanel.revalidate();
-                payrollPanel.repaint();
-
-
+                calculateTab.add(saveBtn);
         // PAYROLL HISTORY TAB
         JPanel payrollHistory = new JPanel();
         payrollHistory.setBackground(new Color(25, 136, 173));
@@ -927,12 +1004,9 @@ public class AdminSystemViewGUI extends PayrollServices {
         JButton phistory_searchBtn = new JButton("Search");
         phistory_searchBtn.setBounds(750, 20,80,30);
 
-
         // Creates the Print Button for the JTable
         JButton phistory_printBtn = new JButton("Print");
         phistory_printBtn.setBounds(1520, 20,80,30);
-
-
 
         //Creates the Search Textfield
         JTextField phistorySearchTextField = new JTextField();
@@ -941,20 +1015,28 @@ public class AdminSystemViewGUI extends PayrollServices {
         payrollHistory.add(phistorySearchTextField);
 
         // Payroll History Tab > Payroll History Output Panel - displays the selected row in the table
-        JPanel payrollHistoryOutput = new JPanel();
+        payrollHistoryOutput = new JTextArea();
         payrollHistoryOutput.setBackground(new Color(255, 255, 255));
-        payrollHistoryOutput.setLayout(null);
         payrollHistoryOutput.setBounds(20, 40, 700, 900);
-        payrollHistoryOutput.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-
-
-        //Components of Payroll History Output
+        payrollHistoryOutput.setFont(new Font("Monospaced", Font.PLAIN, 23));
+        payrollHistoryOutput.setMargin(new Insets(10,25,10,10));
+        payrollHistoryOutput.setEditable(false);
+        payrollHistory.add(payrollHistoryOutput);
 
         //Prints the Payroll History Output panel
         phistory_printBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                try {
+                    boolean complete = payrollHistoryOutput.print();
+                    if (complete) {
+                        JOptionPane.showMessageDialog(null, "Payslip Printed Successfully.", "Print Completed", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(frame, "Payslip Printed Failed.", "Print Failed", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (PrinterException ex) {
+                    JOptionPane.showMessageDialog(null, "Error while printing Payslip", "ERROR", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
 
@@ -974,8 +1056,9 @@ public class AdminSystemViewGUI extends PayrollServices {
 
         // Creates the JTable for the Payroll History
         payrollRecordsTable = new JTable(payrollRecordsModel);
-        payrollRecordsTable.setRowHeight(20);
+        payrollRecordsTable.setRowHeight(40);
         payrollRecordsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        payrollRecordsTable.setFont(new Font("Calibri", Font.PLAIN, 18));
         for (int i = 0; i < payrollRecordsTable.getColumnModel().getColumnCount(); i++) {
             payrollRecordsTable.getColumnModel().getColumn(i).setPreferredWidth(100);
         }
@@ -993,6 +1076,17 @@ public class AdminSystemViewGUI extends PayrollServices {
         payrollTabbedPane.addTab("Payroll History", payrollHistory);
         payrollPanel.add(payrollTabbedPane);
 
+        // Detects the selected row
+        payrollRecordsTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int selectedRow = payrollRecordsTable.getSelectedRow();
+                if (selectedRow != -1) {
+                    int payrollID = (int) payrollRecordsModel.getValueAt(selectedRow, 0);
+                    displayPayslip(payrollID);
+                }
+            }
+        });
 
         //Creates the Attendance GUI
         JPanel attendancePanel = new JPanel();
@@ -1265,6 +1359,75 @@ public class AdminSystemViewGUI extends PayrollServices {
         }
     }
 
+    // Retrieve and Display Payslip Data in JTextArea
+    private void displayPayslip(int payrollID) {
+        try {
+            String query = "SELECT * FROM Payroll WHERE payroll_id = ?";
+            Connection connection = DriverManager.getConnection(db_path);
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, payrollID);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                String separator = "===========================================";
+
+                // Retrieve payroll details
+                int empID = rs.getInt("emp_id");
+                String fName = rs.getString("first_name");
+                String lastName = rs.getString("last_name");
+                String position = rs.getString("job_position");
+                String startDate = rs.getString("pay_period_start");
+                String endDate = rs.getString("pay_period_end");
+                double basicSalary = rs.getDouble("basic_salary");
+                double grossIncome = rs.getDouble("gross_income");
+                double totalBenefits = rs.getDouble("total_benefits");
+                double withholdingTax = rs.getDouble("withholding_tax");
+                double totalDeductions = rs.getDouble("total_deductions");
+                double netIncome = rs.getDouble("net_income");
+
+                // Compute government contributions
+                double sssContribution = getSSSContribution(basicSalary);
+                double philHealthContribution = getPhilHealthContribution(basicSalary);
+                double pagIBIGContribution = getPagIBIGContribution(basicSalary);
+
+                // Format the payslip
+                double totalEarnings = basicSalary + grossIncome + totalBenefits;
+                String payslipOutput = separator + "\n"
+                        + "PAYSLIP\n"
+                        + separator + "\n"
+                        + String.format("%-20s %20s%n", "Employee ID:", empID)
+                        + String.format("%-20s %20s%n", "First Name:", fName)
+                        + String.format("%-20s %20s%n", "Last Name:", lastName)
+                        + String.format("%-20s %20s%n", "Position:", position)
+                        + String.format("%-20s %20s%n", "Pay Period Start:", startDate)
+                        + String.format("%-20s %20s%n", "Pay Period End:", endDate)
+                        + separator + "\n"
+                        + String.format("%-20s %20s%n", "EARNINGS", "AMOUNT")
+                        + separator + "\n"
+                        + String.format("%-20s %20s%n", "Basic Salary:", "PHP " + basicSalary)
+                        + String.format("%-20s %20s%n", "Gross Income:", "PHP " + grossIncome)
+                        + String.format("%-20s %20s%n", "Total Benefits:", "PHP " + totalBenefits)
+                        + String.format("%-20s %20s%n", "Total Earnings:", "PHP " + totalEarnings)
+                        + separator + "\n"
+                        + String.format("%-20s %20s%n", "DEDUCTIONS", "AMOUNT")
+                        + separator + "\n"
+                        + String.format("%-20s %20s%n", "SSS Contribution:", "PHP " + sssContribution)
+                        + String.format("%-20s %20s%n", "PhilHealth:", "PHP " + philHealthContribution)
+                        + String.format("%-20s %20s%n", "Pag-IBIG:", "PHP " + pagIBIGContribution)
+                        + String.format("%-20s %20s%n", "Tax Withholding:", "PHP " + withholdingTax)
+                        + String.format("%-20s %20s%n", "Total Deductions:", "PHP " + totalDeductions)
+                        + "-----------------------------------\n"
+                        + String.format("%-20s %20s%n", "Net Salary:", "PHP " + netIncome)
+                        + separator + "\n";
+
+                payrollHistoryOutput.setText(payslipOutput);
+            }
+
+            ps.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static JDateChooser getDateChooser() {
         return dateChooser;

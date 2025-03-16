@@ -125,7 +125,6 @@ public class PayrollServices implements PayrollServiceInterface {
             double sss = sssTextField.getText().trim().isEmpty() ? 0.0 : Double.parseDouble(sssTextField.getText().trim());
             double philHealth = philHealthTextField.getText().trim().isEmpty() ? 0.0 : Double.parseDouble(philHealthTextField.getText().trim());
             double pagIBIG = pagIBIGTextField.getText().trim().isEmpty() ? 0.0 : Double.parseDouble(pagIBIGTextField.getText().trim());
-
             double grossIncome = basicSalary + (hourlyRate * overtime);
             double totalBenefits = riceSubsidy + phoneAllowance + clothAllowance;
             double totalDeductions = sss + philHealth + pagIBIG;
@@ -138,13 +137,10 @@ public class PayrollServices implements PayrollServiceInterface {
             sssTextField.setText(String.format("%.2f", getSSSContribution(basicSalary))); // calculated with getSSSContribution method
             philHealthTextField.setText(String.format("%.2f", getPhilHealthContribution(basicSalary))); // calculated with getPhilHealthContribution method
             pagIBIGTextField.setText(String.format("%.2f", getPagIBIGContribution(basicSalary))); // calculated with getPagIBIGContribution method
-
-
             totalBenefitsTextField.setText(String.format("%.2f", totalBenefits));
             totalDeductionsTextField.setText(String.format("%.2f", totalDeductions));
             withholdingTextField.setText(String.format("%.2f", withholdingTax));
             netIncomeTextField.setText(String.format("%.2f", netIncome));
-
 
             //Displays the Payslip on the textarea
             double totalEarnings = basicSalary + grossIncome + totalBenefits;
@@ -173,22 +169,28 @@ public class PayrollServices implements PayrollServiceInterface {
                     + String.format("%-20s %20s%n", "Pag-IBIG:", "PHP " + getPagIBIGContribution(basicSalary))
                     + String.format("%-20s %20s%n", "Tax Withholding:", "PHP " + withholdingTax)
                     + String.format("%-20s %20s%n", "Total Deductions:", "PHP " + totalDeductions)
-                    + "-----------------------------------------" + "\n"
+                    + "---------------------------------------" + "\n"
                     + String.format("%-20s %20s%n", "Net Salary:", "PHP " + netIncome)
                     + separator + "\n";
             outputTextArea.setText(payslipOutput);
-
-
-            insertPayrollData(Integer.parseInt(empID), String.format(startDate), String.format(endDate), fName, lastName, position, basicSalary, hourlyRate, daysWorked, hoursWorked,
-                    overtime, grossIncome, riceSubsidy, phoneAllowance, clothAllowance, totalBenefits, sss, philHealth, pagIBIG, totalDeductions, taxableIncome, withholdingTax, netIncome);
-
 
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Invalid number format! Please check your input. Remove ',' in Numbers (e.g 5,000 > 5000)", "Input Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
+    public double getTaxableIncome() {
+        double basicSalary = basicSalaryTextField.getText().trim().isEmpty() ? 0.0 : Double.parseDouble(basicSalaryTextField.getText().trim());
+        double hourlyRate = hrlyRateTextField.getText().trim().isEmpty() ? 0.0 : Double.parseDouble(hrlyRateTextField.getText().trim());
+        double sss = sssTextField.getText().trim().isEmpty() ? 0.0 : Double.parseDouble(sssTextField.getText().trim());
+        double philHealth = philHealthTextField.getText().trim().isEmpty() ? 0.0 : Double.parseDouble(philHealthTextField.getText().trim());
+        double pagIBIG = pagIBIGTextField.getText().trim().isEmpty() ? 0.0 : Double.parseDouble(pagIBIGTextField.getText().trim());
+        int overtime = overtimeTextField.getText().trim().isEmpty() ? 0 : Integer.parseInt(overtimeTextField.getText().trim());
 
+        double grossIncome = basicSalary + (hourlyRate * overtime);
+        double totalDeductions = sss + philHealth + pagIBIG;
+        return grossIncome - totalDeductions;
+    }
 
     public double calculateWithholdingTax(double taxableIncome) {
         if (taxableIncome <= 20832) {
