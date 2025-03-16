@@ -18,6 +18,7 @@ import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,10 +28,12 @@ public class AdminSystemViewGUI extends PayrollServices {
     private final JFrame frame;
     private final JPanel mainPanel;
     private final CardLayout cardLayout;
-    private final DefaultTableModel employeeRecordsModel;
-    private final JTable employeeRecordsTable;
-    private final DefaultTableModel payrollRecordsModel;
-    private final JTable payrollRecordsTable;
+    private static DefaultTableModel employeeRecordsModel;
+    private static JTable employeeRecordsTable;
+    private static DefaultTableModel registered_admin_accounts_model = new DefaultTableModel();
+    private static DefaultTableModel registered_employee_accounts_model = new DefaultTableModel();
+    private static DefaultTableModel payrollRecordsModel;
+    private static JTable payrollRecordsTable;
     private static JDateChooser dateChooser;
     private static JDateChooser dateChooser2;
     private static JTextField empIDTextField;
@@ -53,6 +56,8 @@ public class AdminSystemViewGUI extends PayrollServices {
     private static JTextField totalBenefitsTextField;
     private static JTextField totalDeductionsTextField;
     private static JTextField netIncomeTextField;
+    private static JTextArea outputTextArea;
+    private static JScrollPane outputScrollPane;
 
     public AdminSystemViewGUI() throws SQLException {
         dateChooser = new JDateChooser();
@@ -91,9 +96,16 @@ public class AdminSystemViewGUI extends PayrollServices {
         totalBenefitsTextField = new JTextField();
         totalDeductionsTextField = new JTextField();
         netIncomeTextField = new JTextField();
+        outputTextArea = new JTextArea();
+        outputScrollPane = new JScrollPane(outputTextArea);
+        outputScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        outputScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
         super(dateChooser, dateChooser2, empIDTextField, fNameTextField, lastNameTextField, positionTextField, daysWorkedTextField, hoursWorkedTextField, overtimeTextField, basicSalaryTextField, hrlyRateTextField, grossIncomeField, riceSubsidyTextField, phoneAllowanceTextField, clothAllowanceTextField,
-                sssTextField, philHealthTextField, pagIBIGTextField, withholdingTextField, totalBenefitsTextField, totalDeductionsTextField, netIncomeTextField);
+                sssTextField, philHealthTextField, pagIBIGTextField, withholdingTextField, totalBenefitsTextField, totalDeductionsTextField, netIncomeTextField, outputTextArea, outputScrollPane);
+
+
+
         frame = new JFrame("MotorPH: Administrator Mode");
         Image appIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/motorph_logo.png"))).getImage();
         frame.setIconImage(appIcon);
@@ -368,8 +380,7 @@ public class AdminSystemViewGUI extends PayrollServices {
         scrollPane.setBounds(30, 150, 1580, 840);
 
         // Table Models for the Admin Accouns and Employee Accounts
-        DefaultTableModel registered_admin_accounts_model = new DefaultTableModel();
-        DefaultTableModel registered_employee_accounts_model = new DefaultTableModel();
+
         String[] registered_accounts_columnNames = {"Employee ID","Username","Password"};
         // For loop para di paulit-ulit - simplifies the code when adding column names, also most efficient for adding new columns and removing
         for(String registered_adminModel : registered_accounts_columnNames ){
@@ -544,6 +555,7 @@ public class AdminSystemViewGUI extends PayrollServices {
         fetchData(employeeRecordsModel);
         fetchData_empAccounts(registered_employee_accounts_model);
         fetchData_adminAccounts(registered_admin_accounts_model);
+        
         //Add components to the Employee Records Panel
         employeeRecordsPanel.add(emp_record_label);
         employeeRecordsPanel.add(searchBtn);
@@ -839,16 +851,16 @@ public class AdminSystemViewGUI extends PayrollServices {
                 }
             });
 
+            // JTextArea that displays the Payroll History
 
+            outputTextArea.setEditable(false);
+            outputTextArea.setBackground(new Color(255, 255, 255));
+            outputTextArea.setBounds(20, 40,700,900);
+            outputTextArea.setMargin(new Insets(13,10,13,10));
+            outputTextArea.setFont(new Font("Monospaced", Font.PLAIN, 25));
 
-
-        JPanel outputPanel = new JPanel();
-        calculateTab.add(outputPanel);
-        outputPanel.setBackground(new Color(255, 255, 255));
-        outputPanel.setLayout(null);
-        outputPanel.setBounds(20,40,700,900);
-        outputPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-               calculateTab.add(empIDlbl);
+                calculateTab.add(outputTextArea);
+                calculateTab.add(empIDlbl);
                 calculateTab.add(empIDTextField);
                 calculateTab.add(fNameLbl);
                 calculateTab.add(fNameTextField);
@@ -1070,11 +1082,11 @@ public class AdminSystemViewGUI extends PayrollServices {
                 fNameTextField.setText(rs.getString("first_name"));
                 lastNameTextField.setText(rs.getString("last_name"));
                 positionTextField.setText(rs.getString("job_position"));
-                basicSalaryTextField.setText(rs.getString("basic_salary"));
+                basicSalaryTextField.setText(rs.getString("basic_salary").replaceAll(",",""));
                 hrlyRateTextField.setText(rs.getString("hourly_rate"));
-                riceSubsidyTextField.setText(rs.getString("rice_subsidy"));
-                phoneAllowanceTextField.setText(rs.getString("phone_allowance"));
-                clothAllowanceTextField.setText(rs.getString("clothing_allowance"));
+                riceSubsidyTextField.setText(rs.getString("rice_subsidy").replaceAll(",",""));
+                phoneAllowanceTextField.setText(rs.getString("phone_allowance").replaceAll(",",""));
+                clothAllowanceTextField.setText(rs.getString("clothing_allowance").replaceAll(",",""));
             } else {
                 JOptionPane.showMessageDialog(null, "Employee ID does not exist");
             }
@@ -1116,7 +1128,7 @@ public class AdminSystemViewGUI extends PayrollServices {
 
 
     // Fetches Data from 'LoginCredentials' Table
-    private  void fetchData_adminAccounts(DefaultTableModel registered_admin_accounts_table) {
+    private static void fetchData_adminAccounts(DefaultTableModel registered_admin_accounts_table) {
         String dbURL2 = "jdbc:sqlite:src/main/java/MotorPHDatabase.db";
         String sqlSelect = "SELECT emp_id, username, password FROM AdminLoginCredentials";
 
@@ -1142,7 +1154,7 @@ public class AdminSystemViewGUI extends PayrollServices {
 
 
     //Fetches Registered Employee accounts from the LoginCredentials table
-    private void fetchData_empAccounts(DefaultTableModel registered_emp_accounts_table) throws SQLException {
+    private static void fetchData_empAccounts(DefaultTableModel registered_emp_accounts_table){
         String dbURL = "jdbc:sqlite:src/main/java/MotorPHDatabase.db";
         String sqlSelect = "SELECT emp_id, username, password FROM LoginCredentials";
 
@@ -1150,6 +1162,8 @@ public class AdminSystemViewGUI extends PayrollServices {
         try (Connection connection = DriverManager.getConnection(dbURL);
              PreparedStatement pstmnt = connection.prepareStatement(sqlSelect);
              ResultSet rs = pstmnt.executeQuery()) {
+
+            registered_emp_accounts_table.setRowCount(0);
 
             while (rs.next()) {
                 int empId = rs.getInt("emp_id");
@@ -1170,7 +1184,7 @@ public class AdminSystemViewGUI extends PayrollServices {
 
 
     //Fetches data from Employee Table
-    private void fetchData(DefaultTableModel emp_table) {
+    private static void fetchData(DefaultTableModel emp_table){
         String dbURL = "jdbc:sqlite:src/main/java/MotorPHDatabase.db";
         String sqlSelect = "SELECT employee_id, last_name, first_name, birthday, address, phone_number, SSS_number, philhealth_number, " +
                 "TIN_number, Pagibig_number, employment_status, job_position, Immediate_Supervisor, basic_salary, hourly_rate, " +
@@ -1205,7 +1219,6 @@ public class AdminSystemViewGUI extends PayrollServices {
                         rs.getDouble("gross_semi_monthly_rate")
                 };
                 emp_table.addRow(row);
-
             }
             emp_table.fireTableDataChanged();
         } catch (SQLException e) {
@@ -1213,12 +1226,14 @@ public class AdminSystemViewGUI extends PayrollServices {
         }
     }
 
-    private void displayPayrollRecord(DefaultTableModel payrollRecordsModel) {
+    private void displayPayrollRecord(DefaultTableModel payrollRecordsModel) throws SQLException {
         String sql = "SELECT payroll_id, emp_id, pay_period_start, pay_period_end, first_name, last_name, job_position, gross_income, total_benefits, total_deductions, net_income FROM Payroll";
         try (Connection conn = DriverManager.getConnection(db_path);
              Statement stmnt = conn.createStatement();
              ResultSet rs = stmnt.executeQuery(sql)
         ) {
+            payrollRecordsModel.setRowCount(0);
+
             while ((rs.next())) {
                 payrollRecordsModel.addRow(new Object[]{
                         rs.getInt("payroll_id"),

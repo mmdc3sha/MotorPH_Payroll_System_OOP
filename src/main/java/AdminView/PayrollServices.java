@@ -2,11 +2,11 @@ package AdminView;
 import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
-import java.util.logging.Level;
+
 import java.util.logging.Logger;
 
 public class PayrollServices implements PayrollServiceInterface {
@@ -35,6 +35,8 @@ public class PayrollServices implements PayrollServiceInterface {
     private final JTextField totalBenefitsTextField;
     private final JTextField totalDeductionsTextField;
     private final JTextField netIncomeTextField;
+    private final JTextArea outputTextArea;
+    private final JScrollPane outputScrollPane;
 
     public PayrollServices(JDateChooser dateChooser,
                            JDateChooser dateChooser2,
@@ -57,7 +59,9 @@ public class PayrollServices implements PayrollServiceInterface {
                            JTextField withholdingTextField,
                            JTextField totalBenefitsTextField,
                            JTextField totalDeductionsTextField,
-                           JTextField netIncomeTextField) {
+                           JTextField netIncomeTextField,
+                           JTextArea outputTextArea,
+                           JScrollPane outputScrollPane) {
 
         this.dateChooser = dateChooser;
         this.dateChooser2 = dateChooser2;
@@ -81,6 +85,8 @@ public class PayrollServices implements PayrollServiceInterface {
         this.totalBenefitsTextField = totalBenefitsTextField;
         this.totalDeductionsTextField = totalDeductionsTextField;
         this.netIncomeTextField = netIncomeTextField;
+        this.outputTextArea = outputTextArea;
+        this.outputScrollPane = outputScrollPane;
     }
     // Calculates the Payroll
     @Override
@@ -134,14 +140,53 @@ public class PayrollServices implements PayrollServiceInterface {
             withholdingTextField.setText(String.format("%.2f", withholdingTax));
             netIncomeTextField.setText(String.format("%.2f", netIncome));
 
+            double totalEarnings = basicSalary + grossIncome + totalBenefits;
+            String separator = "===========================================";
+            String payslipOutput = separator + "\n"
+                    + "PAYSLIP" + "\n"
+                    + separator + "\n"
+                    + String.format("%-20s %20s%n", "Employee ID:", empID)
+                    + String.format("%-20s %20s%n", "First Name:", fName)
+                    + String.format("%-20s %20s%n", "Last Name:", lastName)
+                    + String.format("%-20s %20s%n", "Position:", position)
+                    + String.format("%-20s %20s%n", "Pay Period Start:",startDate)
+                    + String.format("%-20s %20s%n", "Pay Period End:", endDate)
+                    + separator + "\n"
+                    + String.format("%-20s %20s%n", "EARNINGS", "AMOUNT")
+                    + separator + "\n"
+                    + String.format("%-20s %20s%n", "Basic Salary:", "PHP " +basicSalary)
+                    + String.format("%-20s %20s%n", "Gross Income:", "PHP " +grossIncome)
+                    + String.format("%-20s %20s%n", "Total Benefits:", "PHP " +totalBenefits)
+                    + String.format("%-20s %20s%n", "Total Earnings:", "PHP " +totalEarnings)
+                    + separator + "\n"
+                    + String.format("%-20s %20s%n", "DEDUCTIONS", "AMOUNT")
+                    + separator + "\n"
+                    + String.format("%-20s %20s%n", "SSS Contribution:", "PHP " + sss)
+                    + String.format("%-20s %20s%n", "PhilHealth:", "PHP " + philHealth)
+                    + String.format("%-20s %20s%n", "Pag-IBIG:", "PHP " + pagIBIG)
+                    + String.format("%-20s %20s%n", "Tax Withholding:", "PHP " + withholdingTax)
+                    + String.format("%-20s %20s%n", "Total Deductions:", "PHP " + totalDeductions)
+                    + "-----------------------------------------" + "\n"
+                    + String.format("%-20s %20s%n", "Net Salary:", "PHP " + netIncome)
+                    + separator + "\n";
+
+            outputTextArea.setText(payslipOutput);
+            outputScrollPane.setVerticalScrollBar(outputScrollPane.getVerticalScrollBar());
             // ✅ Step 7: Insert into Database
             insertPayrollData(Integer.parseInt(empID), String.format(startDate), String.format(endDate), fName, lastName, position, basicSalary, hourlyRate, daysWorked, hoursWorked,
                     overtime, grossIncome, riceSubsidy, phoneAllowance, clothAllowance, totalBenefits, sss, philHealth, pagIBIG, totalDeductions, taxableIncome, withholdingTax, netIncome);
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "Invalid number format! Please check your input.", "Input Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Invalid number format! Please check your input. Remove ',' in Numbers (e.g 5,000 > 5000)", "Input Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
+    /**
+     *
+     */
+    @Override
+    public void displayPayslip() {
+
+    }
 
 
     // ✅ Withholding Tax Calculation Method
