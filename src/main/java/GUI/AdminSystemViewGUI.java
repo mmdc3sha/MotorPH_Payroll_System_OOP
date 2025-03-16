@@ -1,12 +1,10 @@
 package GUI;
 
-import AdminView.PayrollServices;
+import AdminServices.PayrollServices;
 import com.toedter.calendar.JDateChooser;
 import javax.swing.*;
-import javax.swing.border.BevelBorder;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-import javax.swing.border.SoftBevelBorder;
-import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
@@ -17,7 +15,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -131,7 +128,7 @@ public class AdminSystemViewGUI extends PayrollServices {
 
         // Panel for the Left Side
         JPanel menuPanel = new JPanel();
-        menuPanel.setBackground(new Color(225, 249, 255, 255));
+        menuPanel.setBackground(new Color(58, 147, 255, 255));
         menuPanel.setLayout(new GridBagLayout());
         menuPanel.setBounds(0, 0, 300, 1080);
 
@@ -153,18 +150,17 @@ public class AdminSystemViewGUI extends PayrollServices {
         // MotorPH Logo
         JLabel motorph_logo = new JLabel(motorPHIcon);
         menuPanel.add(motorph_logo);
-
         //Admin Icon for Admin Panel
         JLabel adminIconLabel = new JLabel(adminIcon);
         JLabel adminLabel = new JLabel(" Administrator");
-        adminLabel.setForeground(new Color(2, 2, 255));
+        adminLabel.setForeground(new Color(255, 255, 255));
         adminLabel.setFont(new Font("Lato", Font.BOLD, 23));
 
         // Admin Panel - Displays "Administrator Label" and current system date and time
         JPanel adminPanel = new JPanel();
         adminPanel.setPreferredSize(new Dimension(300, 60));
-        adminPanel.setBackground(new Color(225, 249, 255, 255));
-        adminPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        adminPanel.setBackground(new Color(58, 147, 255, 255));
+
         adminPanel.add(adminIconLabel);
         adminPanel.add(adminLabel);
 
@@ -180,50 +176,66 @@ public class AdminSystemViewGUI extends PayrollServices {
             public void actionPerformed(ActionEvent e) {
                 SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy HH:mm");
                 dateTimeLabel.setText(sdf.format(new Date()));
-                dateTimeLabel.setFont(new Font("Lato", Font.BOLD, 14));
+                dateTimeLabel.setFont(new Font("Lato", Font.BOLD, 20));
+                dateTimeLabel.setForeground(new Color(255, 255, 255));
             }
         });
         timer.start();
 
-        //Buttons Background Color
-        Color bluish = new Color(0, 76, 153);
-
         // Creates new JButtons for the MenuPanel
+        ImageIcon emp_recordsIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/emp_icon.png")));
         Font latoFont = new Font("Lato", Font.BOLD, 14);
-        JButton employeeRecordsBtn = new JButton("Employee Records");
+        JButton employeeRecordsBtn = new JButton("Employee Records", emp_recordsIcon);
         employeeRecordsBtn.setFont(latoFont);
-        employeeRecordsBtn.setBackground(bluish);
-        employeeRecordsBtn.setForeground(Color.WHITE);
+        employeeRecordsBtn.setBackground(new Color(255, 255, 255));
+        employeeRecordsBtn.setForeground(new Color(2, 37, 101));
+        employeeRecordsBtn.setHorizontalAlignment(SwingConstants.LEFT);
+        employeeRecordsBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
 
-        JButton payrollBtn = new JButton("Payroll");
+        ImageIcon payrollIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/salary.png")));
+        JButton payrollBtn = new JButton("Payroll", payrollIcon);
         payrollBtn.setFont(latoFont);
-        payrollBtn.setBackground(bluish);
-        payrollBtn.setForeground(Color.WHITE);
+        payrollBtn.setBackground(new Color(255, 255, 255));
+        payrollBtn.setForeground(new Color(2, 37, 101));
+        payrollBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
+        payrollBtn.setHorizontalAlignment(SwingConstants.LEFT);
 
-        JButton attendanceBtn = new JButton("Attendance");
+        ImageIcon attendanceIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/calendar.png")));
+        JButton attendanceBtn = new JButton("Attendance", attendanceIcon);
         attendanceBtn.setFont(latoFont);
-        attendanceBtn.setBackground(bluish);
-        attendanceBtn.setForeground(Color.WHITE);
+        attendanceBtn.setBackground(new Color(255, 255, 255));
+        attendanceBtn.setForeground(new Color(2, 37, 101));
+        attendanceBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
+        attendanceBtn.setHorizontalAlignment(SwingConstants.LEFT);
 
-        JButton inquiryBtn = new JButton("Inquiry");
+        ImageIcon inquiryIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/message.png")));
+        JButton inquiryBtn = new JButton("Inquiry", inquiryIcon);
         inquiryBtn.setFont(latoFont);
-        inquiryBtn.setBackground(bluish);
-        inquiryBtn.setForeground(Color.WHITE);
+        inquiryBtn.setBackground(new Color(255, 255, 255));
+        inquiryBtn.setForeground(new Color(2, 37, 101));
+        inquiryBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
+        inquiryBtn.setHorizontalAlignment(SwingConstants.LEFT);
 
-        JButton leavesBtn = new JButton("Leave Requests");
+        ImageIcon leavesIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/briefcase.png")));
+        JButton leavesBtn = new JButton("Leave Requests", leavesIcon);
         leavesBtn.setFont(latoFont);
-        leavesBtn.setBackground(bluish);
-        leavesBtn.setForeground(Color.WHITE);
+        leavesBtn.setBackground(new Color(255, 255, 255));
+        leavesBtn.setForeground(new Color(2, 37, 101));
+        leavesBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
+        leavesBtn.setHorizontalAlignment(SwingConstants.LEFT);
 
         // Logout Button
         ImageIcon logoutIcon = new ImageIcon("src/main/resources/logout.png");
-        Image resizedLogoutIcon = logoutIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+        Image resizedLogoutIcon = logoutIcon.getImage().getScaledInstance(18, 18, Image.SCALE_SMOOTH);
         ImageIcon resizedLogout = new ImageIcon(resizedLogoutIcon);
+        // Creates the Button for Logout
         JButton exitBtn = new JButton("Logout", resizedLogout);
+        exitBtn.setHorizontalAlignment((SwingConstants.LEFT));
+        exitBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
         exitBtn.setFont(latoFont);
-        exitBtn.setBackground(new Color(0, 76, 153));
-        exitBtn.setForeground(Color.WHITE);
-
+        exitBtn.setBackground(new Color(255, 255, 255));
+        exitBtn.setForeground(new Color(2, 37, 101));
+        // Disposes this frame and opens the LoginGUI
         exitBtn.addActionListener(new ActionListener() {
            @Override
            public void actionPerformed(ActionEvent e) {
@@ -856,10 +868,13 @@ public class AdminSystemViewGUI extends PayrollServices {
             netIncomeTextField.setFont(totalsLabelFont);
 
             //Fill Button
-            JButton fillBtn = new JButton("Fill");
+            ImageIcon fillerIcon = new ImageIcon(getClass().getResource("/add-button.png"));
+            JButton fillBtn = new JButton("",fillerIcon);
             fillBtn.setBounds(1020,130,100,40);
             fillBtn.setFont(labelFont2);
             fillBtn.setForeground(blackColor);
+            fillBtn.setBackground(new Color(75, 188, 255));
+            fillBtn.setHorizontalAlignment(SwingConstants.CENTER);
             fillBtn.addActionListener(new ActionListener() {
                 /**
                  * @param e the event to be processed
@@ -1005,14 +1020,27 @@ public class AdminSystemViewGUI extends PayrollServices {
         phistory_searchBtn.setBounds(750, 20,80,30);
 
         // Creates the Print Button for the JTable
-        JButton phistory_printBtn = new JButton("Print");
-        phistory_printBtn.setBounds(1520, 20,80,30);
+        ImageIcon printIcon = new ImageIcon(getClass().getResource("/print_icon.png"));
+        Image resizedPrint = printIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        printIcon = new ImageIcon(resizedPrint);
+        JButton phistory_printBtn = new JButton("PRINT", printIcon);
+        phistory_printBtn.setBackground(Color.WHITE);
+        phistory_printBtn.setFont(new Font("Lato", Font.BOLD, 16));
+        phistory_printBtn.setForeground(new Color(2, 37, 101));
+        phistory_printBtn.setBounds(1490, 920,120,40);
 
         //Creates the Search Textfield
         JTextField phistorySearchTextField = new JTextField();
         phistorySearchTextField.setBounds(830,20,300,30);
         payrollHistory.add(phistory_searchBtn);
         payrollHistory.add(phistorySearchTextField);
+
+        // Delete Button
+        JButton phistory_delBtn = new JButton("Delete");
+        phistory_delBtn.setBounds(1520, 20,80,35);
+        phistory_delBtn.setBackground(new Color(223, 42, 53));
+        phistory_delBtn.setForeground(new Color(255, 255, 255));
+        payrollHistory.add(phistory_delBtn);
 
         // Payroll History Tab > Payroll History Output Panel - displays the selected row in the table
         payrollHistoryOutput = new JTextArea();
@@ -1085,6 +1113,39 @@ public class AdminSystemViewGUI extends PayrollServices {
                     int payrollID = (int) payrollRecordsModel.getValueAt(selectedRow, 0);
                     displayPayslip(payrollID);
                 }
+            }
+        });
+
+        //Deletes Payroll History Record
+        phistory_delBtn.addActionListener(e -> {
+            try {
+                int selectedRow = payrollRecordsTable.getSelectedRow();
+                if (selectedRow == -1) {
+                    JOptionPane.showMessageDialog(frame, "Please select a record to delete.");
+                    return;
+                }
+
+                String payrollID = payrollRecordsModel.getValueAt(selectedRow, 0).toString();
+                String sql = "DELETE FROM Payroll WHERE payroll_id = ?";
+
+                try (Connection conn = DriverManager.getConnection(db_path);
+                     PreparedStatement pstmnt = conn.prepareStatement(sql)) { // ✅ Closing parenthesis here
+
+                    pstmnt.setString(1, payrollID);
+                    int rowsAffected = pstmnt.executeUpdate();
+
+                    if (rowsAffected > 0) {
+                        JOptionPane.showMessageDialog(frame, "Record Deleted Successfully.");
+                        payrollRecordsModel.removeRow(selectedRow);
+                    } else {
+                        JOptionPane.showMessageDialog(frame, "No record deleted. Check if payroll ID exists.", "Warning", JOptionPane.WARNING_MESSAGE);
+                    }
+
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(frame, "Error in Deleting Record: " + ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(frame, "Unexpected error: " + ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
             }
         });
 

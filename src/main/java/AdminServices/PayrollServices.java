@@ -1,4 +1,4 @@
-package AdminView;
+package AdminServices;
 import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;

@@ -1,4 +1,4 @@
-package AdminView;
+package AdminServices;
 import java.sql.SQLException;
 
 public interface PayrollServiceInterface {
