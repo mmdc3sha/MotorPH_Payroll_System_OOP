@@ -3,7 +3,7 @@
 Description: Created by Trisha Belle B. Quismundo for Object-Oriented Programming Course @Mapua Malayan Digital College T2-Y2
 
 ---
-![MMDC Logo](https://github.com/mmdc3sha/MotorPH_Payroll_System_OOP/blob/master/images/mmdc_logo.png)
+![MMDC Logo](https://github.com/mmdc3sha/MotorPH_Payroll_System_OOP/blob/master/src/main/resources/images/mmdc_logo.png)
 
 The MotorPH Payroll System is an object-oriented payroll management system designed to efficiently manage employee payrolls.
 
