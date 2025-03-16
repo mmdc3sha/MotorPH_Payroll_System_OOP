@@ -1015,9 +1015,23 @@ public class AdminSystemViewGUI extends PayrollServices {
         payrollHistory.setBackground(new Color(25, 136, 173));
         payrollHistory.setLayout(null);
 
+        //Creates the Search Textfield
+        JTextField phistorySearchTextField = new JTextField();
+        phistorySearchTextField.setBounds(830,20,300,30);
+
+        payrollHistory.add(phistorySearchTextField);
+
         // Creates the Search button for the Payroll History Table
         JButton phistory_searchBtn = new JButton("Search");
         phistory_searchBtn.setBounds(750, 20,80,30);
+        phistory_searchBtn.addActionListener(e -> {
+            String keyword = phistorySearchTextField.getText();
+            if (keyword.trim().isEmpty()) {
+                sorter.setRowFilter(null);
+            } else {
+                sorter.setRowFilter(RowFilter.regexFilter("(?i)" + keyword));
+            }
+        });
 
         // Creates the Print Button for the JTable
         ImageIcon printIcon = new ImageIcon(getClass().getResource("/print_icon.png"));
@@ -1029,15 +1043,17 @@ public class AdminSystemViewGUI extends PayrollServices {
         phistory_printBtn.setForeground(new Color(2, 37, 101));
         phistory_printBtn.setBounds(1490, 920,120,40);
 
-        //Creates the Search Textfield
-        JTextField phistorySearchTextField = new JTextField();
-        phistorySearchTextField.setBounds(830,20,300,30);
-        payrollHistory.add(phistory_searchBtn);
-        payrollHistory.add(phistorySearchTextField);
 
         // Delete Button
+        JButton phistory_updateBtn = new JButton("Update");
+        phistory_updateBtn.setBackground(new Color(41, 207, 1));
+        phistory_updateBtn.setFont(new Font("Lato", Font.BOLD, 14));
+        phistory_updateBtn.setForeground(new Color(255, 255, 255));
+        phistory_updateBtn.setBounds(1390, 20,110,35);
+        payrollHistory.add(phistory_updateBtn);
+
         JButton phistory_delBtn = new JButton("Delete");
-        phistory_delBtn.setBounds(1520, 20,80,35);
+        phistory_delBtn.setBounds(1510, 20,100,35);
         phistory_delBtn.setBackground(new Color(223, 42, 53));
         phistory_delBtn.setForeground(new Color(255, 255, 255));
         payrollHistory.add(phistory_delBtn);
@@ -1050,7 +1066,7 @@ public class AdminSystemViewGUI extends PayrollServices {
         payrollHistoryOutput.setMargin(new Insets(10,25,10,10));
         payrollHistoryOutput.setEditable(false);
         payrollHistory.add(payrollHistoryOutput);
-
+        payrollHistory.add(phistory_searchBtn);
         //Prints the Payroll History Output panel
         phistory_printBtn.addActionListener(new ActionListener() {
             @Override
@@ -1104,6 +1120,40 @@ public class AdminSystemViewGUI extends PayrollServices {
         payrollTabbedPane.addTab("Payroll History", payrollHistory);
         payrollPanel.add(payrollTabbedPane);
 
+        //Updates the Table
+        phistory_updateBtn.addActionListener(e -> {
+            String selectQuery = "SELECT * FROM Payroll";
+
+            try (Connection updateConn = DriverManager.getConnection(db_path);
+                 Statement selectStmt = updateConn.createStatement();
+                 ResultSet rs = selectStmt.executeQuery(selectQuery)) {
+
+                // Clear the existing table model
+                payrollRecordsModel.setRowCount(0);
+                payrollRecordsModel.setColumnCount(0);
+
+                // Get Column Names from the ResultSet and add to the model
+                int columnCount = rs.getMetaData().getColumnCount();
+                for (int i = 1; i <= columnCount; i++) {
+                    payrollRecordsModel.addColumn(rs.getMetaData().getColumnName(i));
+                }
+
+                // Add rows from the ResultSet to the model
+                while (rs.next()) {
+                    Object[] row = new Object[columnCount];
+                    for (int i = 1; i <= columnCount; i++) {
+                        row[i - 1] = rs.getObject(i);
+                    }
+                    payrollRecordsModel.addRow(row);
+                }
+                JOptionPane.showMessageDialog(frame, "Update Successful.");
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(frame, "Error while updating Payroll Record", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+
+        });
+
         // Detects the selected row
         payrollRecordsTable.addMouseListener(new MouseAdapter() {
             @Override
@@ -1118,34 +1168,37 @@ public class AdminSystemViewGUI extends PayrollServices {
 
         //Deletes Payroll History Record
         phistory_delBtn.addActionListener(e -> {
-            try {
-                int selectedRow = payrollRecordsTable.getSelectedRow();
-                if (selectedRow == -1) {
-                    JOptionPane.showMessageDialog(frame, "Please select a record to delete.");
-                    return;
-                }
-
-                String payrollID = payrollRecordsModel.getValueAt(selectedRow, 0).toString();
-                String sql = "DELETE FROM Payroll WHERE payroll_id = ?";
-
-                try (Connection conn = DriverManager.getConnection(db_path);
-                     PreparedStatement pstmnt = conn.prepareStatement(sql)) { // ✅ Closing parenthesis here
-
-                    pstmnt.setString(1, payrollID);
-                    int rowsAffected = pstmnt.executeUpdate();
-
-                    if (rowsAffected > 0) {
-                        JOptionPane.showMessageDialog(frame, "Record Deleted Successfully.");
-                        payrollRecordsModel.removeRow(selectedRow);
-                    } else {
-                        JOptionPane.showMessageDialog(frame, "No record deleted. Check if payroll ID exists.", "Warning", JOptionPane.WARNING_MESSAGE);
+            int delChoice = JOptionPane.showConfirmDialog(null, "Delete Record?", "Delete Record", JOptionPane.YES_NO_OPTION);
+            if (delChoice == JOptionPane.YES_OPTION) {
+                try {
+                    int selectedRow = payrollRecordsTable.getSelectedRow();
+                    if (selectedRow == -1) {
+                        JOptionPane.showMessageDialog(frame, "Please select a record to delete.");
+                        return;
                     }
 
-                } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(frame, "Error in Deleting Record: " + ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+                    String payrollID = payrollRecordsModel.getValueAt(selectedRow, 0).toString();
+                    String sql = "DELETE FROM Payroll WHERE payroll_id = ?";
+
+                    try (Connection conn = DriverManager.getConnection(db_path);
+                         PreparedStatement pstmnt = conn.prepareStatement(sql)) { // ✅ Closing parenthesis here
+
+                        pstmnt.setString(1, payrollID);
+                        int rowsAffected = pstmnt.executeUpdate();
+
+                        if (rowsAffected > 0) {
+                            JOptionPane.showMessageDialog(frame, "Record Deleted Successfully.");
+                            payrollRecordsModel.removeRow(selectedRow);
+                        } else {
+                            JOptionPane.showMessageDialog(frame, "No record deleted. Check if payroll ID exists.", "Warning", JOptionPane.WARNING_MESSAGE);
+                        }
+
+                    } catch (SQLException ex) {
+                        JOptionPane.showMessageDialog(frame, "Error in Deleting Record: " + ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(frame, "Unexpected error: " + ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
                 }
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(frame, "Unexpected error: " + ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
             }
         });
 
