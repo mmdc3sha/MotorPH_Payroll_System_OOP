@@ -14,7 +14,7 @@ The MotorPH Payroll System is an object-oriented payroll management system desig
 # Features
 The payroll system has two modes, one for the Payroll Administrator and the other for Regular MotorPH employees. The Administrator mode features consists of the following:
 1. Login - Login Page for Admin and Employees.
-![LoginGUI](path)
+![LoginGUI](src/main/resources/images/Screenshot 2025-03-17 040726.png)
 
 1. Payroll Calculation - allows the admin to create/generate/print/save payslips. It also has a Payroll History tab wherein the admin can view/search/delete/print/update recent and past payslips.
 ![LoginGUI](path)
