@@ -14,6 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.print.PrinterException;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -566,9 +567,6 @@ public class AdminSystemViewGUI extends PayrollServices {
         employeeRecordsPanel.add(emp_record_label);
         employeeRecordsPanel.add(refreshBtn);
 
-
-
-
         //Create a Payroll Panel
         JPanel payrollPanel = new JPanel();
         payrollPanel.setBackground(new Color(0, 12, 20));
@@ -595,11 +593,22 @@ public class AdminSystemViewGUI extends PayrollServices {
             printPayslipBtn.setFont(new Font("Lato", Font.BOLD, 15));
             saveFileBtn.setBounds(740,900,121,45);
             printPayslipBtn.setBounds(861,900,121,45);
+            printPayslipBtn.addActionListener(e -> {
+               try {
+                   boolean complete = outputTextArea.print();
+                   if (complete) {
+                       JOptionPane.showMessageDialog(null, "Payslip Printed Successfully.", "Print Completed", JOptionPane.INFORMATION_MESSAGE);
+                   } else {
+                       JOptionPane.showMessageDialog(frame, "Payslip Printed Failed.", "Print Failed", JOptionPane.ERROR_MESSAGE);
+                   }
+               } catch (PrinterException ex) {
+                   JOptionPane.showMessageDialog(null, "Error while printing Payslip", "ERROR", JOptionPane.ERROR_MESSAGE);
+               }
+            });
 
             // Adds the Save File Button and Print Payslip Button
             calculateTab.add(saveFileBtn);
             calculateTab.add(printPayslipBtn);
-
 
                 //Pay Period
                 JLabel PayPeriodlbl = new JLabel("Pay Period");
@@ -615,22 +624,21 @@ public class AdminSystemViewGUI extends PayrollServices {
                 payStartDateLbl.setBounds(740,80,150,30);
                 calculateTab.add(payStartDateLbl);
 
-                // Creates the Date Chooser
-
-
-
         // Creates the JLabel for Period End
         JLabel payEndDateLbl = new JLabel("End Date:");
         payEndDateLbl.setFont(new Font("Lato", Font.PLAIN, 15));
         payEndDateLbl.setForeground(Color.BLACK);
         payEndDateLbl.setBounds(1120,80,150,30);
         calculateTab.add(payEndDateLbl);
-
                 calculateTab.add(dateChooser2);
                 calculateTab.add(dateChooser);
+
+
+            // Font and Color for the Totals Labels
+            Font totalsLabelFont = new Font("Lato", Font.BOLD, 16);
+            Color totalsLabelColor = new Color(2, 95, 5);
             Font labelFont2 = new Font("Lato", Font.PLAIN, 16);
             Color blackColor = Color.BLACK;
-
             // Create and add components
             JLabel empIDlbl = new JLabel("Employee ID:");
             empIDlbl.setFont(labelFont2);
@@ -708,8 +716,8 @@ public class AdminSystemViewGUI extends PayrollServices {
             grossIncomeLbl.setFont(labelFont2);
             grossIncomeLbl.setForeground(blackColor);
             grossIncomeField.setBounds(870,670,250,40);
-            grossIncomeField.setFont(labelFont2);
-            grossIncomeField.setForeground(blackColor);
+            grossIncomeField.setFont(totalsLabelFont);
+            grossIncomeField.setForeground(totalsLabelColor);
             grossIncomeField.setEditable(false);
 
             JLabel benefitsLbl = new JLabel("Benefits");
@@ -773,28 +781,30 @@ public class AdminSystemViewGUI extends PayrollServices {
 
             //Withholding Label
             JLabel withholdingLbl = new JLabel("Withholding Tax:");
-            withholdingLbl.setFont(labelFont2);
-            withholdingLbl.setForeground(blackColor);
+            withholdingLbl.setFont(totalsLabelFont);
+            withholdingLbl.setForeground(totalsLabelColor);
             withholdingLbl.setBounds(1180,610,150,40);
+
             // Withholding Textfield
             withholdingTextField.setBounds(1330,610,250,40);
-            withholdingTextField.setFont(labelFont2);
-            withholdingTextField.setForeground(blackColor);
+            withholdingTextField.setFont(totalsLabelFont);
+            withholdingTextField.setForeground(totalsLabelColor);
+            withholdingTextField.setEditable(false);
+            withholdingTextField.setBorder(new LineBorder(totalsLabelColor));
 
-            // Font and Color for the Totals Labels
-            Font totalsLabelFont = new Font("Lato", Font.BOLD, 16);
-            Color totalsLabelColor = new Color(2, 95, 5);
             // Total benefits Label
             JLabel totalBenefitsLbl = new JLabel("Total Benefits:");
             totalBenefitsLbl.setBounds(1180,670,150,40);
             totalBenefitsLbl.setFont(totalsLabelFont);
             totalBenefitsLbl.setForeground(totalsLabelColor);
+
             // Total Benefits Textfield
             totalBenefitsTextField.setEditable(false);
             totalBenefitsTextField.setBounds(1330,670,250,40);
             totalBenefitsTextField.setFont(totalsLabelFont);
             totalBenefitsTextField.setForeground(totalsLabelColor);
             totalBenefitsTextField.setBorder(new LineBorder(totalsLabelColor));
+
             //total Deductions
             JLabel totalDeductionsLbl = new JLabel("Total Deductions:");
             totalDeductionsLbl.setFont(totalsLabelFont);
@@ -857,7 +867,7 @@ public class AdminSystemViewGUI extends PayrollServices {
             outputTextArea.setBackground(new Color(255, 255, 255));
             outputTextArea.setBounds(20, 40,700,900);
             outputTextArea.setMargin(new Insets(13,10,13,10));
-            outputTextArea.setFont(new Font("Monospaced", Font.PLAIN, 25));
+            outputTextArea.setFont(new Font("Monospaced", Font.PLAIN, 22));
 
                 calculateTab.add(outputTextArea);
                 calculateTab.add(empIDlbl);

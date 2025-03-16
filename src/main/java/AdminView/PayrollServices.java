@@ -2,7 +2,6 @@ package AdminView;
 import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
-import java.awt.*;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -113,7 +112,7 @@ public class PayrollServices implements PayrollServiceInterface {
             String lastName = lastNameTextField.getText();
             String position = positionTextField.getText();
 
-            // ✅ Apply default values if the text fields are empty
+            // Apply default values if the text fields are empty
             int daysWorked = daysWorkedTextField.getText().trim().isEmpty() ? 0 : Integer.parseInt(daysWorkedTextField.getText().trim());
             int hoursWorked = hoursWorkedTextField.getText().trim().isEmpty() ? 0 : Integer.parseInt(hoursWorkedTextField.getText().trim());
             int overtime = overtimeTextField.getText().trim().isEmpty() ? 0 : Integer.parseInt(overtimeTextField.getText().trim());
@@ -135,11 +134,19 @@ public class PayrollServices implements PayrollServiceInterface {
             double netIncome = taxableIncome - withholdingTax;
 
             grossIncomeField.setText(String.format("%.2f", grossIncome));
+            // Uses getters Contribution methods for Calculations
+            sssTextField.setText(String.format("%.2f", getSSSContribution(basicSalary))); // calculated with getSSSContribution method
+            philHealthTextField.setText(String.format("%.2f", getPhilHealthContribution(basicSalary))); // calculated with getPhilHealthContribution method
+            pagIBIGTextField.setText(String.format("%.2f", getPagIBIGContribution(basicSalary))); // calculated with getPagIBIGContribution method
+
+
             totalBenefitsTextField.setText(String.format("%.2f", totalBenefits));
             totalDeductionsTextField.setText(String.format("%.2f", totalDeductions));
             withholdingTextField.setText(String.format("%.2f", withholdingTax));
             netIncomeTextField.setText(String.format("%.2f", netIncome));
 
+
+            //Displays the Payslip on the textarea
             double totalEarnings = basicSalary + grossIncome + totalBenefits;
             String separator = "===========================================";
             String payslipOutput = separator + "\n"
@@ -161,35 +168,28 @@ public class PayrollServices implements PayrollServiceInterface {
                     + separator + "\n"
                     + String.format("%-20s %20s%n", "DEDUCTIONS", "AMOUNT")
                     + separator + "\n"
-                    + String.format("%-20s %20s%n", "SSS Contribution:", "PHP " + sss)
-                    + String.format("%-20s %20s%n", "PhilHealth:", "PHP " + philHealth)
-                    + String.format("%-20s %20s%n", "Pag-IBIG:", "PHP " + pagIBIG)
+                    + String.format("%-20s %20s%n", "SSS Contribution:", "PHP " + getSSSContribution(basicSalary))
+                    + String.format("%-20s %20s%n", "PhilHealth:", "PHP " + getPhilHealthContribution(basicSalary))
+                    + String.format("%-20s %20s%n", "Pag-IBIG:", "PHP " + getPagIBIGContribution(basicSalary))
                     + String.format("%-20s %20s%n", "Tax Withholding:", "PHP " + withholdingTax)
                     + String.format("%-20s %20s%n", "Total Deductions:", "PHP " + totalDeductions)
                     + "-----------------------------------------" + "\n"
                     + String.format("%-20s %20s%n", "Net Salary:", "PHP " + netIncome)
                     + separator + "\n";
-
             outputTextArea.setText(payslipOutput);
-            outputScrollPane.setVerticalScrollBar(outputScrollPane.getVerticalScrollBar());
-            // ✅ Step 7: Insert into Database
+
+
             insertPayrollData(Integer.parseInt(empID), String.format(startDate), String.format(endDate), fName, lastName, position, basicSalary, hourlyRate, daysWorked, hoursWorked,
                     overtime, grossIncome, riceSubsidy, phoneAllowance, clothAllowance, totalBenefits, sss, philHealth, pagIBIG, totalDeductions, taxableIncome, withholdingTax, netIncome);
+
+
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Invalid number format! Please check your input. Remove ',' in Numbers (e.g 5,000 > 5000)", "Input Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    /**
-     *
-     */
-    @Override
-    public void displayPayslip() {
-
-    }
 
 
-    // ✅ Withholding Tax Calculation Method
     public double calculateWithholdingTax(double taxableIncome) {
         if (taxableIncome <= 20832) {
             return 0;
@@ -253,4 +253,72 @@ public class PayrollServices implements PayrollServiceInterface {
             JOptionPane.showMessageDialog(null, String.format("Calculation Failed: %s", e.getMessage()));
         }
     }
+
+    /**
+     * @param salary
+     * @return
+     */
+    @Override
+    public double getPhilHealthContribution(double salary) {
+        double premiumRate = 0.03; // 3% premium rate
+        double monthlyPremium;
+
+        if (salary <= 10000) { // if the salary is less than PHP10,000
+            monthlyPremium = 300.00; // Monthly Premium is PHP300
+        } else if (salary > 10000 && salary < 60000) {
+            monthlyPremium = salary * premiumRate;
+        } else {
+            monthlyPremium = 1800.00;
+        }
+        return monthlyPremium / 2; // Employee pays half, employer pays half
+    }
+
+    /**
+     * @param salary
+     */
+    @Override
+    public double getSSSContribution(double salary) {
+        double[][] brackets = {
+                {0, 3249.99, 135.00}, {3250, 3749.99, 157.50}, {3750, 4249.99, 180.00},
+                {4250, 4749.99, 202.50}, {4750, 5249.99, 225.00}, {5250, 5749.99, 247.50},
+                {5750, 6249.99, 270.00}, {6250, 6749.99, 292.50}, {6750, 7249.99, 315.00},
+                {7250, 7749.99, 337.50}, {7750, 8249.99, 360.00}, {8250, 8749.99, 382.50},
+                {8750, 9249.99, 405.00}, {9250, 9749.99, 427.50}, {9750, 10249.99, 450.00},
+                {10250, 10749.99, 472.50}, {10750, 11249.99, 495.00}, {11250, 11749.99, 517.50},
+                {11750, 12249.99, 540.00}, {12250, 12749.99, 562.50}, {12750, 13249.99, 585.00},
+                {13250, 13749.99, 607.50}, {13750, 14249.99, 630.00}, {14250, 14749.99, 652.50},
+                {14750, 15249.99, 675.00}, {15250, 15749.99, 697.50}, {15750, 16249.99, 720.00},
+                {16250, 16749.99, 742.50}, {16750, 17249.99, 765.00}, {17250, 17749.99, 787.50},
+                {17750, 18249.99, 810.00}, {18250, 18749.99, 832.50}, {18750, 19249.99, 855.00},
+                {19250, 19749.99, 877.50}, {19750, 20249.99, 900.00}, {20250, 20749.99, 922.50},
+                {20750, 21249.99, 945.00}, {21250, 21749.99, 967.50}, {21750, 22249.99, 990.00},
+                {22250, 22749.99, 1012.50}, {22750, 23249.99, 1035.00}, {23250, 23749.99, 1057.50},
+                {23750, 24249.99, 1080.00}, {24250, 24749.99, 1102.50}, {24750, Double.MAX_VALUE, 1125.00}
+        };
+
+        for (double[] bracket : brackets) {
+            if (salary >= bracket[0] && salary <= bracket[1] ) {
+                return bracket[2];
+            }
+        }
+
+        return 0.0; // Return 0 if salary doesn't match any range
+    }
+
+    /**
+     * @param salary
+     */
+    @Override
+    public double getPagIBIGContribution(double salary) {
+        double employeeRate = (salary <= 1500) ? 0.01 : 0.02; // 1% if salary is 1,000 - 1,500, otherwise 2%
+        double employerRate = 0.02; // Employer always contributes 2%
+        double employeeShare = salary * employeeRate;
+        double employerShare = salary * employerRate;
+
+        // Apply the maximum contribution cap
+        employeeShare = Math.min(employeeShare, 100.00);
+
+        return employeeShare; // Return only the employee's contribution
+    }
+
 }
