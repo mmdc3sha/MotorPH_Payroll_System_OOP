@@ -32,3 +32,13 @@ The payroll system has two modes, one for the Payroll Administrator and the othe
 
 ![Payroll History Tab](https://github.com/mmdc3sha/MotorPH_Payroll_System_OOP/blob/master/src/main/resources/images/Screenshot%202025-03-17%20041445.png)
 
+3. Employee Records
+
+Work In-progress:
+   * Attendance Management
+   * Leave Applications
+   * Employee Inquiries
+   * EMPLOYEE - DASHBOARD
+   * EMPLOYEE - LEAVE PORTAL
+   * EMPLOYEE - INQUIRIES PORTAL
+   * EMPLOYEE - ATTENDANCE TRACKER
