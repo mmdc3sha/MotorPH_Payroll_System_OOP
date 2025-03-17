@@ -1,6 +1,7 @@
 package GUI;
 
 import AdminServices.PayrollServices;
+import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import com.toedter.calendar.JDateChooser;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -117,12 +118,7 @@ public class AdminSystemViewGUI extends PayrollServices {
 
         // Set Nimbus Look and Feel
         try {
-            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
+            UIManager.setLookAndFeel(new FlatMacLightLaf());
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error setting Nimbus Look and Feel", e);
         }

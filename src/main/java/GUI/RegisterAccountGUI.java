@@ -1,5 +1,7 @@
 package GUI;
 
+import com.formdev.flatlaf.themes.FlatMacLightLaf;
+
 import javax.swing.*;
 import java.awt.*;
 import java.sql.Connection;
@@ -24,15 +26,11 @@ public class RegisterAccountGUI extends JFrame {
         setLayout(null);
 
         try {
-            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
+            UIManager.setLookAndFeel(new FlatMacLightLaf());
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Error setting Nimbus Look and Feel", e);
+            LOGGER.log(Level.SEVERE, "Error setting Look and Feel", e);
         }
+
         Font labelFont = new Font("Lato", Font.PLAIN, 14);
 
         // Labels for the text fields

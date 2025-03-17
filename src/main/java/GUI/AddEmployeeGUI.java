@@ -1,5 +1,7 @@
 package GUI;
 
+import com.formdev.flatlaf.themes.FlatMacLightLaf;
+
 import javax.swing.*;
 import java.awt.*;
 import java.sql.Connection;
@@ -37,29 +39,26 @@ public class AddEmployeeGUI extends JDialog {
         super(AdminSystemViewGUI, "Add Employee", true);
         setTitle("Add Employee");
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        setSize(950, 650);
+        setSize(1100, 650);
         setLocationRelativeTo(AdminSystemViewGUI);
         Image appIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/user.png"))).getImage();
         setIconImage(appIcon);
 
         try {
-            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
+            UIManager.setLookAndFeel(new FlatMacLightLaf());
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Error setting Nimbus Look and Feel", e);
+            LOGGER.log(Level.SEVERE, "Error setting Look and Feel", e);
         }
+
         //Panel for the labels and textfield
         JPanel panel = new JPanel();
+        panel.setBackground(new Color(100, 184, 255, 255)); // Inner panel background
         panel.setLayout(new GridBagLayout());
         getContentPane().add(panel);
-        panel.setBackground(new Color(240, 230, 255));
+
 
         Font labelFont = new Font("Lato", Font.PLAIN, 14);
-        Font textfieldFont = new Font("Monospaced", Font.PLAIN, 14);
+        Font textfieldFont = new Font("Lato", Font.PLAIN, 12);
 
         // Labels and fields for personal information (Left Column)
         JLabel firstName = new JLabel("First Name:");
@@ -85,6 +84,7 @@ public class AddEmployeeGUI extends JDialog {
         txtBirthday.setFont(textfieldFont);
         txtAddress = new JTextField(20);
         txtAddress.setFont(textfieldFont);
+        txtAddress.setPreferredSize(new Dimension(400, 40));
         txtPhoneNumber = new JTextField(20);
         txtPhoneNumber.setFont(textfieldFont);
         cbEmploymentStatus = new JComboBox<>(new String[]{"Regular", "Part-time", "Intern", "Probationary"});
@@ -138,7 +138,7 @@ public class AddEmployeeGUI extends JDialog {
 
 
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.insets = new Insets(5, 50, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // Personal Information (Left Column)
@@ -248,23 +248,33 @@ public class AddEmployeeGUI extends JDialog {
         gbc.gridx = 0;
         gbc.gridy = 10;
         gbc.gridwidth = 5;
-        panel.add(Box.createRigidArea(new Dimension(0, 40)), gbc);
+        panel.add(Box.createRigidArea(new Dimension(20, 40)), gbc);
 
         // Button Panel
         JButton saveButton;
+
         // Panel for the buttons
         JPanel buttonPanel = new JPanel();
+        buttonPanel.setBackground(new Color(100, 184, 255, 255));
         buttonPanel.setLayout(new FlowLayout());
+
         saveButton = new JButton("Save");
+        saveButton.setBackground(new Color(0, 176, 24));
+        saveButton.setFont(new Font("Lato", Font.BOLD, 14));
+
         // Sets the Preferred Size of the buttons
         JButton cancelButton = new JButton("Cancel");
+        cancelButton.setFont(new Font("Lato", Font.BOLD, 14));
         Dimension buttonSize = new Dimension(100, 40);
+
+
+        cancelButton.setBackground(new Color(255, 114, 114));
         saveButton.setPreferredSize(buttonSize);
         cancelButton.setPreferredSize(buttonSize);
+
         //Add components to the button panel
         buttonPanel.add(saveButton);
         buttonPanel.add(cancelButton);
-        buttonPanel.setBackground(new Color(240, 230, 255));
 
         gbc.gridx = 0;
         gbc.gridy = 11;
@@ -280,8 +290,6 @@ public class AddEmployeeGUI extends JDialog {
                     saveEmployee();
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
-                }finally {
-                    dispose();
                 }
         });
 
@@ -294,24 +302,35 @@ public class AddEmployeeGUI extends JDialog {
 
 
     private void saveEmployee() throws SQLException {
-        String firstName = txtFirstName.getText();
-        String lastName = txtLastName.getText();
-        String birthday = txtBirthday.getText();
-        String address = txtAddress.getText();
-        String phoneNumber = txtPhoneNumber.getText();
+        String firstName = txtFirstName.getText().trim();
+        String lastName = txtLastName.getText().trim();
+        String birthday = txtBirthday.getText().trim();
+        String address = txtAddress.getText().trim();
+        String phoneNumber = txtPhoneNumber.getText().trim();
         String employmentStatus = (String) cbEmploymentStatus.getSelectedItem();
-        String jobPosition = txtJobPosition.getText();
-        String immediateSupervisor = txtImmediateSupervisor.getText();
-        String sssNumber = txtSSSNumber.getText();
-        String philhealthNumber = txtPhilhealthNumber.getText();
-        String tinNumber = txtTINNumber.getText();
-        String pagIbigNumber = txtPagIbigNumber.getText();
-        String basicSalary = txtBasicSalary.getText();
-        String hourlyRate = txtHourlyRate.getText();
-        String riceSubsidy = txtRiceSubsidy.getText();
-        String phoneAllowance = txtPhoneAllowance.getText();
-        String clothingAllowance = txtClothingAllowance.getText();
-        String grossSemiMonthlyRate = txtGrossSemiMonthlyRate.getText();
+        String jobPosition = txtJobPosition.getText().trim();
+        String immediateSupervisor = txtImmediateSupervisor.getText().trim();
+        String sssNumber = txtSSSNumber.getText().trim();
+        String philhealthNumber = txtPhilhealthNumber.getText().trim();
+        String tinNumber = txtTINNumber.getText().trim();
+        String pagIbigNumber = txtPagIbigNumber.getText().trim();
+        String basicSalary = txtBasicSalary.getText().trim();
+        String hourlyRate = txtHourlyRate.getText().trim();
+        String riceSubsidy = txtRiceSubsidy.getText().trim();
+        String phoneAllowance = txtPhoneAllowance.getText().trim();
+        String clothingAllowance = txtClothingAllowance.getText().trim();
+        String grossSemiMonthlyRate = txtGrossSemiMonthlyRate.getText().trim();
+
+        if (firstName.isEmpty() || lastName.isEmpty() || birthday.isEmpty() || address.isEmpty() ||
+                phoneNumber.isEmpty() || employmentStatus == null || jobPosition.isEmpty() ||
+                immediateSupervisor.isEmpty() || sssNumber.isEmpty() || philhealthNumber.isEmpty() ||
+                tinNumber.isEmpty() || pagIbigNumber.isEmpty() || basicSalary.isEmpty() ||
+                hourlyRate.isEmpty() || riceSubsidy.isEmpty() || phoneAllowance.isEmpty() ||
+                clothingAllowance.isEmpty() || grossSemiMonthlyRate.isEmpty()) {
+
+            JOptionPane.showMessageDialog(this, "All fields must be filled out!", "Input Error", JOptionPane.ERROR_MESSAGE);
+            return;  // Stop execution if any field is empty
+        }
 
         String url = "jdbc:sqlite:src/main/java/MotorPHDatabase.db";
         String sql = "INSERT INTO Employee(employee_id, last_name, first_name, birthday, address, phone_number, SSS_number, philhealth_number, TIN_number, Pagibig_number, employment_status, job_position, Immediate_Supervisor," +
@@ -341,9 +360,10 @@ public class AddEmployeeGUI extends JDialog {
             pstmnt.executeUpdate();
             JOptionPane.showMessageDialog(this, "Employee Added Successfully.");
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Error in Adding Employee. Connection to Database Failed." + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Error in Adding Employee." + e.getMessage());
         }
     }
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new AddEmployeeGUI(new JFrame()).setVisible(true));
     }
