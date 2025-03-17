@@ -1,6 +1,8 @@
 package GUI;
 
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
+import com.toedter.calendar.JDateChooser;
+
 import javax.swing.*;
 import java.awt.*;
 import java.text.SimpleDateFormat;
@@ -12,6 +14,16 @@ public class EmployeeSystemViewGUI {
     private static final Logger LOGGER = Logger.getLogger(EmployeeSystemViewGUI.class.getName());
     private JPanel mainPanel;
     private CardLayout cardLayout;
+    private static JTextField employeeIDtxt;
+    private static JDateChooser leave_applicationDateTxt;
+    private static JDateChooser leaveStartTxt;
+    private static JDateChooser leaveEndTxt;
+    private static JTextArea leaveReasonTxt;
+    private static JComboBox<Stirng> leaveTypeTxt;
+    private static JTextField daysUsedTxt;
+    private static JTextField leaveStatusTxt;
+    private static JTextField status_updatedByTxt;
+    private static JTextField status_updatedDateTxt;
 
     public EmployeeSystemViewGUI() {
         JFrame frame = new JFrame();
@@ -108,6 +120,8 @@ public class EmployeeSystemViewGUI {
         leavesBtn.setBackground(bluish);
         leavesBtn.setForeground(fontColor);
 
+
+
         // Logout Button
         ImageIcon logoutIcon = new ImageIcon("src/main/resources/logout.png");
         Image resizedLogoutIcon = logoutIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
@@ -151,6 +165,7 @@ public class EmployeeSystemViewGUI {
         JPanel leavesPanel = new JPanel();
         leavesPanel.add(new JLabel("Leave Requests View"));
         leavesPanel.setLayout(null);
+        leavesPanel.setBackground(Color.WHITE);
 
             JPanel titlePanel = new JPanel();
             titlePanel.setLayout(null);
@@ -160,11 +175,52 @@ public class EmployeeSystemViewGUI {
 
             //Create the ImageIcon, title and Add the Title and Icon to the panel
             ImageIcon leaveIcon = new ImageIcon("src/main/resources/leave_icon.png");
-            JLabel title = new JLabel("LEAVE APPLICATION", leaveIcon, JLabel.LEFT);
+            JLabel title = new JLabel("  LEAVE APPLICATION", leaveIcon, JLabel.LEFT);
             title.setFont(new Font("Lato", Font.BOLD, 30));
             title.setForeground(Color.WHITE);
             title.setBounds(70,20,500,40);
             titlePanel.add(title);
+
+            // Font for the Label in Leave Requests Panel
+            Font leaveFontLabel = new Font("Lato", Font.BOLD, 14);
+            Color leaveFontColor = new Color(1, 23, 71);
+
+            JLabel employeeIDLbl = new JLabel("Employee ID");
+            employeeIDLbl.setFont(leaveFontLabel);
+            employeeIDLbl.setForeground(leaveFontColor);
+
+            JLabel dateApplicationlbl = new JLabel("Date of Application:");
+            dateApplicationlbl.setFont(leaveFontLabel);
+            dateApplicationlbl.setForeground(leaveFontColor);
+
+            JLabel leaveStartLbl = new JLabel("Start of Leave:");
+            leaveStartLbl.setFont(leaveFontLabel);
+            leaveStartLbl.setForeground(leaveFontColor);
+
+            JLabel leaveEndLbl = new JLabel("End of Leave:");
+            leaveEndLbl.setFont(leaveFontLabel);
+            leaveEndLbl.setForeground(leaveFontColor);
+
+            JLabel leaveTypeLbl = new JLabel("Leave Type:");
+            leaveTypeLbl.setFont(leaveFontLabel);
+            leaveTypeLbl.setForeground(leaveFontColor);
+
+            JLabel daysUsedLbl = new JLabel("Days Used:");
+            daysUsedLbl.setFont(leaveFontLabel);
+            daysUsedLbl.setForeground(leaveFontColor);
+
+            JLabel leaveStatusLbl = new JLabel("Leave Status:");
+            leaveStatusLbl.setFont(leaveFontLabel);
+            leaveStatusLbl.setForeground(leaveFontColor);
+
+            JLabel statusUpdateLbl = new JLabel("Status Update By:");
+            statusUpdateLbl.setFont(leaveFontLabel);
+            statusUpdateLbl.setForeground(leaveFontColor);
+
+            JLabel statusUpdateDateLbl = new JLabel("Status Update at:");
+            statusUpdateDateLbl.setFont(leaveFontLabel);
+            statusUpdateDateLbl.setForeground(leaveFontColor);
+
 
         // Add individual panels to the main panel
         mainPanel.add(attendancePanel, "Attendance");
