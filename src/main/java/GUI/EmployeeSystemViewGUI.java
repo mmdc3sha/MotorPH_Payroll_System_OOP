@@ -290,7 +290,8 @@ public class EmployeeSystemViewGUI {
             status_updatedDateTxt.setEditable(false);
             leavesPanel.add(statusUpdateDateLbl);
             leavesPanel.add(status_updatedDateTxt);
-            
+
+
         // Add individual panels to the main panel
         mainPanel.add(attendancePanel, "Attendance");
         mainPanel.add(inquiryPanel, "Inquiry");
