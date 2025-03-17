@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 
 public class EmployeeSystemViewGUI {
     private static final Logger LOGGER = Logger.getLogger(EmployeeSystemViewGUI.class.getName());
+    private final String db_path = "jdbc:sqlite:src/main/java/MotorPHDatabase.db";
     private JPanel mainPanel;
     private CardLayout cardLayout;
     private static JTextField employeeIDtxt;
@@ -24,6 +25,7 @@ public class EmployeeSystemViewGUI {
     private static JTextField leaveStatusTxt;
     private static JTextField status_updatedByTxt;
     private static JTextField status_updatedDateTxt;
+    private static JTextField searchLeaveTxt;
 
     public EmployeeSystemViewGUI() {
         JFrame frame = new JFrame();
@@ -290,6 +292,19 @@ public class EmployeeSystemViewGUI {
             status_updatedDateTxt.setEditable(false);
             leavesPanel.add(statusUpdateDateLbl);
             leavesPanel.add(status_updatedDateTxt);
+
+            JButton submitLeaveBtn = new JButton("Submit");
+            submitLeaveBtn.setBounds(400, 430,200,50);
+            submitLeaveBtn.setBackground(new Color(2, 134, 18));
+            submitLeaveBtn.setForeground(Color.white);
+            submitLeaveBtn.setFont(new Font("Lato", Font.PLAIN, 15));
+            submitLeaveBtn.setBorderPainted(false);
+            leavesPanel.add(submitLeaveBtn);
+
+            searchLeaveTxt = new JTextField();
+            searchLeaveTxt.setBounds(1000,90,350,40);
+            searchLeaveTxt.setBorder(BorderFactory.createTitledBorder("Search"));
+            leavesPanel.add(searchLeaveTxt);
 
 
         // Add individual panels to the main panel
