@@ -6,6 +6,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.*;
@@ -1021,17 +1022,6 @@ public class AdminSystemViewGUI extends PayrollServices {
 
         payrollHistory.add(phistorySearchTextField);
 
-        // Creates the Search button for the Payroll History Table
-        JButton phistory_searchBtn = new JButton("Search");
-        phistory_searchBtn.setBounds(750, 20,80,30);
-        phistory_searchBtn.addActionListener(e -> {
-            String keyword = phistorySearchTextField.getText();
-            if (keyword.trim().isEmpty()) {
-                sorter.setRowFilter(null);
-            } else {
-                sorter.setRowFilter(RowFilter.regexFilter("(?i)" + keyword));
-            }
-        });
 
         // Creates the Print Button for the JTable
         ImageIcon printIcon = new ImageIcon(getClass().getResource("/print_icon.png"));
@@ -1066,7 +1056,7 @@ public class AdminSystemViewGUI extends PayrollServices {
         payrollHistoryOutput.setMargin(new Insets(10,25,10,10));
         payrollHistoryOutput.setEditable(false);
         payrollHistory.add(payrollHistoryOutput);
-        payrollHistory.add(phistory_searchBtn);
+
         //Prints the Payroll History Output panel
         phistory_printBtn.addActionListener(new ActionListener() {
             @Override
@@ -1083,7 +1073,6 @@ public class AdminSystemViewGUI extends PayrollServices {
                 }
             }
         });
-
         //Creates the Table Model
         payrollRecordsModel = new DefaultTableModel();
         payrollRecordsModel.addColumn("Payroll ID");
@@ -1100,12 +1089,25 @@ public class AdminSystemViewGUI extends PayrollServices {
 
         // Creates the JTable for the Payroll History
         payrollRecordsTable = new JTable(payrollRecordsModel);
+        TableRowSorter<TableModel> sorterPayroll = new TableRowSorter<>(payrollRecordsTable.getModel());
+        payrollRecordsTable.setRowSorter(sorterPayroll);
         payrollRecordsTable.setRowHeight(40);
         payrollRecordsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         payrollRecordsTable.setFont(new Font("Calibri", Font.PLAIN, 18));
         for (int i = 0; i < payrollRecordsTable.getColumnModel().getColumnCount(); i++) {
             payrollRecordsTable.getColumnModel().getColumn(i).setPreferredWidth(100);
         }
+        // Creates the Search button for the Payroll History Table
+        JButton phistory_searchBtn = new JButton("Search");
+        phistory_searchBtn.setBounds(750, 20,80,30);
+        phistory_searchBtn.addActionListener(e -> {
+            String keyword = phistorySearchTextField.getText();
+            if (keyword.trim().isEmpty()) {
+                sorterPayroll.setRowFilter(null);
+            } else {
+                sorterPayroll.setRowFilter(RowFilter.regexFilter("(?i)" + keyword));
+            }
+        });
 
         //Adds a scrollpane to the JTable
         JScrollPane payrollHistoryScrollPane = new JScrollPane(payrollRecordsTable);
@@ -1119,6 +1121,7 @@ public class AdminSystemViewGUI extends PayrollServices {
         payrollTabbedPane.addTab("Calculate", calculateTab);
         payrollTabbedPane.addTab("Payroll History", payrollHistory);
         payrollPanel.add(payrollTabbedPane);
+        payrollHistory.add(phistory_searchBtn);
 
         //Updates the Table
         phistory_updateBtn.addActionListener(e -> {
