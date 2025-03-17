@@ -19,7 +19,7 @@ public class EmployeeSystemViewGUI {
     private static JDateChooser leaveStartTxt;
     private static JDateChooser leaveEndTxt;
     private static JTextArea leaveReasonTxt;
-    private static JComboBox<Stirng> leaveTypeTxt;
+    private static JComboBox<String> leaveTypeTxt;
     private static JTextField daysUsedTxt;
     private static JTextField leaveStatusTxt;
     private static JTextField status_updatedByTxt;
@@ -188,40 +188,109 @@ public class EmployeeSystemViewGUI {
             JLabel employeeIDLbl = new JLabel("Employee ID");
             employeeIDLbl.setFont(leaveFontLabel);
             employeeIDLbl.setForeground(leaveFontColor);
+            employeeIDLbl.setBounds(100,90,150,35);
+            employeeIDtxt = new JTextField();
+            employeeIDtxt.setBounds(100, 130, 200, 35);
+            leavesPanel.add(employeeIDLbl);
+            leavesPanel.add(employeeIDtxt);
 
             JLabel dateApplicationlbl = new JLabel("Date of Application:");
+            leave_applicationDateTxt = new JDateChooser();
             dateApplicationlbl.setFont(leaveFontLabel);
             dateApplicationlbl.setForeground(leaveFontColor);
+            dateApplicationlbl.setBounds(100,175,200,35);
+            leave_applicationDateTxt.setBounds(100,210,200,35);
+            leavesPanel.add(dateApplicationlbl);
+            leavesPanel.add(leave_applicationDateTxt);
 
             JLabel leaveStartLbl = new JLabel("Start of Leave:");
+            leaveStartTxt = new JDateChooser();
             leaveStartLbl.setFont(leaveFontLabel);
             leaveStartLbl.setForeground(leaveFontColor);
+            leaveStartLbl.setBounds(100,245,200,35);
+            leaveStartTxt.setBounds(100, 280,200,35);
+            leavesPanel.add(leaveStartLbl);
+            leavesPanel.add(leaveStartTxt);
 
             JLabel leaveEndLbl = new JLabel("End of Leave:");
+            leaveEndTxt = new JDateChooser();
             leaveEndLbl.setFont(leaveFontLabel);
             leaveEndLbl.setForeground(leaveFontColor);
+            leaveEndLbl.setBounds(100,330,200,35);
+            leaveEndTxt.setBounds(100, 365,200,35);
+            leavesPanel.add(leaveEndLbl);
+            leavesPanel.add(leaveEndTxt);
 
             JLabel leaveTypeLbl = new JLabel("Leave Type:");
             leaveTypeLbl.setFont(leaveFontLabel);
             leaveTypeLbl.setForeground(leaveFontColor);
+            leaveTypeTxt = new JComboBox<>();
+            leaveTypeTxt.setModel(new DefaultComboBoxModel<>(new String[] {"Vacation Leave",
+                    "Sick Leave",
+                    "Maternity Leave",
+                    "Paternity Leave",
+                    "Bereavement Leave",
+                    "Vacation Leave (VL)",
+                    "Sick Leave (SL)",
+                    "Emergency Leave (EL)",
+                    "Study Leave (ST)",
+                    "Special Leave (ML)",
+                    "Unpaid Leave (PL)",}));
+            leaveTypeLbl.setBounds(100,405,200,35);
+            leaveTypeTxt.setBounds(100, 445,200,35);
+            leavesPanel.add(leaveTypeLbl);
+            leavesPanel.add(leaveTypeTxt);
+
+            JLabel reasonLbl = new JLabel("Reason for Leave:");
+            leaveReasonTxt = new JTextArea();
+            reasonLbl.setFont(leaveFontLabel);
+            reasonLbl.setForeground(leaveFontColor);
+            reasonLbl.setBounds(100,500,200,35);
+            leaveReasonTxt.setBounds(100, 545,800,450 );
+            leaveReasonTxt.setBorder(BorderFactory.createTitledBorder("Description"));
+            leavesPanel.add(reasonLbl);
+            leavesPanel.add(leaveReasonTxt);
 
             JLabel daysUsedLbl = new JLabel("Days Used:");
+            daysUsedTxt = new JTextField();
+            daysUsedTxt.setEditable(false);
             daysUsedLbl.setFont(leaveFontLabel);
             daysUsedLbl.setForeground(leaveFontColor);
+            daysUsedLbl.setBounds(400,90,200,35);
+            daysUsedTxt.setBounds(400, 130, 200, 35);
+            leavesPanel.add(daysUsedLbl);
+            leavesPanel.add(daysUsedTxt);
 
             JLabel leaveStatusLbl = new JLabel("Leave Status:");
+            leaveStatusTxt = new JTextField();
             leaveStatusLbl.setFont(leaveFontLabel);
             leaveStatusLbl.setForeground(leaveFontColor);
+            leaveStatusLbl.setBounds(400,175,200,35);
+            leaveStatusTxt.setBounds(400, 210,200,35);
+            leaveStatusTxt.setEditable(false);
+            leavesPanel.add(leaveStatusLbl);
+            leavesPanel.add(leaveStatusTxt);
 
             JLabel statusUpdateLbl = new JLabel("Status Update By:");
+            status_updatedByTxt = new JTextField();
             statusUpdateLbl.setFont(leaveFontLabel);
             statusUpdateLbl.setForeground(leaveFontColor);
+            statusUpdateLbl.setBounds(400,245,200,35);
+            status_updatedByTxt.setBounds(400,280,200,35);
+            status_updatedByTxt.setEditable(false);
+            leavesPanel.add(statusUpdateLbl);
+            leavesPanel.add(status_updatedByTxt);
 
             JLabel statusUpdateDateLbl = new JLabel("Status Update at:");
+            status_updatedDateTxt = new JTextField();
             statusUpdateDateLbl.setFont(leaveFontLabel);
             statusUpdateDateLbl.setForeground(leaveFontColor);
-
-
+            statusUpdateDateLbl.setBounds(400,330,200,35);
+            status_updatedDateTxt.setBounds(400, 365,200,35);
+            status_updatedDateTxt.setEditable(false);
+            leavesPanel.add(statusUpdateDateLbl);
+            leavesPanel.add(status_updatedDateTxt);
+            
         // Add individual panels to the main panel
         mainPanel.add(attendancePanel, "Attendance");
         mainPanel.add(inquiryPanel, "Inquiry");
