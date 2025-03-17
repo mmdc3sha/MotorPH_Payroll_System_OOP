@@ -306,6 +306,29 @@ public class EmployeeSystemViewGUI {
             searchLeaveTxt.setBorder(BorderFactory.createTitledBorder("Search"));
             leavesPanel.add(searchLeaveTxt);
 
+            JButton loadRequestBtn = new JButton("Load Request");
+            loadRequestBtn.setBounds(650,150,250,50);
+            loadRequestBtn.setBackground(new Color(1, 147, 110));
+            loadRequestBtn.setForeground(Color.white);
+            loadRequestBtn.setFont(new Font("Lato", Font.PLAIN, 15));
+            loadRequestBtn.setBorderPainted(false);
+            leavesPanel.add(loadRequestBtn);
+
+            JButton cancelLeaveBtn = new JButton("Cancel Leave");
+            cancelLeaveBtn.setBounds(650,210,250,50);
+            cancelLeaveBtn.setFont(new Font("Lato", Font.PLAIN, 15));
+            cancelLeaveBtn.setBackground(new Color(156, 6, 6));
+            cancelLeaveBtn.setForeground(Color.white);
+            leavesPanel.add(cancelLeaveBtn);
+
+
+            // Column names for the Leave Table
+            leaveModel = new DefaultTableModel();
+            leaveTable = new JTable(leaveModel);
+            leaveScrollPane = new JScrollPane(leaveTable);
+            leaveScrollPane.setBounds(1000,175,540,800);
+            leavesPanel.add(leaveScrollPane);
+
 
         // Add individual panels to the main panel
         mainPanel.add(attendancePanel, "Attendance");

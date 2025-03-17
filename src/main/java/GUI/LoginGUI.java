@@ -95,6 +95,15 @@ public class LoginGUI {
 
         Color labelColor = new Color(255, 255, 255);
 
+        JLabel empIDLabel = new JLabel("ID:");
+        empIDLabel.setFont(new Font("Lato", Font.PLAIN, 20));
+        empIDLabel.setBounds(200, 290, 200, 40);
+        empIDLabel.setForeground(labelColor);
+        empID = new JTextField();
+        empID.setBackground(Color.WHITE);
+        empID.setBounds(200, 330, 300,40);
+
+
         JLabel usernameLabel = new JLabel("Username:");
         JTextField usernameField = new JTextField();
         usernameLabel.setFont(new Font("Lato", Font.PLAIN, 20));
