@@ -1,7 +1,11 @@
 package GUI;
 
+import EmployeeServices.EmployeeSystemViewGUI;
+import com.formdev.flatlaf.themes.FlatMacLightLaf;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,18 +24,16 @@ public class LoginGUI {
     private final JPasswordField passwordField;
     private final JCheckBox checkBox;
     private final String db_path = "jdbc:sqlite:src/main/java/MotorPHDatabase.db";
+    private final JTextField usernameField;
     private JFrame frame;
+    private static JTextField empID;
+
 
     public LoginGUI() {
         try {
-            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
+            UIManager.setLookAndFeel(new FlatMacLightLaf());
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Error setting Nimbus Look and Feel", e);
+            LOGGER.log(Level.SEVERE, "Error setting FlatMacLightLaf Look and Feel", e);
         }
 
         frame = new JFrame();
@@ -105,29 +107,29 @@ public class LoginGUI {
 
 
         JLabel usernameLabel = new JLabel("Username:");
-        JTextField usernameField = new JTextField();
+        usernameField = new JTextField();
         usernameLabel.setFont(new Font("Lato", Font.PLAIN, 20));
         usernameLabel.setForeground(labelColor);
-        usernameLabel.setBounds(200, 240, 100, 30);
-        usernameField.setBounds(200, 280, 300, 40);
+        usernameLabel.setBounds(200, 380, 100, 30);
+        usernameField.setBounds(200, 420, 300, 40);
 
         JLabel passwordLabel = new JLabel("Password:");
         passwordField = new JPasswordField();
         passwordLabel.setForeground(labelColor);
         passwordLabel.setFont(new Font("Lato", Font.PLAIN, 20));
-        passwordLabel.setBounds(200, 340, 100, 30);
-        passwordField.setBounds(200, 380, 300, 40);
+        passwordLabel.setBounds(200,470 , 100, 30);
+        passwordField.setBounds(200, 510, 300, 40);
 
         JComboBox<String> comboBox = new JComboBox<>();
         comboBox.addItem("Administrator");
         comboBox.addItem("Employee");
-        comboBox.setBounds(200, 450, 300, 40);
+        comboBox.setBounds(200, 560, 300, 40);
         comboBox.setEditable(false);
         comboBox.setFont(new Font("Lato", Font.PLAIN, 20));
 
         checkBox = new JCheckBox("Show Password");
         checkBox.setFont(new Font("Lato", Font.PLAIN, 15));
-        checkBox.setBounds(200, 500, 300, 40);
+        checkBox.setBounds(200, 600, 300, 40);
         checkBox.setForeground(labelColor);
         checkBox.addActionListener(new ActionListener() {
             @Override
@@ -143,7 +145,7 @@ public class LoginGUI {
         JButton loginButton = new JButton("Login");
         loginButton.setFont(new Font("Lato", Font.PLAIN, 15));
         loginButton.setForeground(labelColor);
-        loginButton.setBounds(200, 550, 300, 50);
+        loginButton.setBounds(200, 650, 300, 50);
         loginButton.setBackground(new Color(2, 37, 101));
         loginButton.addActionListener(new ActionListener() {
             @Override
@@ -151,7 +153,8 @@ public class LoginGUI {
                 handleLogin(usernameField.getText(), new String(passwordField.getPassword()), (String) comboBox.getSelectedItem());
             }
         });
-
+        panel.add(empIDLabel);
+        panel.add(empID);
         panel.add(usernameLabel);
         panel.add(usernameField);
         panel.add(passwordLabel);
@@ -160,6 +163,10 @@ public class LoginGUI {
         panel.add(checkBox);
         panel.add(loginButton);
         frame.setVisible(true);
+    }
+
+    public JTextField getUsernameField() {
+        return usernameField;
     }
 
     private void handleLogin(String username, String password, String role) {
