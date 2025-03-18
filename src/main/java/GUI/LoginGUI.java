@@ -5,7 +5,6 @@ import com.formdev.flatlaf.themes.FlatMacLightLaf;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,12 +14,16 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class LoginGUI {
     private static final Logger LOGGER = Logger.getLogger(LoginGUI.class.getName());
+    private static final String ADMIN_TABLE = "AdminLoginCredentials";
+    private static final String EMPLOYEE_TABLE = "LoginCredentials";
+
     private final JPasswordField passwordField;
     private final JCheckBox checkBox;
     private final String db_path = "jdbc:sqlite:src/main/java/MotorPHDatabase.db";
@@ -120,6 +123,7 @@ public class LoginGUI {
         passwordLabel.setBounds(200,470 , 100, 30);
         passwordField.setBounds(200, 510, 300, 40);
 
+        // Creates a Combobox for system modes : Administrator & Employee
         JComboBox<String> comboBox = new JComboBox<>();
         comboBox.addItem("Administrator");
         comboBox.addItem("Employee");
@@ -127,6 +131,7 @@ public class LoginGUI {
         comboBox.setEditable(false);
         comboBox.setFont(new Font("Lato", Font.PLAIN, 20));
 
+        //Creates a Checkbox for "Show Password" option
         checkBox = new JCheckBox("Show Password");
         checkBox.setFont(new Font("Lato", Font.PLAIN, 15));
         checkBox.setBounds(200, 600, 300, 40);
@@ -142,17 +147,31 @@ public class LoginGUI {
             }
         });
 
+        // Creates the Login Button
         JButton loginButton = new JButton("Login");
         loginButton.setFont(new Font("Lato", Font.PLAIN, 15));
         loginButton.setForeground(labelColor);
         loginButton.setBounds(200, 650, 300, 50);
         loginButton.setBackground(new Color(2, 37, 101));
-        loginButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                handleLogin(usernameField.getText(), new String(passwordField.getPassword()), (String) comboBox.getSelectedItem());
+
+        loginButton.addActionListener(e -> {
+            try {
+                String employee_ID = empID.getText();
+                String username = usernameField.getText();
+                char[] passwordChars = passwordField.getPassword();
+                String password = new String(passwordChars); // ✅ Correct conversion
+                String role = comboBox.getSelectedItem().toString();
+
+                handleLogin(employee_ID, username, password, role);
+
+                Arrays.fill(passwordChars, ' '); // 🔒 Security: Clear password from memory
+            } catch (Exception e1) {
+                e1.printStackTrace();
             }
         });
+
+
+        //Adds the Swing components to the Panel
         panel.add(empIDLabel);
         panel.add(empID);
         panel.add(usernameLabel);
@@ -165,24 +184,19 @@ public class LoginGUI {
         frame.setVisible(true);
     }
 
-    public JTextField getUsernameField() {
-        return usernameField;
-    }
-
-    private void handleLogin(String username, String password, String role) {
+    // Handles the validity of Login Credentials
+    private void handleLogin(String empID, String username, String password, String role) {
         try (Connection conn = DriverManager.getConnection(db_path)) {
-            if ("Administrator".equals(role)) {
-                if (isValidAdmin(username, password, conn)) {
+            boolean isAuthenticated = authenticateUser(empID, username, password, role, conn);
+
+            if (isAuthenticated) {
+                if ("Administrator".equals(role)) {
                     redirectToAdminSystemView();
-                } else {
-                    showError("Invalid admin credentials");
-                }
-            } else if ("Employee".equals(role)) {
-                if (isValidEmployee(username, password, conn)) {
+                } else if ("Employee".equals(role)) {
                     redirectToEmployeeSystemView();
-                } else {
-                    showError("Invalid employee credentials or unauthorized admin role");
                 }
+            } else {
+                showError("Invalid credentials");
             }
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, "Error during login", ex);
@@ -190,29 +204,29 @@ public class LoginGUI {
         }
     }
 
-    private boolean isValidAdmin(String username, String password, Connection conn) throws Exception {
-        String sql = "SELECT * FROM AdminLoginCredentials WHERE username = ? AND password = ?";
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, username);
-            pstmt.setString(2, password);
-            try (ResultSet rs = pstmt.executeQuery()) {
-                return rs.next();
-            }
-        }
-    }
+    // Generic authentication method for both Admins and Employees
+    private boolean authenticateUser(String empID, String username, String password, String role, Connection conn) throws Exception {
+        String tableName = "Administrator".equals(role) ? ADMIN_TABLE : EMPLOYEE_TABLE;
+        String sql = "SELECT password FROM " + tableName + " WHERE emp_id = ? AND username = ?";
 
-    private boolean isValidEmployee(String username, String password, Connection conn) throws Exception {
-        String sql = "SELECT * FROM LoginCredentials WHERE username = ? AND password = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, username);
-            pstmt.setString(2, password);
+            pstmt.setString(1, empID);
+            pstmt.setString(2, username);
+
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    return !isValidAdmin(username, password, conn);
+                    String storedHashedPassword = rs.getString("password");
+                    return verifyPassword(password, storedHashedPassword);
                 }
-                return false;
             }
         }
+        return false;
+    }
+
+    // Secure password verification using hashing (Replace with a real implementation)
+    private boolean verifyPassword(String inputPassword, String storedHashedPassword) {
+        // Implement password hashing verification using BCrypt or PBKDF2
+        return inputPassword.equals(storedHashedPassword); // Placeholder; Replace with proper password hash comparison
     }
 
     private void redirectToAdminSystemView() throws SQLException {
