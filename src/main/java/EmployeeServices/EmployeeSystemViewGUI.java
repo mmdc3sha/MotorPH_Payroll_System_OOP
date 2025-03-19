@@ -1,33 +1,38 @@
-package GUI;
+package EmployeeServices;
 
+import GUI.LoginGUI;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import com.toedter.calendar.JDateChooser;
-
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class EmployeeSystemViewGUI {
-    private static final Logger LOGGER = Logger.getLogger(EmployeeSystemViewGUI.class.getName());
-    private final String db_path = "jdbc:sqlite:src/main/java/MotorPHDatabase.db";
-    private JPanel mainPanel;
-    private CardLayout cardLayout;
-    private static JTextField employeeIDtxt;
-    private static JDateChooser leave_applicationDateTxt;
-    private static JDateChooser leaveStartTxt;
-    private static JDateChooser leaveEndTxt;
-    private static JTextArea leaveReasonTxt;
-    private static JComboBox<String> leaveTypeTxt;
-    private static JTextField daysUsedTxt;
-    private static JTextField leaveStatusTxt;
-    private static JTextField status_updatedByTxt;
-    private static JTextField status_updatedDateTxt;
-    private static JTextField searchLeaveTxt;
+public class EmployeeSystemViewGUI extends EmployeeServices {
+    protected static final Logger LOGGER = Logger.getLogger(EmployeeSystemViewGUI.class.getName());
+    protected final JPanel mainPanel;
+    protected final CardLayout cardLayout;
+    protected static JPanel leavesPanel;
+    protected static JTextField employeeIDtxt;
+    protected static JDateChooser leave_applicationDateTxt;
+    protected static JDateChooser leaveStartTxt;
+    protected static JDateChooser leaveEndTxt;
+    protected static JTextArea leaveReasonTxt;
+    protected static JComboBox<String> leaveTypeTxt;
+    protected static JTextField daysUsedTxt;
+    protected static JTextField leaveStatusTxt;
+    protected static JTextField status_updatedByTxt;
+    protected static JTextField status_updatedDateTxt;
+    protected static JTextField empID_LoadRequest;
+    protected static DefaultTableModel leaveModel;
+    protected static JTable leaveTable;
+    protected static JScrollPane leaveScrollPane;
 
-    public EmployeeSystemViewGUI() {
+    public EmployeeSystemViewGUI(){
         JFrame frame = new JFrame();
         Image appIcon = new ImageIcon(getClass().getResource("/motorph_logo.png")).getImage();
         frame.setIconImage(appIcon);
@@ -107,11 +112,6 @@ public class EmployeeSystemViewGUI {
         dashboardBtn.setBackground(bluish);
         dashboardBtn.setForeground(fontColor);
 
-        JButton attendanceBtn = new JButton("Attendance");
-        attendanceBtn.setFont(latoFont);
-        attendanceBtn.setBackground(bluish);
-        attendanceBtn.setForeground(fontColor);
-
         JButton inquiryBtn = new JButton("Create Inquiry");
         inquiryBtn.setFont(latoFont);
         inquiryBtn.setBackground(bluish);
@@ -140,8 +140,6 @@ public class EmployeeSystemViewGUI {
         menuPanel.add(employeePanel, gbc);
         gbc.gridy = 2;
         menuPanel.add(dashboardBtn, gbc);
-        gbc.gridy = 3;
-        menuPanel.add(attendanceBtn, gbc);
         gbc.gridy = 4;
         menuPanel.add(leavesBtn, gbc);
         gbc.gridy = 5;
@@ -155,16 +153,12 @@ public class EmployeeSystemViewGUI {
         mainPanel.setLayout(cardLayout);
         mainPanel.setBounds(300, 0, 1620, 1080);
 
-        JPanel attendancePanel = new JPanel();
-        attendancePanel.add(new JLabel("Attendance View"));
-        attendancePanel.setLayout(new BorderLayout());
-
         JPanel inquiryPanel = new JPanel();
         inquiryPanel.add(new JLabel("Inquiry View"));
         inquiryPanel.setLayout(new BorderLayout());
 
 
-        JPanel leavesPanel = new JPanel();
+        leavesPanel = new JPanel();
         leavesPanel.add(new JLabel("Leave Requests View"));
         leavesPanel.setLayout(null);
         leavesPanel.setBackground(Color.WHITE);
@@ -245,6 +239,7 @@ public class EmployeeSystemViewGUI {
 
             JLabel reasonLbl = new JLabel("Reason for Leave:");
             leaveReasonTxt = new JTextArea();
+            leaveReasonTxt.setFont(new Font("Lato", Font.PLAIN, 18));
             reasonLbl.setFont(leaveFontLabel);
             reasonLbl.setForeground(leaveFontColor);
             reasonLbl.setBounds(100,500,200,35);
@@ -295,16 +290,20 @@ public class EmployeeSystemViewGUI {
 
             JButton submitLeaveBtn = new JButton("Submit");
             submitLeaveBtn.setBounds(400, 430,200,50);
-            submitLeaveBtn.setBackground(new Color(2, 134, 18));
+            submitLeaveBtn.setBackground(new Color(2, 37, 101));
             submitLeaveBtn.setForeground(Color.white);
             submitLeaveBtn.setFont(new Font("Lato", Font.PLAIN, 15));
             submitLeaveBtn.setBorderPainted(false);
             leavesPanel.add(submitLeaveBtn);
 
-            searchLeaveTxt = new JTextField();
-            searchLeaveTxt.setBounds(1000,90,350,40);
-            searchLeaveTxt.setBorder(BorderFactory.createTitledBorder("Search"));
-            leavesPanel.add(searchLeaveTxt);
+            submitLeaveBtn.addActionListener(e -> {
+                submitLeaveApplications();
+            });
+
+            empID_LoadRequest = new JTextField();
+            empID_LoadRequest.setBounds(1000,105,350,40);
+            empID_LoadRequest.setBorder(BorderFactory.createTitledBorder("Employee ID"));
+            leavesPanel.add(empID_LoadRequest);
 
             JButton loadRequestBtn = new JButton("Load Request");
             loadRequestBtn.setBounds(650,150,250,50);
@@ -313,6 +312,9 @@ public class EmployeeSystemViewGUI {
             loadRequestBtn.setFont(new Font("Lato", Font.PLAIN, 15));
             loadRequestBtn.setBorderPainted(false);
             leavesPanel.add(loadRequestBtn);
+            loadRequestBtn.addActionListener(e -> {
+                loadLeaveApplications();
+            });
 
             JButton cancelLeaveBtn = new JButton("Cancel Leave");
             cancelLeaveBtn.setBounds(650,210,250,50);
@@ -320,7 +322,6 @@ public class EmployeeSystemViewGUI {
             cancelLeaveBtn.setBackground(new Color(156, 6, 6));
             cancelLeaveBtn.setForeground(Color.white);
             leavesPanel.add(cancelLeaveBtn);
-
 
             // Column names for the Leave Table
             leaveModel = new DefaultTableModel();
@@ -331,13 +332,11 @@ public class EmployeeSystemViewGUI {
 
 
         // Add individual panels to the main panel
-        mainPanel.add(attendancePanel, "Attendance");
         mainPanel.add(inquiryPanel, "Inquiry");
         mainPanel.add(leavesPanel, "Leave Requests");
 
         // Add action listeners to the buttons
         dashboardBtn.addActionListener(e -> {cardLayout.show(mainPanel, "Dashboard");});
-        attendanceBtn.addActionListener(e -> cardLayout.show(mainPanel, "Attendance"));
         inquiryBtn.addActionListener(e -> cardLayout.show(mainPanel, "Create Inquiry"));
         leavesBtn.addActionListener(e -> cardLayout.show(mainPanel, "Leave Requests"));
 
@@ -351,7 +350,7 @@ public class EmployeeSystemViewGUI {
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
-            };
+            }
         });
 
         // Frame Components
@@ -360,11 +359,43 @@ public class EmployeeSystemViewGUI {
         frame.setVisible(true);
     }
 
-    public static void main(String[] args) {
-        // Create an instance of MainSystem to display the frame
-        new EmployeeSystemViewGUI();
+    private void submitLeaveApplications() {
+        LoginGUI emp_login_id = new LoginGUI();
+        JTextField employee_id = emp_login_id.getEmpID();
+
+        try {
+            int empID = Integer.parseInt(employee_id.getText().trim());
+            String type = Objects.requireNonNull(leaveTypeTxt.getSelectedItem()).toString();
+            String startDate = leaveStartTxt.getDate().toString();
+            String endDate = leaveEndTxt.getDate().toString();
+            String status = "Pending";
+
+            insertLeaveApplication(empID, type, startDate, endDate, status);
+
+            JOptionPane.showMessageDialog(null, "Your Leave application has been submitted.", "Application Submitted", JOptionPane.INFORMATION_MESSAGE);
+        } catch (NumberFormatException ex)
+        {
+            JOptionPane.showMessageDialog(null, "Invalid Employee ID. Please enter your Employee ID.", "Invalid Employee ID", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Submit Request Failed", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
-    public void setVisible(boolean b) {
+
+    // Method to Load leave applications of the Logged-in user
+    private void loadLeaveApplications(){
+        try {
+            int empID = Integer.parseInt(empID_LoadRequest.getText().trim()); // Convert input to integer
+            leaveModel = getLeaveTable(empID);
+            leaveTable.setModel(leaveModel);
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(null, "Invalid Employee ID. Please enter a number.");
+        }
+    }
+
+    public static void main(String[] args) {
+        // Create an instance of MainSystem to display the frame
+        SwingUtilities.invokeLater(EmployeeSystemViewGUI::new);
     }
 }

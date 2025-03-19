@@ -8,7 +8,7 @@ import java.util.Locale;
 
 import java.util.logging.Logger;
 
-public class PayrollServices implements PayrollServiceInterface {
+public abstract class PayrollServices implements PayrollServiceInterface {
     private static final Logger LOGGER = Logger.getLogger(PayrollServices.class.getName());
     private static final String DB_URL = "jdbc:sqlite:src/main/java/MotorPHDatabase.db"; // Externalize Database Path
 

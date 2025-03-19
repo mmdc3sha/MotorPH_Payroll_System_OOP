@@ -23,7 +23,6 @@ public class LoginGUI {
     private static final Logger LOGGER = Logger.getLogger(LoginGUI.class.getName());
     private static final String ADMIN_TABLE = "AdminLoginCredentials";
     private static final String EMPLOYEE_TABLE = "LoginCredentials";
-
     private final JPasswordField passwordField;
     private final JCheckBox checkBox;
     private final String db_path = "jdbc:sqlite:src/main/java/MotorPHDatabase.db";
@@ -238,11 +237,15 @@ public class LoginGUI {
     private void redirectToEmployeeSystemView() {
         JOptionPane.showMessageDialog(null, "Redirecting to Employee System View");
         frame.dispose();
-        new EmployeeSystemViewGUI().setVisible(true);
+        new EmployeeSystemViewGUI();
     }
 
     private void showError(String message) {
         JOptionPane.showMessageDialog(null, message, "Login Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    public JTextField getEmpID() {
+        return empID;
     }
 
     public static void main(String[] args) {
