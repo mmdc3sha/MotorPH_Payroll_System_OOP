@@ -57,6 +57,9 @@ public class AdminSystemViewGUI extends PayrollServices {
     private static JTextArea outputTextArea;
     private static JScrollPane outputScrollPane;
     private static JTextArea payrollHistoryOutput;
+    protected static DefaultTableModel leaveModel;
+    protected static JTable leaveTable;
+    protected static JScrollPane leaveScrollPane;
 
     public AdminSystemViewGUI() throws SQLException {
         dateChooser = new JDateChooser();
@@ -205,12 +208,12 @@ public class AdminSystemViewGUI extends PayrollServices {
         attendanceBtn.setHorizontalAlignment(SwingConstants.LEFT);
 
         ImageIcon accountIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/message.png")));
-        JButton inquiryBtn = new JButton("Account", accountIcon);
-        inquiryBtn.setFont(latoFont);
-        inquiryBtn.setBackground(new Color(255, 255, 255));
-        inquiryBtn.setForeground(new Color(2, 37, 101));
-        inquiryBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
-        inquiryBtn.setHorizontalAlignment(SwingConstants.LEFT);
+        JButton accountBtn = new JButton("Account", accountIcon);
+        accountBtn.setFont(latoFont);
+        accountBtn.setBackground(new Color(255, 255, 255));
+        accountBtn.setForeground(new Color(2, 37, 101));
+        accountBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
+        accountBtn.setHorizontalAlignment(SwingConstants.LEFT);
 
         ImageIcon leavesIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/briefcase.png")));
         JButton leavesBtn = new JButton("Leave Requests", leavesIcon);
@@ -262,7 +265,7 @@ public class AdminSystemViewGUI extends PayrollServices {
         gbc.gridy = 6;
         menuPanel.add(leavesBtn, gbc);
         gbc.gridy = 7;
-        menuPanel.add(inquiryBtn, gbc);
+        menuPanel.add(accountBtn, gbc);
         gbc.gridy = 8;
         menuPanel.add(exitBtn, gbc);
 
@@ -1259,17 +1262,54 @@ public class AdminSystemViewGUI extends PayrollServices {
         attendancePanel.add(attendanceScrollPane);
 
 
+        JPanel leavePanel = new JPanel();
+        leavePanel.setBackground(new Color(255, 255, 255));
+        leavePanel.setLayout(null);
+
+        JPanel titlePanel = new JPanel();
+        titlePanel.setLayout(null);
+        titlePanel.setBackground(new Color(3, 49, 137, 255));
+        titlePanel.setBounds(0, 0,1800 , 80);
+        leavePanel.add(titlePanel);
+
+        ImageIcon leaveIcon = new ImageIcon("src/main/resources/leave_icon.png");
+        JLabel title = new JLabel("  LEAVE APPLICATION", leaveIcon, JLabel.LEFT);
+        title.setFont(new Font("Lato", Font.BOLD, 30));
+        title.setForeground(Color.WHITE);
+        title.setBounds(70,20,500,40);
+        titlePanel.add(title);
+
+        leaveModel = new DefaultTableModel();
+        leaveModel.setColumnIdentifiers(new String[]{
+                "Leave ID",
+                "Emp ID",
+                "Leave Type",
+                "Start",
+                "End",
+                "Reason",
+                "Status"
+        });
+
+        leaveTable = new JTable(leaveModel);
+        leaveScrollPane = new JScrollPane(leaveTable);
+        leaveScrollPane.setWheelScrollingEnabled(true);
+        leaveScrollPane.setBounds(50,100,600,900);
+        leavePanel.add(leaveScrollPane);
+
+        //Loads leave applications of Employees after JTable is set up.
+        loadLeaveApplications();
+
         // Adds individual panels to the main panel
         mainPanel.add(employeeRecordsPanel, "EmployeeRecords");
         mainPanel.add(payrollPanel, "Payroll");
         mainPanel.add(attendancePanel, "Attendance");
-        mainPanel.add(new JPanel(), "Leave Requests");
+        mainPanel.add(leavePanel, "Leave Requests");
 
         // Add action listeners to the buttons
         employeeRecordsBtn.addActionListener(e -> cardLayout.show(mainPanel, "EmployeeRecords"));
         payrollBtn.addActionListener(e -> cardLayout.show(mainPanel, "Payroll"));
         attendanceBtn.addActionListener(e -> cardLayout.show(mainPanel, "Attendance"));
-        inquiryBtn.addActionListener(e -> cardLayout.show(mainPanel, "Account"));
+        accountBtn.addActionListener(e -> cardLayout.show(mainPanel, "Account"));
         leavesBtn.addActionListener(e -> cardLayout.show(mainPanel, "Leave Requests"));
 
         // Frame Components
@@ -1278,6 +1318,9 @@ public class AdminSystemViewGUI extends PayrollServices {
         frame.setVisible(true);
     }
 
+    public void loadLeaveApplications(){
+        loadLeaveData(leaveModel);
+    }
 
     //Method for Automatically filling the first name, last name and job position based on the Emp ID textfield
     private static void fillEmployeeInfo() throws SQLException {
@@ -1315,8 +1358,6 @@ public class AdminSystemViewGUI extends PayrollServices {
 
 
     }
-
-
 
     //Deletes Employee in the Employee Records Table
     public void deleteEmployee() throws SQLException {

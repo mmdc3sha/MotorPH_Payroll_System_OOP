@@ -1,11 +1,11 @@
 package AdminServices;
 import com.toedter.calendar.JDateChooser;
-
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
-
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public abstract class PayrollServices implements PayrollServiceInterface {
@@ -323,4 +323,35 @@ public abstract class PayrollServices implements PayrollServiceInterface {
         return employeeShare; // Return only the employee's contribution
     }
 
+    // LEAVE APPLICATIONS OPERATIONS
+    //loads the table
+    public void loadLeaveData(DefaultTableModel tableModel) {
+        String query = "SELECT leave_request_id, emp_id, leave_type_id, leave_start_date, leave_end_date, reason_for_leave, leave_status FROM LeaveRequests";
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement pstmt = conn.prepareStatement(query);
+             ResultSet rs = pstmt.executeQuery()) {
+
+            // Clear previous data in the table
+            tableModel.setRowCount(0);
+
+            // Iterate through the result set and add rows to the table
+            while (rs.next()) {
+                Object[] row = {
+                        rs.getInt("leave_request_id"),
+                        rs.getInt("emp_id"),
+                        rs.getString("leave_type_id"),
+                        rs.getString("leave_start_date"),
+                        rs.getString("leave_end_date"),
+                        rs.getString("reason_for_leave"),
+                        rs.getString("leave_status")
+                };
+                tableModel.addRow(row);
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            JOptionPane.showMessageDialog(null, "Error loading leave data: " + e.getMessage(),
+                    "Database Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 }
+
