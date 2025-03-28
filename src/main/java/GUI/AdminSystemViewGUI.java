@@ -204,8 +204,8 @@ public class AdminSystemViewGUI extends PayrollServices {
         attendanceBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
         attendanceBtn.setHorizontalAlignment(SwingConstants.LEFT);
 
-        ImageIcon inquiryIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/message.png")));
-        JButton inquiryBtn = new JButton("Inquiry", inquiryIcon);
+        ImageIcon accountIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/message.png")));
+        JButton inquiryBtn = new JButton("Account", accountIcon);
         inquiryBtn.setFont(latoFont);
         inquiryBtn.setBackground(new Color(255, 255, 255));
         inquiryBtn.setForeground(new Color(2, 37, 101));
@@ -1203,13 +1203,15 @@ public class AdminSystemViewGUI extends PayrollServices {
 
         //Creates the Attendance GUI
         JPanel attendancePanel = new JPanel();
-        attendancePanel.setBackground(new Color(208, 237, 255)); // Changes the Color of the Attendance Panel to a bluish color
+        attendancePanel.setBackground(new Color(1, 55, 152)); // Changes the Color of the Attendance Panel to a bluish color
         attendancePanel.setLayout(null); // sets the Layout of the Attendance Panel to Null
 
-        JLabel attendanceLabel = new JLabel("Attendance");
-        attendanceLabel.setFont(new Font("Lato", Font.BOLD, 20));
+        JLabel attendanceLabel = new JLabel("ATTENDANCE");
+        attendanceLabel.setFont(new Font("Lato", Font.BOLD, 25));
+        attendanceLabel.setForeground(new Color(255, 255, 255));
         attendanceLabel.setBounds(30, 10, 200, 50);
         attendancePanel.add(attendanceLabel);
+
 
         JSeparator attendanceSeperator = new JSeparator();
         attendancePanel.add(attendanceSeperator);
@@ -1252,7 +1254,7 @@ public class AdminSystemViewGUI extends PayrollServices {
 
         //creates a ScrollPane and wraps the AttendanceTable
         JScrollPane attendanceScrollPane = new JScrollPane(attendanceTable);
-        attendanceScrollPane.setBounds(30, 70, 860, 950);
+        attendanceScrollPane.setBounds(30, 70, 1460, 950);
         attendanceScrollPane.setWheelScrollingEnabled(true);
         attendancePanel.add(attendanceScrollPane);
 
@@ -1261,14 +1263,13 @@ public class AdminSystemViewGUI extends PayrollServices {
         mainPanel.add(employeeRecordsPanel, "EmployeeRecords");
         mainPanel.add(payrollPanel, "Payroll");
         mainPanel.add(attendancePanel, "Attendance");
-        mainPanel.add(new JPanel(), "Inquiry");
         mainPanel.add(new JPanel(), "Leave Requests");
 
         // Add action listeners to the buttons
         employeeRecordsBtn.addActionListener(e -> cardLayout.show(mainPanel, "EmployeeRecords"));
         payrollBtn.addActionListener(e -> cardLayout.show(mainPanel, "Payroll"));
         attendanceBtn.addActionListener(e -> cardLayout.show(mainPanel, "Attendance"));
-        inquiryBtn.addActionListener(e -> cardLayout.show(mainPanel, "Inquiry"));
+        inquiryBtn.addActionListener(e -> cardLayout.show(mainPanel, "Account"));
         leavesBtn.addActionListener(e -> cardLayout.show(mainPanel, "Leave Requests"));
 
         // Frame Components
