@@ -4,6 +4,8 @@ import GUI.LoginGUI;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import com.toedter.calendar.JDateChooser;
 import javax.swing.*;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.text.SimpleDateFormat;
@@ -307,12 +309,29 @@ public class EmployeeSystemViewGUI extends EmployeeServices {
                 cancelLeaveApplications(leaveTable); // Cancel Leave Application method called from EmployeeDatabaseOperation
             });
 
+            JTextArea remarksTxt = new JTextArea();
+            remarksTxt.setEditable(false);
+            remarksTxt.setBackground(new Color(226, 226, 226));
+            remarksTxt.setBounds(1000,600, 540, 300);
+        remarksTxt.setBorder(BorderFactory.createCompoundBorder(
+                new LineBorder(new Color(2, 37, 101), 3), // Outer border with 3-pixel thickness
+                new TitledBorder(null, "Remarks", TitledBorder.LEFT,
+                        TitledBorder.TOP, new Font("Lato", Font.BOLD, 25))
+        ));
+
+
             // Column names for the Leave Table
             leaveModel = new DefaultTableModel();
             leaveTable = new JTable(leaveModel);
             leaveScrollPane = new JScrollPane(leaveTable);
-            leaveScrollPane.setBounds(1000,175,540,800);
+            leaveScrollPane.setBounds(1000,175,540,400);
+            leaveScrollPane.setBorder(BorderFactory.createCompoundBorder(
+                    new LineBorder(new Color(2, 37, 101, 3)),
+                            new TitledBorder(null, "Leave Applications", TitledBorder.LEFT, TitledBorder.TOP, new Font("Lato", Font.BOLD, 25))
+            ));
+
             leavesPanel.add(leaveScrollPane);
+            leavesPanel.add(remarksTxt);
 
 
         // Add individual panels to the main panel
