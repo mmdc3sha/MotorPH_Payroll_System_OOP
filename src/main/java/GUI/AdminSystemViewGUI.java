@@ -127,7 +127,7 @@ public class AdminSystemViewGUI extends PayrollServices {
 
         // Panel for the Left Side
         JPanel menuPanel = new JPanel();
-        menuPanel.setBackground(new Color(58, 147, 255, 255));
+        menuPanel.setBackground(new Color(2, 37, 101, 255));
         menuPanel.setLayout(new GridBagLayout());
         menuPanel.setBounds(0, 0, 300, 1080);
 
@@ -158,7 +158,7 @@ public class AdminSystemViewGUI extends PayrollServices {
         // Admin Panel - Displays "Administrator Label" and current system date and time
         JPanel adminPanel = new JPanel();
         adminPanel.setPreferredSize(new Dimension(300, 60));
-        adminPanel.setBackground(new Color(58, 147, 255, 255));
+        adminPanel.setBackground(new Color(2, 37, 101, 255));
 
         adminPanel.add(adminIconLabel);
         adminPanel.add(adminLabel);
