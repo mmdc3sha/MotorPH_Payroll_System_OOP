@@ -104,7 +104,6 @@ public class AdminSystemViewGUI extends PayrollServices {
                 sssTextField, philHealthTextField, pagIBIGTextField, withholdingTextField, totalBenefitsTextField, totalDeductionsTextField, netIncomeTextField, outputTextArea, outputScrollPane);
 
 
-
         frame = new JFrame("MotorPH: Administrator Mode");
         Image appIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/motorph_logo.png"))).getImage();
         frame.setIconImage(appIcon);
@@ -519,7 +518,7 @@ public class AdminSystemViewGUI extends PayrollServices {
             try {
                 deleteEmployee();
             } catch (SQLException ex) {
-                throw new RuntimeException(ex);
+                LOGGER.log(Level.SEVERE, null, ex);
             }
         });
 
@@ -881,7 +880,7 @@ public class AdminSystemViewGUI extends PayrollServices {
                     try {
                         fillEmployeeInfo();
                     } catch (SQLException ex) {
-                        throw new RuntimeException(ex);
+                        LOGGER.log(Level.SEVERE, null, ex);
                     }
                 }
             });
@@ -1096,6 +1095,7 @@ public class AdminSystemViewGUI extends PayrollServices {
         // Creates the Search button for the Payroll History Table
         JButton phistory_searchBtn = new JButton("Search");
         phistory_searchBtn.setBounds(750, 20,80,30);
+
         phistory_searchBtn.addActionListener(e -> {
             String keyword = phistorySearchTextField.getText();
             if (keyword.trim().isEmpty()) {

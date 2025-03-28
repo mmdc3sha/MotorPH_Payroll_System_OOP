@@ -21,7 +21,7 @@ The payroll system has two modes, one for the Payroll Administrator and the othe
 3. Payroll Calculation - In the Employee ID field, enter the employee ID and click the '+' next to it to fill out the basic employee information fields such as "first name, last name, job position, basic salary etc.". However, it does not include days worked, hours worked and overtime automatic setter, you have to input it yourself same as the Pay Period start and End Date.
     * New - Removes the contents of the textfields if there are any, allowing you to start a new file.
     * Print - Opens up an option to Print to PDF, Fax, OneNote etc.
-    * Calculate - After you are done with your inputs, click this button to automatically calculate everything for you. The calculations will be displayed on the textArea at the left side. NOTE - you will not be able to edit this TextArea to avoid unnecessary tampering.
+    * Calculate - After you are done with your inputs, click this button to automatically calculate everything for you. The calculations will be displayed on the textArea on the left side. NOTE - you will not be able to edit this TextArea to avoid unnecessary tampering.
 
 ![ Payroll Calculation](https://github.com/mmdc3sha/MotorPH_Payroll_System_OOP/blob/master/src/main/resources/images/Screenshot%202025-03-17%20041416.png)
 

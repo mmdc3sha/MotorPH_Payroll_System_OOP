@@ -349,7 +349,7 @@ public class EmployeeSystemViewGUI extends EmployeeServices {
                     new LoginGUI();
                 }
             } catch (Exception ex) {
-                ex.printStackTrace();
+                LOGGER.log(Level.SEVERE, null, ex);
             }
         });
 
@@ -377,7 +377,7 @@ public class EmployeeSystemViewGUI extends EmployeeServices {
         {
             JOptionPane.showMessageDialog(null, "Invalid Employee ID. Please enter your Employee ID.", "Invalid Employee ID", JOptionPane.ERROR_MESSAGE);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            LOGGER.log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, ex.getMessage(), "Submit Request Failed", JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -392,6 +392,62 @@ public class EmployeeSystemViewGUI extends EmployeeServices {
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(null, "Invalid Employee ID. Please enter a number.");
         }
+    }
+
+    public static JTextField getEmployeeIDtxt() {
+        return employeeIDtxt;
+    }
+
+    public static JDateChooser getLeave_applicationDateTxt() {
+        return leave_applicationDateTxt;
+    }
+
+    public static JDateChooser getLeaveStartTxt() {
+        return leaveStartTxt;
+    }
+
+    public static JDateChooser getLeaveEndTxt() {
+        return leaveEndTxt;
+    }
+
+    public static JTextArea getLeaveReasonTxt() {
+        return leaveReasonTxt;
+    }
+
+    public static JComboBox<String> getLeaveTypeTxt() {
+        return leaveTypeTxt;
+    }
+
+    public static JTextField getDaysUsedTxt() {
+        return daysUsedTxt;
+    }
+
+    public static JTextField getLeaveStatusTxt() {
+        return leaveStatusTxt;
+    }
+
+    public static JTextField getStatus_updatedByTxt() {
+        return status_updatedByTxt;
+    }
+
+    public static JTextField getStatus_updatedDateTxt() {
+        return status_updatedDateTxt;
+    }
+
+    public static JTextField getEmpID_LoadRequest() {
+        return empID_LoadRequest;
+    }
+
+    public static DefaultTableModel getLeaveModel() {
+        return leaveModel;
+    }
+
+    public static JTable getLeaveTable() {
+        return leaveTable;
+    }
+
+    public static JScrollPane getLeaveScrollPane() {
+        return leaveScrollPane;
     }
 
     public static void main(String[] args) {

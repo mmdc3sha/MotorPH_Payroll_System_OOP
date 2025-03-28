@@ -248,7 +248,21 @@ public class LoginGUI {
         return empID;
     }
 
+    public JPasswordField getPasswordField() {
+        return passwordField;
+    }
+
+    public JCheckBox getCheckBox() {
+        return checkBox;
+    }
+
+    public JTextField getUsernameField() {
+        return usernameField;
+    }
+
     public static void main(String[] args) {
+
         SwingUtilities.invokeLater(LoginGUI::new);
+
     }
 }
