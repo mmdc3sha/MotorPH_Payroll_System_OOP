@@ -1293,7 +1293,7 @@ public class AdminSystemViewGUI extends PayrollServices {
         leaveTable = new JTable(leaveModel);
         leaveScrollPane = new JScrollPane(leaveTable);
         leaveScrollPane.setWheelScrollingEnabled(true);
-        leaveScrollPane.setBounds(50,100,600,900);
+        leaveScrollPane.setBounds(20,700,1600,900);
         leavePanel.add(leaveScrollPane);
 
         //Loads leave applications of Employees after JTable is set up.
