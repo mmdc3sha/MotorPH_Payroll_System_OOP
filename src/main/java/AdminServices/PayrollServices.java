@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -357,6 +358,7 @@ public abstract class PayrollServices implements PayrollServiceInterface {
         }
     }
 
+    // Updates Employees' Leave Requests
     public void commitLeaveUpdate(JTable table, JComboBox<String> status, JTextField updatedBy, JDateChooser updatedDate, JTextArea remarks) throws SQLException {
         int selectedRow = table.getSelectedRow();
 
@@ -370,16 +372,17 @@ public abstract class PayrollServices implements PayrollServiceInterface {
         int leaveRequestId = (Integer) table.getValueAt(selectedRow, 0);
         String leaveStatus = (String) status.getSelectedItem();
         String updatedByName = updatedBy.getText();
-        String updatedDateChooser = String.valueOf(updatedDate.getDate());
+        Date selectedDate = updatedDate.getDate();
         String leaveRemarks = remarks.getText();
 
-        if (updatedDateChooser == null) {
-            JOptionPane.showMessageDialog(null, "Select Updated Date:", "Missing Date. Please Choose a Date", JOptionPane.ERROR_MESSAGE.);
+        if (selectedDate == null) {
+            JOptionPane.showMessageDialog(null, "Select Updated Date:", "Missing Date. Please Choose a Date", JOptionPane.ERROR_MESSAGE);
+            return;
         }
 
         //Formate Date
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String formattedDate = sdf.format(updatedDateChooser);
+        String formattedDate = sdf.format(selectedDate);
 
         String query = "UPDATE LeaveRequests SET leave_status = ?, status_updated_by = ?, status_updated_at = ?, remarks = ? WHERE leave_request_id = ?";
 
@@ -396,10 +399,15 @@ public abstract class PayrollServices implements PayrollServiceInterface {
 
             if (rowsAffected > 0) {
                 JOptionPane.showMessageDialog(null,"Leave Updated Successfully", "Success.", JOptionPane.INFORMATION_MESSAGE);
-                this.loadLeaveData();
+                DefaultTableModel model = (DefaultTableModel) table.getModel();
+                loadLeaveData(model);
+            } else {
+                JOptionPane.showMessageDialog(null, "Leave Updated Failed", "Error", JOptionPane.ERROR_MESSAGE);
             }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
 }
 

@@ -1296,18 +1296,39 @@ public class AdminSystemViewGUI extends PayrollServices {
                 "Updated At",
                 "Remarks"
         });
-
         leaveTable = new JTable(leaveModel);
+
+        // Enable sorting
+        leaveTable.setAutoCreateRowSorter(true);
+
+        // Font and row height
+        leaveTable.setFont(new Font("Calibri", Font.PLAIN, 14));
+        leaveTable.setRowHeight(25);
+
+        // Table colors
+        leaveTable.setBackground(new Color(240, 240, 240)); // Light Gray
+        leaveTable.setGridColor(new Color(200, 200, 200)); // Soft Grid Color
+
+        // Column settings
+        leaveTable.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
+        leaveTable.getTableHeader().setFont(new Font("Calibri", Font.BOLD, 15));
+        leaveTable.getTableHeader().setBackground(new Color(180, 180, 180)); // Header color
+
+        // Add to scroll pane
         leaveScrollPane = new JScrollPane(leaveTable);
         leaveScrollPane.setWheelScrollingEnabled(true);
-        leaveScrollPane.setBounds(20,500,1600,900);
+        leaveScrollPane.setBounds(0, 500, 1630, 700); // Adjust height
+
+        // Add to panel
         leavePanel.add(leaveScrollPane);
+
+
         Font leaveFontLbl = new Font("Lato", Font.PLAIN, 14);
         JLabel leaveStatuslbl = new JLabel("Status:");
         leaveStatuslbl.setBounds(20,100,150,40);
 
         // 'Pending', 'Approved', 'Rejected', 'Cancelled'
-        statusComboBox = new JComboBox();
+        statusComboBox = new JComboBox<String>();
             statusComboBox.addItem("Pending");
             statusComboBox.addItem("Approved");
             statusComboBox.addItem("Rejected");
@@ -1323,6 +1344,8 @@ public class AdminSystemViewGUI extends PayrollServices {
         updated_date.setDateFormatString("yyyy-MM-dd");
         updated_date.setBounds(150, 220, 250,40);
         JLabel remarksLbl = new JLabel("Remarks");
+
+
         JButton updateLeaveBtn = new JButton("Update");
         updateLeaveBtn.setBounds(530, 350, 150, 50);
         updateLeaveBtn.setFont(new Font("Lato", Font.BOLD, 14));
@@ -1350,8 +1373,14 @@ public class AdminSystemViewGUI extends PayrollServices {
         //Loads leave applications of Employees after JTable is set up.
         loadLeaveApplications();
 
+        //Commits Changes to the Leave Application
         updateLeaveBtn.addActionListener(e -> {
-
+            try {
+                commitLeaveUpdate(leaveTable, statusComboBox, updated_byTxt, updated_date, remarksArea);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, ex.getMessage(), "Update Failed. Database Error.", JOptionPane.ERROR_MESSAGE);
+            }
         });
 
         // Adds individual panels to the main panel
