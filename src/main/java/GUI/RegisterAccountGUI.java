@@ -1,6 +1,7 @@
 package GUI;
 
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
+import org.mindrot.jbcrypt.BCrypt;
 
 import javax.swing.*;
 import java.awt.*;
@@ -98,6 +99,9 @@ public class RegisterAccountGUI extends JFrame {
                 return;
             }
 
+            // Hash the password before storing it
+            String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt(12));
+
             String url = "jdbc:sqlite:src/main/java/MotorPHDatabase.db";
             String sql;
 
@@ -111,7 +115,7 @@ public class RegisterAccountGUI extends JFrame {
                  PreparedStatement pstmt = conn.prepareStatement(sql)) {
                 pstmt.setString(1, employeeID);
                 pstmt.setString(2, username);
-                pstmt.setString(3, password);
+                pstmt.setString(3, hashedPassword);  // Store hashed password
                 pstmt.executeUpdate();
                 JOptionPane.showMessageDialog(this, "Account registered successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
             } catch (SQLException ex) {

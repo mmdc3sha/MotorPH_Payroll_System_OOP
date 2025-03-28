@@ -3,7 +3,7 @@ package GUI;
 import EmployeeServices.EmployeeSystemViewGUI;
 import EmployeeServices.LoginSessionManager;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
-
+import org.mindrot.jbcrypt.BCrypt;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -30,7 +30,6 @@ public class LoginGUI {
     private final JTextField usernameField;
     private JFrame frame;
     private static JTextField empID;
-
 
     public LoginGUI() {
         try {
@@ -108,7 +107,6 @@ public class LoginGUI {
         empID.setBackground(Color.WHITE);
         empID.setBounds(200, 330, 300,40);
 
-
         JLabel usernameLabel = new JLabel("Username:");
         usernameField = new JTextField();
         usernameLabel.setFont(new Font("Lato", Font.PLAIN, 20));
@@ -170,7 +168,6 @@ public class LoginGUI {
             }
         });
 
-
         //Adds the Swing components to the Panel
         panel.add(empIDLabel);
         panel.add(empID);
@@ -206,6 +203,7 @@ public class LoginGUI {
             showError("An error occurred during login");
         }
     }
+
     // Generic authentication method for both Admins and Employees
     private boolean authenticateUser(String empID, String username, String password, String role, Connection conn) throws Exception {
         String tableName = "Administrator".equals(role) ? ADMIN_TABLE : EMPLOYEE_TABLE;
@@ -225,10 +223,10 @@ public class LoginGUI {
         return false;
     }
 
-    // Secure password verification using hashing (Replace with a real implementation)
+    // Secure password verification using hashing
     private boolean verifyPassword(String inputPassword, String storedHashedPassword) {
         // Implement password hashing verification using BCrypt or PBKDF2
-        return inputPassword.equals(storedHashedPassword); // Placeholder; Replace with proper password hash comparison
+        return BCrypt.checkpw(inputPassword, storedHashedPassword);
     }
 
     private void redirectToAdminSystemView() throws SQLException {
@@ -264,8 +262,6 @@ public class LoginGUI {
     }
 
     public static void main(String[] args) {
-
         SwingUtilities.invokeLater(LoginGUI::new);
-
     }
 }
