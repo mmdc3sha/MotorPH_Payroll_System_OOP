@@ -322,7 +322,14 @@ public class EmployeeSystemViewGUI extends EmployeeServices {
 
             // Column names for the Leave Table
             leaveModel = new DefaultTableModel();
+
+            // Creates "Leave Application" table
             leaveTable = new JTable(leaveModel);
+
+            // Sets Selection of rows to single selection
+            leaveTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+
             leaveScrollPane = new JScrollPane(leaveTable);
             leaveScrollPane.setBounds(1000,175,540,400);
             leaveScrollPane.setBorder(BorderFactory.createCompoundBorder(
@@ -462,5 +469,14 @@ public class EmployeeSystemViewGUI extends EmployeeServices {
     public static void main(String[] args) {
         // Create an instance of MainSystem to display the frame
         SwingUtilities.invokeLater(EmployeeSystemViewGUI::new);
+    }
+
+    /**
+     * @param leave_table
+     * @param selectedRow
+     */
+    @Override
+    protected void handleRowSelection(JTable leave_table, int selectedRow) {
+
     }
 }

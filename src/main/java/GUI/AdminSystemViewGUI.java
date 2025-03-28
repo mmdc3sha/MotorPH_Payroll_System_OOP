@@ -1297,7 +1297,7 @@ public class AdminSystemViewGUI extends PayrollServices {
                 "Remarks"
         });
         leaveTable = new JTable(leaveModel);
-
+        leaveTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         // Enable sorting
         leaveTable.setAutoCreateRowSorter(true);
 
@@ -1672,6 +1672,7 @@ public class AdminSystemViewGUI extends PayrollServices {
         return dateChooser;
     }
 
+
     public static JDateChooser getDateChooser2() {
         return dateChooser2;
     }
@@ -1760,6 +1761,12 @@ public class AdminSystemViewGUI extends PayrollServices {
     public void setVisible(boolean visible) {
         frame.setVisible(visible);
     }
+
+    /**
+     * @param leave_table
+     * @param selectedRow
+     */
+
 
     //Main Method
     public static void main(String[] args) {
