@@ -7,4 +7,5 @@ public interface PayrollServiceInterface {
     double getPhilHealthContribution(double salary);
     double getSSSContribution(double salary);
     double getPagIBIGContribution(double salary);
+
 }

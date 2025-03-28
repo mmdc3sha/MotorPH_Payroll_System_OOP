@@ -60,6 +60,10 @@ public class AdminSystemViewGUI extends PayrollServices {
     protected static DefaultTableModel leaveModel;
     protected static JTable leaveTable;
     protected static JScrollPane leaveScrollPane;
+    protected static JComboBox<String> statusComboBox;
+    protected static JTextField updated_byTxt = new JTextField();
+    protected static JDateChooser updated_date = new JDateChooser();
+    protected static JTextArea remarksArea = new JTextArea();
 
     public AdminSystemViewGUI() throws SQLException {
         dateChooser = new JDateChooser();
@@ -1284,10 +1288,13 @@ public class AdminSystemViewGUI extends PayrollServices {
                 "Leave ID",
                 "Emp ID",
                 "Leave Type",
-                "Start",
-                "End",
+                "Start Date",
+                "End Date",
                 "Reason",
-                "Status"
+                "Status",
+                "Updated By",
+                "Updated At",
+                "Remarks"
         });
 
         leaveTable = new JTable(leaveModel);
@@ -1295,13 +1302,12 @@ public class AdminSystemViewGUI extends PayrollServices {
         leaveScrollPane.setWheelScrollingEnabled(true);
         leaveScrollPane.setBounds(20,500,1600,900);
         leavePanel.add(leaveScrollPane);
-
         Font leaveFontLbl = new Font("Lato", Font.PLAIN, 14);
-
         JLabel leaveStatuslbl = new JLabel("Status:");
         leaveStatuslbl.setBounds(20,100,150,40);
+
         // 'Pending', 'Approved', 'Rejected', 'Cancelled'
-        JComboBox statusComboBox = new JComboBox();
+        statusComboBox = new JComboBox();
             statusComboBox.addItem("Pending");
             statusComboBox.addItem("Approved");
             statusComboBox.addItem("Rejected");
@@ -1310,25 +1316,29 @@ public class AdminSystemViewGUI extends PayrollServices {
 
         JLabel updatedByLbl = new JLabel("Updated By:");
         updatedByLbl.setBounds(20,160,150,40);
-        JTextField updated_byTxt = new JTextField("Name");
         updated_byTxt.setBounds(150, 160,250,40);
 
         JLabel updated_dateLbl = new JLabel("Date:");
-        JDateChooser updated_date = new JDateChooser();
         updated_dateLbl.setBounds(20, 220, 150, 40);
         updated_date.setDateFormatString("yyyy-MM-dd");
         updated_date.setBounds(150, 220, 250,40);
-
         JLabel remarksLbl = new JLabel("Remarks");
-        JTextArea remarksArea = new JTextArea();
+        JButton updateLeaveBtn = new JButton("Update");
+        updateLeaveBtn.setBounds(530, 350, 150, 50);
+        updateLeaveBtn.setFont(new Font("Lato", Font.BOLD, 14));
+        updateLeaveBtn.setBackground(new Color(2, 37, 101));
+        updateLeaveBtn.setForeground(Color.WHITE);
+        updateLeaveBtn.setBorderPainted(false);
 
-
+        remarksLbl.setBounds(20, 260, 150, 40);
+        remarksArea.setBounds(20, 300, 450, 180);
+        remarksArea.setBorder(new LineBorder(Color.black));
         leaveStatuslbl.setFont(leaveFontLbl);
         updatedByLbl.setFont(leaveFontLbl);
         updated_dateLbl.setFont(leaveFontLbl);
         remarksLbl.setFont(leaveFontLbl);
 
-
+        leavePanel.add(updateLeaveBtn);
         leavePanel.add(leaveStatuslbl);
         leavePanel.add(statusComboBox);
         leavePanel.add(updatedByLbl);
@@ -1339,6 +1349,10 @@ public class AdminSystemViewGUI extends PayrollServices {
         leavePanel.add(remarksArea);
         //Loads leave applications of Employees after JTable is set up.
         loadLeaveApplications();
+
+        updateLeaveBtn.addActionListener(e -> {
+
+        });
 
         // Adds individual panels to the main panel
         mainPanel.add(employeeRecordsPanel, "EmployeeRecords");

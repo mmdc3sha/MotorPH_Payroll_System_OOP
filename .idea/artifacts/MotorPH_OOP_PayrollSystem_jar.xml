@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="MotorPH_OOP_PayrollSystem:jar">
+    <output-path>$USER_HOME$/Desktop</output-path>
+    <root id="archive" name="MotorPH_OOP_PayrollSystem.jar">
+      <element id="module-output" name="MotorPH_OOP_PayrollSystem" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/formdev/flatlaf/3.3/flatlaf-3.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/xerial/sqlite-jdbc/3.49.0.0/sqlite-jdbc-3.49.0.0.jar" path-in-jar="/" />
+      <element id="library" level="project" name="Maven: org.pushing-pixels:substance:8.0" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/itextpdf/itextpdf/5.5.13.4/itextpdf-5.5.13.4.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/toedter/jcalendar/1.4/jcalendar-1.4.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

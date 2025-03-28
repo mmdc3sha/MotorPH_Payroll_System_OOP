@@ -326,7 +326,7 @@ public abstract class PayrollServices implements PayrollServiceInterface {
     // LEAVE APPLICATIONS OPERATIONS
     //loads the table
     public void loadLeaveData(DefaultTableModel tableModel) {
-        String query = "SELECT leave_request_id, emp_id, leave_type_id, leave_start_date, leave_end_date, reason_for_leave, leave_status FROM LeaveRequests";
+        String query = "SELECT * FROM LeaveRequests";
         try (Connection conn = DriverManager.getConnection(DB_URL);
              PreparedStatement pstmt = conn.prepareStatement(query);
              ResultSet rs = pstmt.executeQuery()) {
@@ -343,7 +343,10 @@ public abstract class PayrollServices implements PayrollServiceInterface {
                         rs.getString("leave_start_date"),
                         rs.getString("leave_end_date"),
                         rs.getString("reason_for_leave"),
-                        rs.getString("leave_status")
+                        rs.getString("leave_status"),
+                        rs.getString("status_updated_by"),
+                        rs.getString("status_updated_at"),
+                        rs.getString("remarks")
                 };
                 tableModel.addRow(row);
             }
@@ -353,5 +356,50 @@ public abstract class PayrollServices implements PayrollServiceInterface {
                     "Database Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+
+    public void commitLeaveUpdate(JTable table, JComboBox<String> status, JTextField updatedBy, JDateChooser updatedDate, JTextArea remarks) throws SQLException {
+        int selectedRow = table.getSelectedRow();
+
+        if (selectedRow == -1)
+        {
+            JOptionPane.showMessageDialog(null, "Please select a Leave Application", "Leave Update Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        //Get values of the fields
+        int leaveRequestId = (Integer) table.getValueAt(selectedRow, 0);
+        String leaveStatus = (String) status.getSelectedItem();
+        String updatedByName = updatedBy.getText();
+        String updatedDateChooser = String.valueOf(updatedDate.getDate());
+        String leaveRemarks = remarks.getText();
+
+        if (updatedDateChooser == null) {
+            JOptionPane.showMessageDialog(null, "Select Updated Date:", "Missing Date. Please Choose a Date", JOptionPane.ERROR_MESSAGE.);
+        }
+
+        //Formate Date
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedDate = sdf.format(updatedDateChooser);
+
+        String query = "UPDATE LeaveRequests SET leave_status = ?, status_updated_by = ?, status_updated_at = ?, remarks = ? WHERE leave_request_id = ?";
+
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement pstmt = conn.prepareStatement(query))
+        {
+            pstmt.setString(1, leaveStatus);
+            pstmt.setString(2, updatedByName);
+            pstmt.setString(3, formattedDate);
+            pstmt.setString(4, leaveRemarks);
+            pstmt.setInt(5, leaveRequestId);
+
+            int rowsAffected = pstmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                JOptionPane.showMessageDialog(null,"Leave Updated Successfully", "Success.", JOptionPane.INFORMATION_MESSAGE);
+                this.loadLeaveData();
+            }
+        }
+    }
+
 }
 
