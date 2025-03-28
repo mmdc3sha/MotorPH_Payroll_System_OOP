@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 
 public class EmployeeSystemViewGUI extends EmployeeServices {
     protected static final Logger LOGGER = Logger.getLogger(EmployeeSystemViewGUI.class.getName());
+    private final String db_path = "jdbc:sqlite:src/main/java/MotorPHDatabase.db";
     protected final JPanel mainPanel;
     protected final CardLayout cardLayout;
     protected static JPanel leavesPanel;
@@ -23,11 +24,9 @@ public class EmployeeSystemViewGUI extends EmployeeServices {
     protected static JDateChooser leaveEndTxt;
     protected static JTextArea leaveReasonTxt;
     protected static JComboBox<String> leaveTypeTxt;
-    protected static JTextField daysUsedTxt;
     protected static JTextField leaveStatusTxt;
     protected static JTextField status_updatedByTxt;
     protected static JTextField status_updatedDateTxt;
-    protected static JTextField empID_LoadRequest;
     protected static DefaultTableModel leaveModel;
     protected static JTable leaveTable;
     protected static JScrollPane leaveScrollPane;
@@ -137,14 +136,10 @@ public class EmployeeSystemViewGUI extends EmployeeServices {
         gbc.gridy = 0;
         menuPanel.add(motorph_logo, gbc);
         gbc.gridy = 1;
-        menuPanel.add(employeePanel, gbc);
-        gbc.gridy = 2;
         menuPanel.add(dashboardBtn, gbc);
-        gbc.gridy = 4;
+        gbc.gridy = 2;
         menuPanel.add(leavesBtn, gbc);
-        gbc.gridy = 5;
-        menuPanel.add(inquiryBtn, gbc);
-        gbc.gridy = 6;
+        gbc.gridy = 3;
         menuPanel.add(exitBtn, gbc);
 
         //Create the main panel with CardLayout
@@ -153,10 +148,9 @@ public class EmployeeSystemViewGUI extends EmployeeServices {
         mainPanel.setLayout(cardLayout);
         mainPanel.setBounds(300, 0, 1620, 1080);
 
-        JPanel inquiryPanel = new JPanel();
-        inquiryPanel.add(new JLabel("Inquiry View"));
-        inquiryPanel.setLayout(new BorderLayout());
-
+        JPanel dashboardPanel = new JPanel();
+        dashboardPanel.add(new JLabel("Inquiry View"));
+        dashboardPanel.setLayout(new BorderLayout());
 
         leavesPanel = new JPanel();
         leavesPanel.add(new JLabel("Leave Requests View"));
@@ -248,16 +242,6 @@ public class EmployeeSystemViewGUI extends EmployeeServices {
             leavesPanel.add(reasonLbl);
             leavesPanel.add(leaveReasonTxt);
 
-            JLabel daysUsedLbl = new JLabel("Days Used:");
-            daysUsedTxt = new JTextField();
-            daysUsedTxt.setEditable(false);
-            daysUsedLbl.setFont(leaveFontLabel);
-            daysUsedLbl.setForeground(leaveFontColor);
-            daysUsedLbl.setBounds(400,90,200,35);
-            daysUsedTxt.setBounds(400, 130, 200, 35);
-            leavesPanel.add(daysUsedLbl);
-            leavesPanel.add(daysUsedTxt);
-
             JLabel leaveStatusLbl = new JLabel("Leave Status:");
             leaveStatusTxt = new JTextField();
             leaveStatusLbl.setFont(leaveFontLabel);
@@ -300,11 +284,6 @@ public class EmployeeSystemViewGUI extends EmployeeServices {
                 submitLeaveApplications();
             });
 
-            empID_LoadRequest = new JTextField();
-            empID_LoadRequest.setBounds(1000,105,350,40);
-            empID_LoadRequest.setBorder(BorderFactory.createTitledBorder("Employee ID"));
-            leavesPanel.add(empID_LoadRequest);
-
             JButton loadRequestBtn = new JButton("Load Request");
             loadRequestBtn.setBounds(650,150,250,50);
             loadRequestBtn.setBackground(new Color(1, 147, 110));
@@ -323,6 +302,11 @@ public class EmployeeSystemViewGUI extends EmployeeServices {
             cancelLeaveBtn.setForeground(Color.white);
             leavesPanel.add(cancelLeaveBtn);
 
+            //Cancels a Leave Application
+            cancelLeaveBtn.addActionListener(e -> {
+                cancelLeaveApplications(leaveTable); // Cancel Leave Application method called from EmployeeDatabaseOperation
+            });
+
             // Column names for the Leave Table
             leaveModel = new DefaultTableModel();
             leaveTable = new JTable(leaveModel);
@@ -332,12 +316,11 @@ public class EmployeeSystemViewGUI extends EmployeeServices {
 
 
         // Add individual panels to the main panel
-        mainPanel.add(inquiryPanel, "Inquiry");
+        mainPanel.add(dashboardPanel, "Dashboard");
         mainPanel.add(leavesPanel, "Leave Requests");
 
         // Add action listeners to the buttons
         dashboardBtn.addActionListener(e -> {cardLayout.show(mainPanel, "Dashboard");});
-        inquiryBtn.addActionListener(e -> cardLayout.show(mainPanel, "Create Inquiry"));
         leavesBtn.addActionListener(e -> cardLayout.show(mainPanel, "Leave Requests"));
 
         // Logs out of the System
@@ -360,37 +343,52 @@ public class EmployeeSystemViewGUI extends EmployeeServices {
     }
 
     private void submitLeaveApplications() {
-        LoginGUI emp_login_id = new LoginGUI();
-        JTextField employee_id = emp_login_id.getEmpID();
-
         try {
-            int empID = Integer.parseInt(employee_id.getText().trim());
+            // Retrieve the logged-in Employee ID from LoginSessionManager
+            int empID = LoginSessionManager.getInstance().getLoggedInEmpID();
+
+            // Validate empID (ensure it's not zero or negative)
+            if (empID <= 0) {
+                JOptionPane.showMessageDialog(null, "Invalid Employee ID. Please log in again.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             String type = Objects.requireNonNull(leaveTypeTxt.getSelectedItem()).toString();
             String startDate = leaveStartTxt.getDate().toString();
             String endDate = leaveEndTxt.getDate().toString();
             String status = "Pending";
 
+            // Insert leave application into the database
             insertLeaveApplication(empID, type, startDate, endDate, status);
 
             JOptionPane.showMessageDialog(null, "Your Leave application has been submitted.", "Application Submitted", JOptionPane.INFORMATION_MESSAGE);
-        } catch (NumberFormatException ex)
-        {
-            JOptionPane.showMessageDialog(null, "Invalid Employee ID. Please enter your Employee ID.", "Invalid Employee ID", JOptionPane.ERROR_MESSAGE);
+        } catch (NullPointerException ex) {
+            JOptionPane.showMessageDialog(null, "Please select all required fields.", "Missing Information", JOptionPane.WARNING_MESSAGE);
         } catch (Exception ex) {
-            LOGGER.log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, "Error submitting leave application", ex);
             JOptionPane.showMessageDialog(null, ex.getMessage(), "Submit Request Failed", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-
     // Method to Load leave applications of the Logged-in user
-    private void loadLeaveApplications(){
+    @Override
+    public void loadLeaveApplications(){
         try {
-            int empID = Integer.parseInt(empID_LoadRequest.getText().trim()); // Convert input to integer
+            // Get logged-in Employee ID from LoginSessionManager
+            int empID = LoginSessionManager.getInstance().getLoggedInEmpID();
+
+            // Validate empID (ensure it's not zero or negative)
+            if (empID <= 0) {
+                JOptionPane.showMessageDialog(null, "Error: Invalid session. Please log in again.", "Session Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            // Load leave applications for the logged-in employee only
             leaveModel = getLeaveTable(empID);
             leaveTable.setModel(leaveModel);
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(null, "Invalid Employee ID. Please enter a number.");
+
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, "Error loading leave applications", ex);
+            JOptionPane.showMessageDialog(null, "Failed to load leave applications. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -418,10 +416,6 @@ public class EmployeeSystemViewGUI extends EmployeeServices {
         return leaveTypeTxt;
     }
 
-    public static JTextField getDaysUsedTxt() {
-        return daysUsedTxt;
-    }
-
     public static JTextField getLeaveStatusTxt() {
         return leaveStatusTxt;
     }
@@ -432,10 +426,6 @@ public class EmployeeSystemViewGUI extends EmployeeServices {
 
     public static JTextField getStatus_updatedDateTxt() {
         return status_updatedDateTxt;
-    }
-
-    public static JTextField getEmpID_LoadRequest() {
-        return empID_LoadRequest;
     }
 
     public static DefaultTableModel getLeaveModel() {

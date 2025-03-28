@@ -1,6 +1,7 @@
 package GUI;
 
 import EmployeeServices.EmployeeSystemViewGUI;
+import EmployeeServices.LoginSessionManager;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 
 import javax.imageio.ImageIO;
@@ -189,6 +190,9 @@ public class LoginGUI {
             boolean isAuthenticated = authenticateUser(empID, username, password, role, conn);
 
             if (isAuthenticated) {
+                // Store logged-in Employee ID
+                LoginSessionManager.getInstance().setLoggedInEmpID(Integer.parseInt(empID));
+
                 if ("Administrator".equals(role)) {
                     redirectToAdminSystemView();
                 } else if ("Employee".equals(role)) {
@@ -202,7 +206,6 @@ public class LoginGUI {
             showError("An error occurred during login");
         }
     }
-
     // Generic authentication method for both Admins and Employees
     private boolean authenticateUser(String empID, String username, String password, String role, Connection conn) throws Exception {
         String tableName = "Administrator".equals(role) ? ADMIN_TABLE : EMPLOYEE_TABLE;

@@ -1,7 +1,10 @@
 package EmployeeServices;
 
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public abstract class EmployeeServices implements EmployeeDatabaseOperations {
     private final String db_path = "jdbc:sqlite:src/main/java/MotorPHDatabase.db";
@@ -25,13 +28,9 @@ public abstract class EmployeeServices implements EmployeeDatabaseOperations {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            Logger.getLogger(EmployeeServices.class.getName()).log(Level.SEVERE, null, e);
         }
     }
-    /**
-     * @return
-     * @throws SQLException
-     */
 
     @Override
     public DefaultTableModel getLeaveTable(int empID) {
@@ -63,4 +62,36 @@ public abstract class EmployeeServices implements EmployeeDatabaseOperations {
         }
         return model;
     }
+
+    @Override
+    public void cancelLeaveApplications(JTable leaveTable) {
+        int selectedRow = leaveTable.getSelectedRow(); // Use JTable parameter
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(null, "Please select a leave application to cancel.", "No Selection", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        try (Connection conn = DriverManager.getConnection(db_path)) {
+            int empID = LoginSessionManager.getInstance().getLoggedInEmpID(); // Get logged-in Employee ID
+            int leaveID = (int) leaveTable.getValueAt(selectedRow, 0); // Get Leave ID from JTable
+
+            String sql = "UPDATE LeaveRequests SET leave_status = 'Cancelled' WHERE leave_request_id = ? AND emp_id = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setInt(1, leaveID);
+                pstmt.setInt(2, empID);
+
+                int updatedRows = pstmt.executeUpdate();
+                if (updatedRows > 0) {
+                    JOptionPane.showMessageDialog(null, "Leave application has been cancelled.", "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+                    ((DefaultTableModel) leaveTable.getModel()).removeRow(selectedRow); // ✅ Remove row from UI
+                } else {
+                    JOptionPane.showMessageDialog(null, "Failed to cancel leave. You may not have permission.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "An error occurred. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
+    }
 }
+
