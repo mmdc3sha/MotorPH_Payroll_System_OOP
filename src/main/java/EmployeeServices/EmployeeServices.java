@@ -92,6 +92,39 @@ public abstract class EmployeeServices implements EmployeeDatabaseOperations {
             ex.printStackTrace();
         }
     }
+    protected void reviewLeaveStatus(JTable leaveTable) {
+        int selectedRow = leaveTable.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(null, "Please select a leave application to review.", "No Selection", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
+        int leaveRequestId = (int) leaveTable.getValueAt(selectedRow, 0); // Assuming first column is leave_request_id
+
+        String query = "SELECT leave_status, status_updated_by, status_updated_at FROM LeaveRequests WHERE leave_request_id = ?";
+
+        try (Connection conn = DriverManager.getConnection(db_path);
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setInt(1, leaveRequestId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                String status = rs.getString("leave_status");
+                String updatedBy = rs.getString("status_updated_by");
+                String updatedDate = rs.getString("status_updated_at");
+
+                // Call an abstract method to update UI components in subclasses
+                updateLeaveStatusUI(status, updatedBy, updatedDate);
+            } else {
+                JOptionPane.showMessageDialog(null, "No details found for the selected leave application.", "No Data", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error fetching leave details: " + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // Abstract method for subclasses to implement UI update
+    protected abstract void updateLeaveStatusUI(String status, String updatedBy, String updatedDate);
 }
 

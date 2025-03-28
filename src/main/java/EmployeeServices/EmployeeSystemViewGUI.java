@@ -309,7 +309,7 @@ public class EmployeeSystemViewGUI extends EmployeeServices {
                 cancelLeaveApplications(leaveTable); // Cancel Leave Application method called from EmployeeDatabaseOperation
             });
 
-        // Create and configure the "Remarks" text area
+        //Create and configure the "Remarks" text area
         JTextArea remarksTxt = new JTextArea();
         remarksTxt.setEditable(false);
         remarksTxt.setBackground(new Color(226, 226, 226));
@@ -320,7 +320,11 @@ public class EmployeeSystemViewGUI extends EmployeeServices {
         // Make remarksTxt scrollable
         JScrollPane remarksScrollPane = new JScrollPane(remarksTxt);
         remarksScrollPane.setBounds(1000, 600, 540, 300);
-        remarksScrollPane.setBorder(new TitledBorder("Remarks"));
+        remarksScrollPane.setBackground(Color.WHITE);
+        remarksScrollPane.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(new Color(2, 37, 101)),"Remarks",
+                TitledBorder.LEFT, TitledBorder.TOP, new Font("Lato", Font.BOLD, 20), new Color(2, 37, 101)
+        ));
 
         // Configure Leave Table
         leaveModel = new DefaultTableModel();
@@ -330,14 +334,19 @@ public class EmployeeSystemViewGUI extends EmployeeServices {
         // Scroll pane for Leave Table
         leaveScrollPane = new JScrollPane(leaveTable);
         leaveScrollPane.setBounds(1000, 175, 540, 400);
-        leaveScrollPane.setBorder(new TitledBorder("Leave Applications"));
+        leaveScrollPane.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(new Color(2, 37, 101)),"Applications",
+                TitledBorder.LEFT, TitledBorder.TOP, new Font("Lato", Font.BOLD, 20), new Color(2, 37, 101)
+        ));
 
         JButton reviewStatusBtn = new JButton("Review Status");
         reviewStatusBtn.setBounds(650, 390, 250, 50); // Adjust position as needed
         reviewStatusBtn.setFont(new Font("Lato", Font.PLAIN, 16));
-        reviewStatusBtn.setBackground(new Color(10, 2, 101));
+        reviewStatusBtn.setBackground(new Color(52, 2, 101));
         reviewStatusBtn.setForeground(Color.WHITE);
         // Attach listener
+        reviewStatusBtn.addActionListener(e -> reviewLeaveStatus(leaveTable));
+
 
         // Add components to the panel
         leavesPanel.add(reviewStatusBtn);
@@ -469,7 +478,12 @@ public class EmployeeSystemViewGUI extends EmployeeServices {
     public static JScrollPane getLeaveScrollPane() {
         return leaveScrollPane;
     }
-
+    @Override
+    protected void updateLeaveStatusUI(String status, String updatedBy, String updatedDate) {
+        leaveStatusTxt.setText(status != null ? status : "");
+        status_updatedByTxt.setText(updatedBy != null ? updatedBy : "");
+        status_updatedDateTxt.setText(updatedDate != null ? updatedDate : "");
+    }
     public static void main(String[] args) {
         // Create an instance of MainSystem to display the frame
         SwingUtilities.invokeLater(EmployeeSystemViewGUI::new);
