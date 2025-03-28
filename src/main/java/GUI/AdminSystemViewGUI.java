@@ -1293,9 +1293,44 @@ public class AdminSystemViewGUI extends PayrollServices {
         leaveTable = new JTable(leaveModel);
         leaveScrollPane = new JScrollPane(leaveTable);
         leaveScrollPane.setWheelScrollingEnabled(true);
-        leaveScrollPane.setBounds(20,700,1600,900);
+        leaveScrollPane.setBounds(20,500,1600,900);
         leavePanel.add(leaveScrollPane);
 
+        Font leaveFontLbl = new Font("Lato", Font.PLAIN, 16);
+
+        JLabel leaveStatuslbl = new JLabel("Status:");
+        leaveStatuslbl.setBounds(20,100,150,40);
+        // 'Pending', 'Approved', 'Rejected', 'Cancelled'
+        JComboBox statusComboBox = new JComboBox();
+            statusComboBox.addItem("Pending");
+            statusComboBox.addItem("Approved");
+            statusComboBox.addItem("Rejected");
+            statusComboBox.addItem("Cancelled");
+        statusComboBox.setBounds(150, 100,250,40);
+
+        JLabel updatedByLbl = new JLabel("Updated By:");
+        JTextField updated_byTxt = new JTextField("Name");
+
+        JLabel updated_dateLbl = new JLabel("Updated Date");
+        JDateChooser updated_date = new JDateChooser();
+
+        JLabel remarksLbl = new JLabel("Remarks");
+        JTextArea remarksArea = new JTextArea();
+
+
+        leaveStatuslbl.setFont(leaveFontLbl);
+        updatedByLbl.setFont(leaveFontLbl);
+        updated_dateLbl.setFont(leaveFontLbl);
+        remarksLbl.setFont(leaveFontLbl);
+
+
+        leavePanel.add(leaveStatuslbl);
+        leavePanel.add(statusComboBox);
+        leavePanel.add(updatedByLbl);
+        leavePanel.add(updated_byTxt);
+        leavePanel.add(updated_date);
+        leavePanel.add(remarksLbl);
+        leavePanel.add(remarksArea);
         //Loads leave applications of Employees after JTable is set up.
         loadLeaveApplications();
 
