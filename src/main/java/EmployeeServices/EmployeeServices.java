@@ -56,7 +56,6 @@ public abstract class EmployeeServices implements EmployeeDatabaseOperations {
                         rs.getString("leave_status")
                 });
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
