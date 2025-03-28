@@ -93,19 +93,5 @@ public abstract class EmployeeServices implements EmployeeDatabaseOperations {
         }
     }
 
-    protected void reflectLeaveSelectionStatus(JTable leave_table) {
-        ListSelectionModel selectionModel = leave_table.getSelectionModel();
-        selectionModel.addListSelectionListener(event -> {
-            if (!event.getValueIsAdjusting()) {
-                int selectedRow = leave_table.getSelectedRow();
-                if (selectedRow == -1) {
-                    handleRowSelection(leave_table, selectedRow);
-                }
-            }
-        });
-    }
-
-    // Partial Implementation of HandleRowSelection
-    protected abstract void handleRowSelection(JTable leave_table, int selectedRow);
 }
 

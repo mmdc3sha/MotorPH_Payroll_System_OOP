@@ -4,10 +4,10 @@ import GUI.LoginGUI;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import com.toedter.calendar.JDateChooser;
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
@@ -287,7 +287,7 @@ public class EmployeeSystemViewGUI extends EmployeeServices {
             });
 
             JButton loadRequestBtn = new JButton("Load Request");
-            loadRequestBtn.setBounds(650,150,250,50);
+            loadRequestBtn.setBounds(650,250,250,50);
             loadRequestBtn.setBackground(new Color(1, 147, 110));
             loadRequestBtn.setForeground(Color.white);
             loadRequestBtn.setFont(new Font("Lato", Font.PLAIN, 15));
@@ -298,7 +298,7 @@ public class EmployeeSystemViewGUI extends EmployeeServices {
             });
 
             JButton cancelLeaveBtn = new JButton("Cancel Leave");
-            cancelLeaveBtn.setBounds(650,210,250,50);
+            cancelLeaveBtn.setBounds(650,320,250,50);
             cancelLeaveBtn.setFont(new Font("Lato", Font.PLAIN, 15));
             cancelLeaveBtn.setBackground(new Color(156, 6, 6));
             cancelLeaveBtn.setForeground(Color.white);
@@ -309,36 +309,40 @@ public class EmployeeSystemViewGUI extends EmployeeServices {
                 cancelLeaveApplications(leaveTable); // Cancel Leave Application method called from EmployeeDatabaseOperation
             });
 
-            JTextArea remarksTxt = new JTextArea();
-            remarksTxt.setEditable(false);
-            remarksTxt.setBackground(new Color(226, 226, 226));
-            remarksTxt.setBounds(1000,600, 540, 300);
-        remarksTxt.setBorder(BorderFactory.createCompoundBorder(
-                new LineBorder(new Color(2, 37, 101), 3), // Outer border with 3-pixel thickness
-                new TitledBorder(null, "Remarks", TitledBorder.LEFT,
-                        TitledBorder.TOP, new Font("Lato", Font.BOLD, 25))
-        ));
+        // Create and configure the "Remarks" text area
+        JTextArea remarksTxt = new JTextArea();
+        remarksTxt.setEditable(false);
+        remarksTxt.setBackground(new Color(226, 226, 226));
+        remarksTxt.setFont(new Font("Lato", Font.PLAIN, 16)); // Set readable font
+        remarksTxt.setLineWrap(true); // Enable text wrapping
+        remarksTxt.setWrapStyleWord(true); // Wrap words properly
 
+        // Make remarksTxt scrollable
+        JScrollPane remarksScrollPane = new JScrollPane(remarksTxt);
+        remarksScrollPane.setBounds(1000, 600, 540, 300);
+        remarksScrollPane.setBorder(new TitledBorder("Remarks"));
 
-            // Column names for the Leave Table
-            leaveModel = new DefaultTableModel();
+        // Configure Leave Table
+        leaveModel = new DefaultTableModel();
+        leaveTable = new JTable(leaveModel);
+        leaveTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-            // Creates "Leave Application" table
-            leaveTable = new JTable(leaveModel);
+        // Scroll pane for Leave Table
+        leaveScrollPane = new JScrollPane(leaveTable);
+        leaveScrollPane.setBounds(1000, 175, 540, 400);
+        leaveScrollPane.setBorder(new TitledBorder("Leave Applications"));
 
-            // Sets Selection of rows to single selection
-            leaveTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        JButton reviewStatusBtn = new JButton("Review Status");
+        reviewStatusBtn.setBounds(650, 390, 250, 50); // Adjust position as needed
+        reviewStatusBtn.setFont(new Font("Lato", Font.PLAIN, 16));
+        reviewStatusBtn.setBackground(new Color(10, 2, 101));
+        reviewStatusBtn.setForeground(Color.WHITE);
+        // Attach listener
 
-
-            leaveScrollPane = new JScrollPane(leaveTable);
-            leaveScrollPane.setBounds(1000,175,540,400);
-            leaveScrollPane.setBorder(BorderFactory.createCompoundBorder(
-                    new LineBorder(new Color(2, 37, 101, 3)),
-                            new TitledBorder(null, "Leave Applications", TitledBorder.LEFT, TitledBorder.TOP, new Font("Lato", Font.BOLD, 25))
-            ));
-
-            leavesPanel.add(leaveScrollPane);
-            leavesPanel.add(remarksTxt);
+        // Add components to the panel
+        leavesPanel.add(reviewStatusBtn);
+        leavesPanel.add(leaveScrollPane);
+        leavesPanel.add(remarksScrollPane);
 
 
         // Add individual panels to the main panel
@@ -469,14 +473,5 @@ public class EmployeeSystemViewGUI extends EmployeeServices {
     public static void main(String[] args) {
         // Create an instance of MainSystem to display the frame
         SwingUtilities.invokeLater(EmployeeSystemViewGUI::new);
-    }
-
-    /**
-     * @param leave_table
-     * @param selectedRow
-     */
-    @Override
-    protected void handleRowSelection(JTable leave_table, int selectedRow) {
-
     }
 }
