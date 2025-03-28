@@ -1296,7 +1296,7 @@ public class AdminSystemViewGUI extends PayrollServices {
         leaveScrollPane.setBounds(20,500,1600,900);
         leavePanel.add(leaveScrollPane);
 
-        Font leaveFontLbl = new Font("Lato", Font.PLAIN, 16);
+        Font leaveFontLbl = new Font("Lato", Font.PLAIN, 14);
 
         JLabel leaveStatuslbl = new JLabel("Status:");
         leaveStatuslbl.setBounds(20,100,150,40);
@@ -1309,10 +1309,15 @@ public class AdminSystemViewGUI extends PayrollServices {
         statusComboBox.setBounds(150, 100,250,40);
 
         JLabel updatedByLbl = new JLabel("Updated By:");
+        updatedByLbl.setBounds(20,160,150,40);
         JTextField updated_byTxt = new JTextField("Name");
+        updated_byTxt.setBounds(150, 160,250,40);
 
-        JLabel updated_dateLbl = new JLabel("Updated Date");
+        JLabel updated_dateLbl = new JLabel("Date:");
         JDateChooser updated_date = new JDateChooser();
+        updated_dateLbl.setBounds(20, 220, 150, 40);
+        updated_date.setDateFormatString("yyyy-MM-dd");
+        updated_date.setBounds(150, 220, 250,40);
 
         JLabel remarksLbl = new JLabel("Remarks");
         JTextArea remarksArea = new JTextArea();
@@ -1328,6 +1333,7 @@ public class AdminSystemViewGUI extends PayrollServices {
         leavePanel.add(statusComboBox);
         leavePanel.add(updatedByLbl);
         leavePanel.add(updated_byTxt);
+        leavePanel.add(updated_dateLbl);
         leavePanel.add(updated_date);
         leavePanel.add(remarksLbl);
         leavePanel.add(remarksArea);
