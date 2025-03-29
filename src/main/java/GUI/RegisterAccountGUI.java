@@ -32,15 +32,15 @@ public class RegisterAccountGUI extends JFrame {
             LOGGER.log(Level.SEVERE, "Error setting Look and Feel", e);
         }
 
-        Font labelFont = new Font("Lato", Font.PLAIN, 14);
+        Font labelFont = new Font("Lato", Font.PLAIN, 16);
 
         // Labels for the text fields
-        JLabel idLabel = new JLabel("Employee ID:");
+        JLabel idLabel = new JLabel("Register New Account");
         JLabel usernameLbl = new JLabel("Username:");
         JLabel passwordLbl = new JLabel("Password:");
         JLabel roleLbl = new JLabel("Role:");
 
-        idLabel.setFont(labelFont);
+        idLabel.setFont(new Font("Lato", Font.BOLD, 25));
         idLabel.setForeground(Color.WHITE);
         usernameLbl.setFont(labelFont);
         usernameLbl.setForeground(Color.WHITE);
@@ -50,7 +50,6 @@ public class RegisterAccountGUI extends JFrame {
         roleLbl.setForeground(Color.WHITE);
 
         // Text fields
-        JTextField idField = new JTextField();
         JTextField usernameField = new JTextField();
         JPasswordField passwordField = new JPasswordField();
         passwordField.setEchoChar((char) 0);
@@ -58,26 +57,29 @@ public class RegisterAccountGUI extends JFrame {
         roleComboBox.addItem("Administrator");
         roleComboBox.addItem("Employee");
         roleComboBox.setFont(labelFont);
+        roleComboBox.setForeground(new Color(2, 37, 101));
 
         // Register and Cancel buttons
         JButton registerButton = new JButton("Register");
+        registerButton.setFont(new Font("Lato", Font.PLAIN, 14));
+        registerButton.setForeground(new Color(2, 37, 101));
         JButton cancelButton = new JButton("Cancel");
+        cancelButton.setFont(new Font("Lato", Font.PLAIN, 14));
+        cancelButton.setForeground(new Color(2, 37, 101));
 
         // Set bounds for labels and fields
-        idLabel.setBounds(50, 50, 100, 30);
-        idField.setBounds(150, 50, 300, 30);
+        idLabel.setBounds(50, 30, 400, 50);
         usernameLbl.setBounds(50, 100, 100, 30);
         usernameField.setBounds(150, 100, 300, 30);
         passwordLbl.setBounds(50, 150, 100, 30);
         passwordField.setBounds(150, 150, 300, 30);
         roleLbl.setBounds(50, 200, 100, 30);
         roleComboBox.setBounds(150, 200, 200, 30);
-        registerButton.setBounds(150, 250, 100, 40);
-        cancelButton.setBounds(260, 250, 100, 40);
+        registerButton.setBounds(150, 280, 100, 40);
+        cancelButton.setBounds(260, 280, 100, 40);
 
         // Add components to frame
         add(idLabel);
-        add(idField);
         add(usernameLbl);
         add(usernameField);
         add(passwordLbl);
@@ -89,19 +91,17 @@ public class RegisterAccountGUI extends JFrame {
 
         // Action listeners for buttons
         registerButton.addActionListener(e -> {
-            String employeeID = idField.getText();
             String username = usernameField.getText();
             String password = new String(passwordField.getPassword());
             String role = (String) roleComboBox.getSelectedItem();
 
-            if (employeeID.isEmpty() || username.isEmpty() || password.isEmpty() || role == null) {
+            if (username.isEmpty() || password.isEmpty() || role == null) {
                 JOptionPane.showMessageDialog(this, "Please fill in all fields", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
             // Hash the password before storing it
             String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt(12));
-
             String url = "jdbc:sqlite:src/main/java/MotorPHDatabase.db";
             String sql;
 
@@ -113,7 +113,6 @@ public class RegisterAccountGUI extends JFrame {
 
             try (Connection conn = DriverManager.getConnection(url);
                  PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                pstmt.setString(1, employeeID);
                 pstmt.setString(2, username);
                 pstmt.setString(3, hashedPassword);  // Store hashed password
                 pstmt.executeUpdate();
@@ -137,6 +136,8 @@ public class RegisterAccountGUI extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new RegisterAccountGUI(new JFrame()));
+        SwingUtilities.invokeLater(() ->
+                new RegisterAccountGUI(new JFrame())
+        );
     }
 }

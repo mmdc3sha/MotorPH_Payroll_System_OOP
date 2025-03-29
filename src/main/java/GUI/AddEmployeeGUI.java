@@ -1,7 +1,6 @@
 package GUI;
 
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
-
 import javax.swing.*;
 import java.awt.*;
 import java.sql.Connection;
@@ -32,10 +31,8 @@ public class AddEmployeeGUI extends JDialog {
     private final JTextField txtClothingAllowance;
     private final JTextField txtGrossSemiMonthlyRate;
 
-
     public AddEmployeeGUI(JFrame AdminSystemViewGUI) {
         final Logger LOGGER = Logger.getLogger(AddEmployeeGUI.class.getName());
-
         super(AdminSystemViewGUI, "Add Employee", true);
         setTitle("Add Employee");
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -55,7 +52,6 @@ public class AddEmployeeGUI extends JDialog {
         panel.setBackground(new Color(100, 184, 255, 255)); // Inner panel background
         panel.setLayout(new GridBagLayout());
         getContentPane().add(panel);
-
 
         Font labelFont = new Font("Lato", Font.PLAIN, 14);
         Font textfieldFont = new Font("Lato", Font.PLAIN, 12);
@@ -135,7 +131,6 @@ public class AddEmployeeGUI extends JDialog {
         txtClothingAllowance.setFont(textfieldFont);
         txtGrossSemiMonthlyRate = new JTextField(20);
         txtGrossSemiMonthlyRate.setFont(textfieldFont);
-
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 50, 10, 10);
@@ -282,7 +277,6 @@ public class AddEmployeeGUI extends JDialog {
         gbc.anchor = GridBagConstraints.CENTER;
         panel.add(buttonPanel, gbc);
 
-
         // When save button is pressed, it will save the employee data
         saveButton.addActionListener(e -> {
                 // Save data
@@ -299,7 +293,6 @@ public class AddEmployeeGUI extends JDialog {
             JOptionPane.showMessageDialog(null, "Employee not Added.", "Cancelled", JOptionPane.INFORMATION_MESSAGE);
         });
     }
-
 
     private void saveEmployee() throws SQLException {
         String firstName = txtFirstName.getText().trim();
