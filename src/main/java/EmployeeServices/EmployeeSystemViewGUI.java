@@ -150,9 +150,32 @@ public class EmployeeSystemViewGUI extends EmployeeServices {
         mainPanel.setLayout(cardLayout);
         mainPanel.setBounds(300, 0, 1620, 1080);
 
+        // Creates the Dashboard Panel
         JPanel dashboardPanel = new JPanel();
         dashboardPanel.add(new JLabel("Inquiry View"));
-        dashboardPanel.setLayout(new BorderLayout());
+        dashboardPanel.setLayout(null);
+
+        // Creates the Profile Panel inside the Dashboard Panel
+        JPanel profilePanel = new JPanel(new GridBagLayout());
+        profilePanel.setBackground(new Color(141, 208, 254));
+        profilePanel.setPreferredSize(new Dimension(500, 1080));
+
+        ImageIcon applyLeavesIcon = new ImageIcon("src/main/resources/leave_icon.png");
+        JButton applyLeavesBtn = new JButton(applyLeavesIcon);
+        applyLeavesBtn.setBounds(700,400,200,200);
+
+        JLabel applyLeavesLabel = new JLabel("Apply for Leave");
+        applyLeavesLabel.setFont(new Font("Lato", Font.BOLD, 30));
+        applyLeavesLabel.setForeground(new Color(2, 37, 101));
+        applyLeavesLabel.setBounds(700,580,400,200);
+        applyLeavesBtn.addActionListener(e -> {
+           cardLayout.show(mainPanel, "Leave Requests");
+        });
+
+        // Add the Profile Panel to the Dashboard Panel
+        dashboardPanel.add(applyLeavesLabel);
+        dashboardPanel.add(profilePanel, BorderLayout.WEST);
+        dashboardPanel.add(applyLeavesBtn);
 
         leavesPanel = new JPanel();
         leavesPanel.add(new JLabel("Leave Requests View"));
