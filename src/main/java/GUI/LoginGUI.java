@@ -7,8 +7,6 @@ import org.mindrot.jbcrypt.BCrypt;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
@@ -134,14 +132,11 @@ public class LoginGUI {
         checkBox.setFont(new Font("Lato", Font.PLAIN, 15));
         checkBox.setBounds(200, 600, 300, 40);
         checkBox.setForeground(labelColor);
-        checkBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (checkBox.isSelected()) {
-                    passwordField.setEchoChar((char) 0);
-                } else {
-                    passwordField.setEchoChar('*');
-                }
+        checkBox.addActionListener(e -> {
+            if (checkBox.isSelected()) {
+                passwordField.setEchoChar((char) 0);
+            } else {
+                passwordField.setEchoChar('*');
             }
         });
 
@@ -158,7 +153,7 @@ public class LoginGUI {
                 String username = usernameField.getText();
                 char[] passwordChars = passwordField.getPassword();
                 String password = new String(passwordChars); // ✅ Correct conversion
-                String role = comboBox.getSelectedItem().toString();
+                String role = Objects.requireNonNull(comboBox.getSelectedItem()).toString();
 
                 handleLogin(employee_ID, username, password, role);
 
