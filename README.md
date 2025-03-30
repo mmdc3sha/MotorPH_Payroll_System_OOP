@@ -14,3 +14,4 @@ The MotorPH Payroll System is an object-oriented payroll management system desig
 ---
 # DOCUMENTATION
 To get started, click the link to the documentation. This will lead you to the Google Docs file. Please take your time to the time to read.
+- https://docs.google.com/document/d/13ThjJB-h4MzcNAiD3uy14uQxu7wpmYEB3Z4xxW6KsEE/edit?usp=sharing
