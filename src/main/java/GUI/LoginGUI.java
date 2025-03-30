@@ -255,8 +255,4 @@ public class LoginGUI {
     public JTextField getUsernameField() {
         return usernameField;
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(LoginGUI::new);
-    }
 }
