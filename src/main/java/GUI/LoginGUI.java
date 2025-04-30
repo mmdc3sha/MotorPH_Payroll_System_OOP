@@ -89,8 +89,8 @@ public class LoginGUI {
         panel.setBackground(new Color(36, 142, 213));
         frame.getContentPane().add(panel);
 
-        JLabel loginLabel = new JLabel("LOGIN");
-        loginLabel.setFont(new Font("Tahoma", Font.BOLD, 50));
+        JLabel loginLabel = new JLabel("MotorPH Payroll System Login");
+        loginLabel.setFont(new Font("Tahoma", Font.PLAIN, 35));
         loginLabel.setForeground(new Color(255, 235, 235));
         loginLabel.setBounds(250, 100, 200, 50);
         panel.add(loginLabel);
